@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoteRunnerStack", "MoteRunnerStack\MoteRunnerStack.csproj", "{9DAB4964-8D2A-44C4-AE05-299ACE044F39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mr_test", "mr_test\mr_test.csproj", "{BFB5E72D-C385-4FE4-8D78-264AF5B33F13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB5E72D-C385-4FE4-8D78-264AF5B33F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB5E72D-C385-4FE4-8D78-264AF5B33F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB5E72D-C385-4FE4-8D78-264AF5B33F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB5E72D-C385-4FE4-8D78-264AF5B33F13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = MoteRunnerStack\MoteRunnerStack.csproj
+	EndGlobalSection
+EndGlobal

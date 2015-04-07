@@ -1,0 +1,17 @@
+.sxp-version 2.0
+
+.assembly bcw-1.0
+
+
+.namespace mr_test
+
+.class#0 public BlinkCounterWireless
+
+	.method#0 static public BlinkCounterWireless(r:mr_test.BlinkCounterWireless this)v
+
+	.method#1 static public onRxCallback(b port, b[] paybuf,u payoff,u paylen)v
+
+	.method#2 static public onTimeCallback(b param, l time)v
+.end
+
+.end
