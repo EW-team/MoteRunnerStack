@@ -21,7 +21,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mrc --verbose --assembly=bcw-1.0 BlinkCounterWireless.cs -r:lrsc-mac-28.4" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="mrc --verbose --assembly=bcw-1.2 BlinkCounterWireless.cs -r:lrsc-mac-28.4" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
