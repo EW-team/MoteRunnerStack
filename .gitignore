@@ -1,1 +1,7 @@
-/bin/
+# Build results
+bin/
+[Dd]ebug/
+[Rr]elease/
+*.sba
+*.sdx
+*.sxp
