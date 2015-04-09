@@ -54,12 +54,7 @@ namespace mr_test
 		}
 		
 	    public static void onRxCallback (byte port, byte[] paybuf, uint payoff, uint paylen) {
-	        // get counter value from paybuf
-	        if (paylen > 1)
-	        	counter = Util.get16(paybuf, payoff) % LED.getNumLEDs();
-	        else
-	        	counter = (uint)paybuf[payoff] % LED.getNumLEDs();
-	        
+	        counter ++;
 	        uint tmp = counter;
 			uint r;
 			for (uint i = 0; i < LED.getNumLEDs(); i++) {
@@ -72,7 +67,6 @@ namespace mr_test
 	    }
 		
 		public static void onTimeCallback(byte param, long time) {
-			counter ++;
 			Util.set16(dbuf,0,counter);
 			Mac.setTxData(false,APP_PORT,dbuf,0,2);
 		}
