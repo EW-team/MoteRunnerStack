@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="mr_test/BlinkCounterWireless.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MasterSlave/Slave.cs">
     <Files>
-      <File FileName="mr_test/BlinkCounterWireless.cs" Line="42" Column="5" />
-      <File FileName="mr_test/MacPacket.cs" Line="15" Column="97" />
+      <File FileName="MasterSlave/Master.cs" Line="34" Column="4" />
+      <File FileName="mr_test/BlinkCounterWireless.cs" Line="13" Column="3" />
+      <File FileName="MasterSlave/Slave.cs" Line="7" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

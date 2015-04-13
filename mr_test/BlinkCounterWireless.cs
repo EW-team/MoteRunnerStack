@@ -9,7 +9,7 @@ namespace mr_test
 		private static Timer txTimer = new Timer();
 		private static Radio radio = new Radio();
 		private static uint counter = 0;
-		private static long SPAN_TICKS = Time.toTickSpan (Time.SECONDS, 1 + Util.rand16()%5);
+		private static long SPAN_TICKS = Time.toTickSpan (Time.MILLISECS, 100 + Util.rand8()%100);
 		private static long LISTEN_TICKS = Time.toTickSpan (Time.MILLISECS, 200);
 		
 		static BlinkCounterWireless ()
@@ -18,8 +18,11 @@ namespace mr_test
 			for (int i = 0; i < LED.getNumLEDs(); i++) {
 				LED.setState ((byte)i, (byte)0);
 			}
+			// radio.setChannel(CHANNEL);
+
 			radio.setRxHandler(onRxCallback);
-			txTimer.setAlarm (onTimeCallback, Time.currentTicks () + SPAN_TICKS);
+			
+			txTimer.setAlarm (onTimeCallback, SPAN_TICKS);
 		}
 		
 	    public static int onRxCallback (uint flags, byte[] data, uint len, uint info, long time) {
@@ -33,18 +36,18 @@ namespace mr_test
 					LED.setState((byte) r, (byte) j);
 				}
 				counter = Util.get16(data,0);
-				txTimer.setAlarm(onTimeCallback, Time.currentTicks() + SPAN_TICKS);
+				txTimer.setAlarm(onTimeCallback, SPAN_TICKS);
 				return 1;
 			}
 			else {
-				txTimer.setAlarm(onClockWakeUp, Time.currentTicks() + LISTEN_TICKS);
+				txTimer.setAlarm(onClockWakeUp, LISTEN_TICKS);
 				return 0;
 			}
 	    }
 		
 		public static byte[] getDataFrame(byte seqno, uint panid, uint dstaddr, uint srcaddr, uint payload){
 			byte[] frame = new byte[11];
-			frame[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ | Radio.FCF_NSPID;
+			frame[0] = Radio.FCF_BEACON | Radio.FCF_ACKRQ | Radio.FCF_NSPID;
 			frame[1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
 			frame[2] = seqno;
 			Util.set16(frame, 3, panid);
@@ -56,13 +59,17 @@ namespace mr_test
 		
 		public static void onTimeCallback(byte param, long time) {
 			byte[] pkt = getDataFrame(0,Radio.PAN_BROADCAST,Radio.SADDR_BROADCAST,radio.getShortAddr(),counter);
+			radio.open(Radio.DID,null,0,0);
 			radio.transmit(Device.ASAP,pkt,10,12,0);
-			radio.startRx(Device.ASAP,0, Time.currentTicks() + LISTEN_TICKS);
-			txTimer.setAlarm(onClockWakeUp, Time.currentTicks() + LISTEN_TICKS);
+			radio.startRx(Device.ASAP,0, LISTEN_TICKS);
+			radio.close();
+			txTimer.setAlarm(onClockWakeUp, LISTEN_TICKS);
 		}
 		
 		public static void onClockWakeUp(byte param, long time) {
-			radio.startRx(Device.ASAP,0, Time.currentTicks() + LISTEN_TICKS);	
+			radio.open(Radio.DID,null,0,0);
+			radio.startRx(Device.ASAP,0, LISTEN_TICKS);	
+			radio.close();
 		}
 	}
 }
