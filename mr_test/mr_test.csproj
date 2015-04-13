@@ -21,7 +21,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mrc --verbose --assembly=bcw-1.2 BlinkCounterWireless.cs -r:lrsc-mac-28.4" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="mrc --verbose --assembly=bcw-1.1 BlinkCounterWireless.cs" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -40,19 +40,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="saguaro-system-20.0">
+      <HintPath>..\..\..\..\opt\moterunner\gac\saguaro-system-20.0.dll</HintPath>
+    </Reference>
     <Reference Include="csharp-aux-2.0">
       <HintPath>..\..\..\..\opt\moterunner\lib\csharp-aux-2.0.dll</HintPath>
     </Reference>
-    <Reference Include="lrsc-mac-28.4">
-      <HintPath>..\..\..\..\opt\moterunner\gac\lrsc-mac-28.4.dll</HintPath>
+    <Reference Include="iris-system-11.1">
+      <HintPath>..\..\Desktop\moterunner-install-temp\moterunner\gac\iris-system-11.1.dll</HintPath>
     </Reference>
-    <Reference Include="saguaro-system-22.0">
-      <HintPath>..\..\..\..\opt\moterunner\gac\saguaro-system-22.0.dll</HintPath>
+    <Reference Include="dust-system-11.0">
+      <HintPath>..\..\Desktop\moterunner-install-temp\moterunner\gac\dust-system-11.0.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BlinkCounterWireless.cs" />
+    <Compile Include="MacPacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
