@@ -19,7 +19,7 @@ namespace mr_test
 				LED.setState ((byte)i, (byte)0);
 			}
 			// radio.setChannel(CHANNEL);
-
+			radio.setRxMode(Radio.RXMODE_PROMISCUOUS);
 			radio.setRxHandler(onRxCallback);
 			
 			txTimer.setAlarm (onTimeCallback, SPAN_TICKS);
