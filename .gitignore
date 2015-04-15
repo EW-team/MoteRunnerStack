@@ -9,7 +9,6 @@ bin/
 *.sln
 *.userprefs
 
-
 #Latex junk files
 *.aux
 *.glo
@@ -34,3 +33,7 @@ bin/
 *.mtc1
 *.out
 *.synctex.gz
+
+#Other
+*.pdf
+*.nav
