@@ -5,3 +5,32 @@ bin/
 *.sba
 *.sdx
 *.sxp
+# Mono prefs
+*.sln
+*.userprefs
+
+
+#Latex junk files
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
