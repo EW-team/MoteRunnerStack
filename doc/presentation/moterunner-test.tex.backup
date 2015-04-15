@@ -33,12 +33,62 @@
 \begin{frame}[fragile]
   \frametitle{Transmission \& Reception}
   \begin{itemize}
-    \item :
+    \item These operations require much attention:
     \begin{itemize}
-    	\item Radio interface IEEE 802.15.4 compliant
-    	\item Hopi
-    	\item A simulation environment IRIS friendly
-    	\item Many nice features (Debugger, Logger and so on)
+    	\item The radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
+    	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
     \end{itemize}
+    \item Each mote mantains 3 addresses:
+    \begin{itemize}
+    	\item a 16-bit PAN identifier
+    	\item a 64-bit extended address that uniquely identifies a mote
+    	\item a 16-bit short address that's application and protocol specific
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Transmission \& Reception}
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=\textwidth]{img/header.jpg}
+  	\caption{PDU header format}
+  \end{figure}
+  \begin{columns}
+  	\begin{column}{.52\textwidth}
+	    \begin{figure}
+	    	\includegraphics[width=\textwidth]{img/fcf.jpg}
+  		\caption{Frame Control Flags}
+	    \end{figure}
+  	\end{column}
+  	\hfill
+	\begin{column}{.45\textwidth}
+	    \begin{figure}
+	    	\includegraphics[width=\textwidth]{img/fca.jpg}
+  		\caption{Frame Control Address Flags}
+	    \end{figure}
+  	\end{column}
+  \end{columns}
+\end{frame}
+% 
+% \begin{frame}[fragile]
+%   \frametitle{Tx/Rx - Filtering}
+%   \begin{itemize}
+%     \item Possible packets are specified in FCF-Type field and are: BEACON, DATA, ACK and CMD.
+%     \item BEACONs are accepted only if the header field SRCPAN matches the mote's PANID or it's BROADCAST
+%     \item If FCA Flags specify an address then 
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tx/Rx Real and Real Time Constraints}
+  \begin{itemize}
+    \item It's possible to operate in many different ways with regars to real time constraints:
+    \begin{itemize}
+    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or exactly at the specified time or ...
+    	\item Radio requires a start operation and an end operation instant, MR manages autonomously Radio rampage so that the device is ready at the specified time and could turn back to sleep at the end of the operations
+    	\item If the device cannot be ready, it raises an even
+    \end{itemize}
+
   \end{itemize}
 \end{frame}

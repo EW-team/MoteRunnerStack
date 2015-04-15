@@ -1,17 +1,2 @@
-\frametitle {Transmission \& Reception}
-  \begin{figure}
-   \centering
-   \includegraphics[width=\textwidth]{img/header.jpg}
-   \caption{PDU Header format}
-  \end{figure}
-  \begin{columns}
-   \begin{column}{.52\textwidth}
-   \includegraphics[width=\textwidth]{img/fcf.jpg}
-   \caption{Frame Control Flags}
-   \end{column}
-\begin{column}{.45\textwidth}
-   \includegraphics[width=\textwidth]{img/fca.jpg}
-   \caption{Frame Control Address Flags}
-   \end{column}
-  \end{columns}
-
+\frametitle {Coming soon}
+  ...

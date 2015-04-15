@@ -33,40 +33,6 @@
 
 \input{moterunner}
 \input{moterunner-test}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
+% \input{MAC}
 
 \end{document}

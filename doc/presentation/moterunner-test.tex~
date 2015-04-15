@@ -52,7 +52,7 @@
   \begin{figure}
   	\centering
   	\includegraphics[width=\textwidth]{img/header.jpg}
-  	\caption{PDU Header format}
+  	\caption{PDU header format}
   \end{figure}
   \begin{columns}
   	\begin{column}{.52\textwidth}
@@ -69,16 +69,27 @@
 	    \end{figure}
   	\end{column}
   \end{columns}
-
 \end{frame}
+% 
+% \begin{frame}[fragile]
+%   \frametitle{Tx/Rx - Filtering}
+%   \begin{itemize}
+%     \item Possible packets are specified in FCF-Type field and are: BEACON, DATA, ACK and CMD.
+%     \item BEACONs are accepted only if the header field SRCPAN matches the mote's PANID or it's BROADCAST
+%     \item If FCA Flags specify an address then 
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Tx/Rx Real and Real Time Constraints}
   \begin{itemize}
-    \item It's possible to operate in many different ways with regars to real time constraints:
+    \item It's possible to operate in many different ways with regards to real time constraints:
     \begin{itemize}
-    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or exactly at the specified time or ...
-    	\item Radio requires a start operation and an end operation instant
+    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or EXACTLY at the specified time or ...
+    	\item Rx/Tx require a start operation time and an end one
+    	\item MR manages autonomously all warm up and ramp up to make the device ready at the specified time
+    	\item The device turn off at the end and an event is raised to be managed with delegation
+    	\item If the device cannot be ready at the specified time or an error occurs an error flag is setted up
     \end{itemize}
 
   \end{itemize}
