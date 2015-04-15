@@ -1,5 +1,3 @@
-using System;
-
 namespace MasterSlave
 {
 	using com.ibm.saguaro.system;
@@ -12,13 +10,14 @@ namespace MasterSlave
 		internal static uint slaveSADDR = 0x0C3E;
 		internal static uint masterSADDR = 0x303E;
 		
+		internal static ADC adc = new ADC();
 		internal static Radio radio = new Radio();
 		internal static uint count = 0;
 		internal static uint txCount = 0;
 		internal static uint txFailedCount = 0;
 		internal static uint txLateCount = 0;
 		internal static Timer timer = new Timer();
-		internal static long span_TICKS = Time.toTickSpan (Time.MILLISECS, 200);
+		internal static long span_TICKS = Time.toTickSpan (Time.MILLISECS, 400);
 		internal static byte[] buf;
 		internal static uint numLeds = LED.getNumLEDs();
 		
@@ -32,38 +31,53 @@ namespace MasterSlave
 			radio.setShortAddr(masterSADDR);
 			
 			radio.setTxHandler(onTxEvent);
-            buf = new byte[13];
+			radio.setRxHandler(onRxEvent);
+			
+            buf = new byte[11];
             // set up the beacon mesasge
-            buf[0] = Radio.FCF_DATA;
-            buf[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
-            buf[2] = (byte)(count+1); // sequence number
-			Util.set16(buf, 3, panid);
-            Util.set16(buf, 5, slaveSADDR);
-			Util.set16(buf, 7, panid);
-			Util.set16(buf, 9, masterSADDR);
+            buf[0] = Radio.FCF_DATA | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
+            buf[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
+			buf[2] = 1;  // sequence number
+            Util.set16(buf, 3, Radio.PAN_BROADCAST); // setting the destination pan address to all PANs
+			Util.set16(buf, 5, slaveSADDR); // setting the destination mote address to slave one
+			Util.set16 (buf, 7, masterSADDR); // setting the source address
 
-			timer.setCallback(onTimerAlarm);
-			timer.setAlarmBySpan(span_TICKS);
+			timer.setCallback(onTimerAlarm); // timer callback to transmit and increment the counter
+			timer.setAlarmBySpan(span_TICKS); // programming the timer to raise callback
 		}
 		
 		static int onTxEvent (uint flags, byte[] data, uint len, uint info, long time) {
-			if(flags == Radio.FLAG_FAILED)
+			if(flags == Radio.FLAG_FAILED) // if the transmission's failed
 				txFailedCount ++;
-			else if(flags == Radio.FLAG_WASLATE)
+			else if(flags == Radio.FLAG_WASLATE) // if the transmission's late
 				txLateCount ++;			
-			else
+			else // if the transmission's succeeded
+			{
 				txCount ++;
+			}
 			return 1;
 		}
 		
+		static int onRxEvent (uint flags, byte[] data, uint len, uint info, long time) {
+			if (flags == Device.FLAG_FAILED) { // reception failed
+				Logger.appendUInt(flags);
+				Logger.flush(Mote.INFO);
+			}	
+			else if (data != null) { // received something
+				return 1;
+			}
+			else // end reception or Timed
+				timer.setAlarmBySpan(span_TICKS); // reset timer to raise callback again
+			return 0;
+		}
+		
 		static void onTimerAlarm(byte param, long time){
-			Util.set16 (buf, 11, count);
-			Logger.appendUInt(count);
-			Logger.flush(Mote.DEBUG);
+			Util.set16(buf, 9, count); // set pdu as counter value: 2 byte
 //			radio.transmit(Radio.ASAP, buf, 0, 8, Time.currentTicks() + (span_TICKS >> 1));
-			radio.transmit(Radio.EXACT, buf, 0, 12, Time.currentTicks() + (span_TICKS >> 1));
+			radio.transmit(Radio.EXACT, buf, 0, 12, Time.currentTicks() + (span_TICKS)); // transmit at the specified Time
 			count += 1;
-			timer.setAlarmBySpan(span_TICKS);
+//			count = count % 10;
+			timer.setAlarmBySpan(span_TICKS); // reset timer to raise callback again
 		}
 	}
 }

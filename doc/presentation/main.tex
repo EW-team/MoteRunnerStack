@@ -1,0 +1,40 @@
+\documentclass[10pt, compress]{beamer}
+\usetheme{m}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{minted}
+
+\usepackage[utf8]{inputenc}
+\usepackage{default}
+
+\title{A modern beamer theme}
+\subtitle{}
+\date{\today}
+\author{Matthias Vogelgesang}
+\institute{Institute or miscellaneous information}
+
+\begin{document}
+  
+  \maketitle
+  
+  \section{\scshape Introduction}
+    \begin{frame}[fragile]
+      \frametitle{mtheme}
+
+      The \emph{mtheme} is a Beamer theme with minimal visual noise inspired by the
+      \href{https://github.com/hsrmbeamertheme/hsrmbeamertheme}{\textsc{hsrm} Beamer
+      Theme} by Benjamin Weiss.
+
+      Enable the theme by loading
+
+      \begin{minted}[fontsize=\small]{latex}
+	\documentclass{beamer}
+	\usetheme{m}
+      \end{minted}
+
+      Note, that you have to have Mozilla's \emph{Fira Sans} font and XeTeX
+      installed to enjoy this wonderful typography.
+    \end{frame}
+
+\end{document}

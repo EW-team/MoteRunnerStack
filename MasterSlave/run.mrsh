@@ -1,12 +1,8 @@
 # create two motes
-mote-create --pos 10,1
-mote-create --pos 11,3
+mote-create 2
 
 # load the master-slave application
-a1 msetup-setup -v slave-1.0
-a0 msetup-setup -v master-1.0
+a1 msetup-setup -v slave-1.1
+a0 msetup-setup -v master-1.1
 
-
-mrshell-widget leds
-
-moma-list
+ev-show -c 50

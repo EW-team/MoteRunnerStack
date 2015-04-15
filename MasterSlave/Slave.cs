@@ -1,5 +1,3 @@
-using System;
-
 namespace MasterSlave
 {
 	using com.ibm.saguaro.system;
@@ -17,36 +15,47 @@ namespace MasterSlave
 		internal static Timer timer = new Timer();
 		internal static long span_TICKS;
 		internal static uint numLeds = LED.getNumLEDs();
-		internal static long rx_TICKS = Time.toTickSpan (Time.MILLISECS, 200);
+		internal static long rx_TICKS = Time.toTickSpan (Time.MILLISECS, 500);
 		
-		public Slave ()
+		static Slave ()
 		{
-			// set all leds off
-			setLeds();
+			
+			setLeds(); // set all leds off since count is 0
+			
+			// prepare the radio
 			radio.open(Radio.DID,null,0,0);
 			radio.setChannel(channel);
-			radio.setPanId(panid,true);
+			radio.setPanId(panid,false);
 			radio.setShortAddr(slaveSADDR);
 			
+			Logger.appendUInt(panid);
+			Logger.flush(Mote.INFO);
+			
 			radio.setRxHandler(onMessageRx);
-			radio.startRx(Radio.TIMED, Time.currentTicks() + (rx_TICKS >> 1), Time.currentTicks()+(rx_TICKS));
+			receive(Radio.TIMED);
 		}
 		
 		static int onMessageRx(uint flags, byte[] data, uint len, uint info, long time) {
-			if (data != null) {
+			if (flags == Device.FLAG_FAILED) { // reception failed
+				Logger.appendUInt(flags);
+				Logger.flush(Mote.INFO);
+			}	
+			else if (data != null) { // received something
 				byte[] msg = new byte[2];
-				uint i = 11;
+				uint i = 7;
 				msg[0] = data[i];
 				msg[1] = data[i+1];
-				Util.get16(msg,count);
-				Logger.appendUInt(count);
-				Logger.flush(Mote.INFO);
+				Util.get16(msg,count);			
 				setLeds();
+				return 1;
 			}
-			else
-				radio.startRx(Radio.TIMED, Time.currentTicks() + rx_TICKS-(rx_TICKS >> 1),
-			              Time.currentTicks()+(rx_TICKS + rx_TICKS >> 1));
-			return 1;
+			else // end reception or Timed
+				receive(Radio.TIMED);
+			return 0;
+		}
+		
+		static void receive(uint mode) {
+			radio.startRx(mode, Time.currentTicks(), Time.currentTicks()+(5*rx_TICKS));
 		}
 		
 		static void setLeds () {
