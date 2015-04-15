@@ -102,6 +102,26 @@
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{IBM LRSC}
+    	\begin{itemize}
+	  \item The Long Range Signaling and Control (LRSC) system is a network infrastructure which relies on LoRa\texttrademark, modulation technology developed by Semtech for wireless bidirectional communication over distances of up to 15 km in semi-rural environments and up to five km in dense urban environments.
+	  \item All communication is generally bi-directional, although uplink communication from end devices to the network server is strongly favored, and is based on LoRa.
+    	\end{itemize}
+   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LRSC network simulation}
+    	The Mote Runner SDK ships with:
+    	\begin{itemize}
+	  \item LoRa Mac library providing an API for accessing a LRSC network. 
+	  \item LIP shell interface to control the Mac from the Mote Runner shell MRSH.
+    	\end{itemize}
+  The main constraint for our intial purpose depends on the fact that the end devices cannot communicate directly. Any message should be sent over the LRSC network.
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{LoRa\texttrademark}
   \begin{columns}
     \begin{column}{.48\linewidth}
@@ -130,7 +150,7 @@
     \item LoRa\texttrademark Technology
     \begin{itemize}
       \item LoRaWAN pledeges to extend the radio range by 10x while using only one third of the power used by competing solutions 
-      \item Star (of stars?) topology
+      \item Star (of stars) topology
       \item Gateways relay messages between end-devices and a central network server
       \item Communication between end-devices and gateways is spread out on different frequency channels and data rates.
       \item Data rates: 0.3 - 50 kbps
