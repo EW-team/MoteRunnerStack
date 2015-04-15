@@ -103,7 +103,8 @@
       \begin{column}[t]{0.48\linewidth}
 	\vspace{-2em}
 	\begin{flushright}
-	  {\usebeamerfont{author}\usebeamercolor[fg]{author}Professors:\\Fortunato Santucci\\Luigi Pomante\par}
+	  Professors:\\
+	  {\usebeamerfont{author}\usebeamercolor[fg]{author}Fortunato Santucci\\Luigi Pomante\par}
 	\end{flushright}
       \end{column}
     \end{columns}

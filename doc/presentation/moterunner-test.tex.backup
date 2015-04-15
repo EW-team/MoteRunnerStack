@@ -31,9 +31,9 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Transmission}
+  \frametitle{Transmission \& Reception}
   \begin{itemize}
-    \item MR v.13 offers:
+    \item :
     \begin{itemize}
     	\item Radio interface IEEE 802.15.4 compliant
     	\item Hopi

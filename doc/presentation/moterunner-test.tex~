@@ -31,14 +31,15 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Transmission \& Rece}
+  \frametitle{Transmission \& Reception}
   \begin{itemize}
-    \item MR v.13 offers:
+    \item These operations require much attention:
     \begin{itemize}
-    	\item Radio interface IEEE 802.15.4 compliant
-    	\item Hopi
-    	\item A simulation environment IRIS friendly
-    	\item Many nice features (Debugger, Logger and so on)
+    	\item The radio permits to transmit every type of pdu, but it's possible to receive only 802.15.4 well formed packets
+    	\item It's also possible to receive in promiscuous mode to sniff for every packet
+    	\item However it's suitable to adopt IEEE 802.15.4 packets to reduce interferences in reception
+    	\item Radio 
     \end{itemize}
+    
   \end{itemize}
 \end{frame}
