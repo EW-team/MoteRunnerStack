@@ -1,7 +1,44 @@
 \section{Testing Mote Runner}
 \begin{frame}[fragile]
-  \frametitle{Introduction}
+  \frametitle{Problems}
   \begin{itemize}
-    \item 
+    \item MR v.13 offers:
+    \begin{itemize}
+    	\item Radio interface IEEE 802.15.4 compliant
+    	\item Hopi
+    	\item A simulation environment IRIS friendly
+    	\item Many nice features (Debugger, Logger and so on)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Programming the Radio}
+  \begin{itemize}
+    \item com.ibm.saguaro.system.Radio
+    \begin{itemize}
+    	\item This is a generic class in the IBM saguaro system to use the device radio
+    	\item It offers a low level API with the following functionality:
+    	\begin{itemize}
+	  \item open: opens the radio, once opened no other assembly can use it
+	  \item close: releases the radio so that others can use it
+	  \item setter and getters for channel and network parameters (addresses, panid...)
+	  \item startReceive: listens the channel (in one of the many receiption mode)
+	  \item transmit: begin to transmit a pdu
+    	\end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Transmission}
+  \begin{itemize}
+    \item MR v.13 offers:
+    \begin{itemize}
+    	\item Radio interface IEEE 802.15.4 compliant
+    	\item Hopi
+    	\item A simulation environment IRIS friendly
+    	\item Many nice features (Debugger, Logger and so on)
+    \end{itemize}
   \end{itemize}
 \end{frame}
