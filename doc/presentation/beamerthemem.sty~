@@ -311,7 +311,7 @@
 %{{{ Styles
 
 \pgfplotsset{
-  compat=newest,
+  compat=1.8,
   mbaseplot/.style={
     legend style={
       draw=none,
