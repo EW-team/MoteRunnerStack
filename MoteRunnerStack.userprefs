@@ -2,13 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MasterSlave/Master.cs">
     <Files>
-      <File FileName="MasterSlave/Master.cs" Line="63" Column="23" />
-      <File FileName="MasterSlave/Slave.cs" Line="53" Column="24" />
-      <File FileName="MasterSlave/run.mrsh" Line="8" Column="1" />
-      <File FileName="app/app/Rx.cs" Line="161" Column="53" />
-      <File FileName="app/app/Tx.cs" Line="26" Column="25" />
-      <File FileName="../Downloads/test.cs" Line="45" Column="30" />
-      <File FileName="mr_test/BlinkCounterWireless.cs" Line="50" Column="68" />
+      <File FileName="MasterSlave/Master.cs" Line="80" Column="25" />
+      <File FileName="MasterSlave/Slave.cs" Line="58" Column="79" />
+      <File FileName="MasterSlave/run.mrsh" Line="8" Column="14" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -91,24 +91,21 @@
     \vspace*{3mm}
     {\centering\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}%
     \fi%
-    \vspace{2em}
+    \vspace{1em}
     \ifx\insertauthor\@empty%
     \else%
-    \begin{columns}
-      \begin{column}[t]{0.48\linewidth}
-	Students:\\
+    \fboxsep=none
+    \noindent\fbox{%
+      \begin{minipage}[t]{0.48\linewidth}
 	{\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}
-      \end{column}%
-      \hfill%
-      \begin{column}[t]{0.48\linewidth}
-	\vspace{-2em}
-	\begin{flushright}
-	  Professors:\\
-	  {\usebeamerfont{author}\usebeamercolor[fg]{author}Fortunato Santucci\\Luigi Pomante\par}
-	\end{flushright}
-      \end{column}
-    \end{columns}
-    \vspace*{3em}%
+      \end{minipage}}%
+    \hfill%
+    \fbox{%
+      \begin{minipage}[t]{0.48\linewidth}
+	{\usebeamerfont{author}\usebeamercolor[fg]{author}Fortunato Santucci\\Luigi Pomante\par}
+      \end{minipage}
+    }
+    \vspace*{1em}%
     \fi%
     \ifx\insertdate\@empty%
     \else%

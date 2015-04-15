@@ -1,0 +1,36 @@
+\documentclass[10pt, compress]{beamer}
+\usetheme{m}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{minted}
+
+\usepgfplotslibrary{dateplot}
+
+\usemintedstyle{trac}
+
+\title{Realization of a network stack that supports TAKS+WIDS on WSN with Mote Runner}
+\subtitle{}
+\date{\today}
+\author{Andrea Salini - 231413\\Lorenzo Di Giuseppe - 227515\\Matteo Gentile - 230997}
+\institute{DISIM - Università degli Studi dell’Aquila}
+
+\begin{document}
+
+  \maketitle
+  
+  \begin{frame}[fragile]
+  \frametitle{Introduction}
+
+  
+
+  \begin{minted}[fontsize=\small]{latex}
+    \documentclass{beamer}
+    \usetheme{m}
+  \end{minted}
+
+  Note, that you have to have Mozilla's \emph{Fira Sans} font and XeTeX
+  installed to enjoy this wonderful typography.
+\end{frame}
+
+\end{document}
