@@ -89,7 +89,7 @@
     	\item Rx/Tx require a start operation time and an end one
     	\item MR manages autonomously all warm up and ramp up to make the device ready at the specified time
     	\item The device turn off at the end and an event is raised to be managed with delegation
-    	\item If the device cannot be ready at the specified time or an error occurs an error flag is setted up
+    	\item If the device cannot be ready at the specified time or an error occurs an error reports this status
     \end{itemize}
 
   \end{itemize}
