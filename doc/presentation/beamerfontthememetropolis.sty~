@@ -13,8 +13,10 @@
 
 
 \defaultfontfeatures{Mapping=tex-text}
-\setsansfont[BoldFont={Fira Sans}]{Fira Sans Light}
-\setmonofont{Fira Mono}
+% \setsansfont[BoldFont={Fira Sans}]{Fira Sans Light}
+% \setmonofont{Fira Mono}
+\setsansfont[BoldFont={Georgia}]{Helvetica}
+\setmonofont{Palatino}
 \newfontfamily\ExtraLight{Fira Sans ExtraLight}
 \newfontfamily\Light{Fira Sans Light}
 \newfontfamily\Book{Fira Sans}
@@ -25,6 +27,7 @@
 \setbeamerfont{title}{family=\Book, size=\Large}
 \setbeamerfont{author}{family=\ExtraLight, size=\small}
 \setbeamerfont{date}{family=\ExtraLight, size=\small}
+\setbeamerfont{institute}{family=\ExtraLight, size=\small}
 
 \setbeamerfont{section title}{family=\Book, size=\Large}
 
