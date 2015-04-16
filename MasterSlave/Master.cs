@@ -23,7 +23,6 @@ namespace MasterSlave
 		
 		static Master ()
 		{
-			
 			// open the radio for sending LED status
             radio.open(Radio.DID,null,0,0);
 			radio.setChannel(channel);
@@ -44,6 +43,7 @@ namespace MasterSlave
 
 			timer.setCallback(onTimerAlarm); // timer callback to transmit and increment the counter
 			timer.setAlarmBySpan(span_TICKS); // programming the timer to raise callback
+			blinkLed();
 		}
 		
 		static int onTxEvent (uint flags, byte[] data, uint len, uint info, long time) {
@@ -76,8 +76,18 @@ namespace MasterSlave
 //			radio.transmit(Radio.ASAP, buf, 0, 8, Time.currentTicks() + (span_TICKS >> 1));
 			radio.transmit(Radio.EXACT, buf, 0, 12, Time.currentTicks() + (span_TICKS)); // transmit at the specified Time
 			count += 1;
+			blinkLed();
 //			count = count % 10;
 			timer.setAlarmBySpan(span_TICKS); // reset timer to raise callback again
+		}
+		
+		static void blinkLed() {
+			for(int i = 0; i < LED.getNumLEDs(); i++) {
+				if(LED.getState((byte)i) == 1)
+					LED.setState((byte)i, (byte)0);
+				else
+					LED.setState((byte)i, (byte)1);
+			}
 		}
 	}
 }
