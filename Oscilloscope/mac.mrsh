@@ -1,0 +1,5 @@
+#Create mote
+mote-create
+
+#load assembly
+msetup-setup mac-1.0
