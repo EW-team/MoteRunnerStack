@@ -31,7 +31,9 @@ namespace Oscilloscope
 //#if COORDINATOR
 		// beacon settings
 		const uint nFrame = 16;
-		internal static byte[] beacon = new byte[127];
+		internal static uint rCount = 0;
+		
+		internal static byte[] beacon = new byte[32];
 		internal static uint bSeq = 0;
 		
 		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 384); // Beacon slot superframe duration
@@ -60,9 +62,8 @@ namespace Oscilloscope
 			beacon[0] = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
             beacon[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
 			Util.set16(beacon, 2, bSeq);  // sequence number
-            Util.set16(beacon, 4, radio.getPanId()); // setting the destination pan address to all PANs
-			Util.set16(beacon, 6, Radio.SADDR_BROADCAST); // setting the destination mote address to slave one
-			Util.set16 (beacon, 8, radio.getShortAddr());
+            Util.set16(beacon, 4, Radio.SADDR_BROADCAST); // setting broadcast receiver address
+			Util.set16(beacon, 6,radio.getShortAddr()); // set PAN coordinator address
 			
 			radio.setTxHandler(onTxEvent);
 			radio.setRxHandler(onRxEvent);
@@ -83,7 +84,8 @@ namespace Oscilloscope
 		}
 		
 		static void sendBeacon(byte param, long time) {
-			radio.transmit(Radio.TIMED,beacon,0,127,Time.currentTicks()+sInterval);
+			rCount = 1;
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,beacon,0,32,Time.currentTicks()+sInterval);
 			bSeq += 1;
 		}
 		
@@ -97,17 +99,18 @@ namespace Oscilloscope
 			if(flags == Radio.FLAG_FAILED) { // if the transmission's failed
 				Logger.appendUInt(Radio.FLAG_FAILED);
 				Logger.flush(Mote.INFO);
-				return (int)Radio.FLAG_FAILED;
+				return 0;
 			}
 			else if(flags == Radio.FLAG_WASLATE) { // if the transmission's late
 				Logger.appendUInt(Radio.FLAG_WASLATE);
 				Logger.flush(Mote.INFO);
-				return (int)Radio.FLAG_WASLATE;
+				return 0;
 			}
 			else { // if the transmission's succeeded
-				
+				bTimer.cancelAlarm();
+				bTimer.setAlarmBySpan(2 * bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
 				radio.startRx(Radio.TIMED,time, time + sInterval);
-				return -1;
+				return 1;
 			}
 		}
 		
@@ -119,8 +122,10 @@ namespace Oscilloscope
 					LED.setState((byte)0, (byte)0);
 				return 0;
 			}
-			if(flags == Radio.FLAG_TIMED || data == null)
+			if(rCount < 16) {
+				rCount ++;
 				radio.startRx(Radio.TIMED,time, time + sInterval);
+			}
 			return -1;
 		}
 		
