@@ -25,7 +25,7 @@ namespace Oscilloscope
 		
 		internal static Radio radio = new Radio();
 		const uint rChannel = 0x01;
-		const uint panId = 0x010D;
+		const uint panId = 0x0022;
 		
 		// internal static bool sec = false;
 //#if COORDINATOR
@@ -37,7 +37,7 @@ namespace Oscilloscope
 		internal static uint bSeq = 0;
 		
 		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 384); // Beacon slot superframe duration
-		internal static long bInterval = nFrame * sInterval; // Beacon Interval
+		internal static long bInterval = 2 * nFrame * sInterval; // Beacon Interval
 		
 		internal static uint nGTS = 0; // number of Guaranted Time Slotss
 		internal static Timer bTimer = new Timer();
@@ -61,18 +61,15 @@ namespace Oscilloscope
 			
 			beacon[0] = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
             beacon[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
-			Util.set16(beacon, 2, bSeq);  // sequence number
             Util.set16(beacon, 4, Radio.SADDR_BROADCAST); // setting broadcast receiver address
 			Util.set16(beacon, 6,radio.getShortAddr()); // set PAN coordinator address
 			
 			radio.setTxHandler(onTxEvent);
 			radio.setRxHandler(onRxEvent);
+			radio.setEventHandler(onRadioEvent);
 			
-			bTimer.setCallback(sendBeacon);
-			sTimer.setCallback(endSuperframe);
-			
+			bTimer.setCallback(sendBeacon);			
 			bTimer.setAlarmBySpan(sInterval);
-			sTimer.setAlarmBySpan(16*sInterval);
 //#endif
 		}
 		
@@ -85,14 +82,9 @@ namespace Oscilloscope
 		
 		static void sendBeacon(byte param, long time) {
 			rCount = 1;
-			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,beacon,0,32,Time.currentTicks()+sInterval);
+			Util.set16(beacon, 2, bSeq);  // sequence number
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,beacon,0,32,time+sInterval);
 			bSeq += 1;
-		}
-		
-		static void endSuperframe(byte param, long time) {
-			bTimer.cancelAlarm();
-			radio.stopRx();
-			bTimer.setAlarmBySpan(bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
 		}
 		
 		static int onTxEvent (uint flags, byte[] data, uint len, uint info, long time) {
@@ -107,10 +99,11 @@ namespace Oscilloscope
 				return 0;
 			}
 			else { // if the transmission's succeeded
-				bTimer.cancelAlarm();
-				bTimer.setAlarmBySpan(2 * bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
-				radio.startRx(Radio.TIMED,time, time + sInterval);
-				return 1;
+//				bTimer.cancelAlarm();
+				bTimer.setAlarmBySpan(bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
+				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
+				rCount ++;
+				return 0;
 			}
 		}
 		
@@ -123,13 +116,17 @@ namespace Oscilloscope
 				return 0;
 			}
 			if(rCount < 16) {
+				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
 				rCount ++;
-				radio.startRx(Radio.TIMED,time, time + sInterval);
 			}
-			return -1;
+			return 0;
 		}
 		
-		
+		static int onRadioEvent (uint flags, byte[] data, uint len, uint info, long time) {
+			Logger.appendUInt(flags);
+			Logger.flush(Mote.INFO);
+			return 0;
+		}
 		
 		// procedures to handle LIP in MAC LAYER
 //		internal static int onSysEvent(int type, int info){
