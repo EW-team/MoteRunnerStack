@@ -1,13 +1,13 @@
 namespace Oscilloscope
 {
 	using com.ibm.saguaro.system;
-//#if IRIS
-//	using com.ibm.iris;
-//#elif AVRRAVEN
-//	using com.ibm.avrraven;
-//#elif DUST
-//	using com.ibm.dust;
-//#endif
+#if IRIS
+	using com.ibm.iris;
+#elif AVRRAVEN
+	using com.ibm.avrraven;
+#elif DUST
+	using com.ibm.dust;
+#endif
 	
 #if DEBUG
 	using com.ibm.saguaro.logger;
@@ -37,7 +37,7 @@ namespace Oscilloscope
 		// beacon settings
 		
 		internal static uint rCount = 0; // counter of transmitted slots
-		internal static uint bOrder = 8; // beacon order
+		internal static uint bOrder = 10; // beacon order
 		internal static uint sOrder = 7; // superframe order
 		internal static byte[] beacon = new byte[15]; // beacon header + payload
 		internal static uint bSeq = 0; // sequence of beacon
@@ -45,7 +45,7 @@ namespace Oscilloscope
 		internal static uint gtsCount = 0; // GTS allocated counter
 		internal static uint gtsEnabled = 0; // GTS allocated counter
 		
-		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^sOrder); // 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
+		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 3 * 2^sOrder); // 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
 		internal static long bInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^bOrder); // Beacon Interval
 		
 		internal static uint nGTS = 0; // number of Guaranted Time Slotss
@@ -62,7 +62,9 @@ namespace Oscilloscope
 //	    	LIP.open(PORT);
 			
 //#if COORDINATOR
-						
+			if(bInterval < sInterval)
+				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
+			
 			radio.open(Radio.DID,null,0,0); // ricordare di chiudere la radio quando termina il beacon interval
 			radio.setPanId(panId,true);
 			radio.setChannel((byte)rChannel);
@@ -127,8 +129,8 @@ namespace Oscilloscope
 				return 0;
 			}
 			else { // if the transmission's succeeded
-//				bTimer.cancelAlarm();
-				bTimer.setAlarmBySpan(bInterval-sInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
+				bTimer.cancelAlarm();
+				bTimer.setAlarmBySpan(bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
 				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
 				rCount ++;
 				return 0;
@@ -143,7 +145,8 @@ namespace Oscilloscope
 					LED.setState((byte)0, (byte)0);
 				return 0;
 			}
-			if(rCount < nFrame) {
+			if(rCount <= nFrame) {
+				blink();
 				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
 				rCount ++;
 			}
@@ -154,6 +157,15 @@ namespace Oscilloscope
 			Logger.appendUInt(flags);
 			Logger.flush(Mote.INFO);
 			return 0;
+		}
+		
+		static void blink() {
+			for(uint i = 0 ; i < LED.getNumLEDs() ; i++){
+				if (LED.getState((byte)i) == 1)
+					LED.setState((byte)i, (byte)0);
+				else
+					LED.setState((byte)i, (byte)1);
+			}
 		}
 		
 		// procedures to handle LIP in MAC LAYER

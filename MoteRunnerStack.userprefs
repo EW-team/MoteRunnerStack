@@ -5,7 +5,7 @@
       <File FileName="MasterSlave/Master.cs" Line="49" Column="24" />
       <File FileName="MasterSlave/Slave.cs" Line="58" Column="79" />
       <File FileName="MasterSlave/run.mrsh" Line="8" Column="14" />
-      <File FileName="Oscilloscope/Mac.cs" Line="105" Column="13" />
+      <File FileName="Oscilloscope/Mac.cs" Line="4" Column="1" />
       <File FileName="Oscilloscope/Oscilloscope.cs" Line="7" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
