@@ -15,6 +15,12 @@ namespace Oscilloscope
 	
 	public class Mac
 	{
+		// constant
+		const uint rChannel = 0x01; // n. of radio channel
+		const uint panId = 0x0022; // id of application PAN
+		const uint nFrame = 15; // n. of time slots in superframe
+		const uint symRate = 60; // symbol rate
+		
 		
 		// w\lip setup
 //		internal static uint lip;
@@ -24,24 +30,26 @@ namespace Oscilloscope
 //		internal const byte PORT = 111;
 		
 		internal static Radio radio = new Radio();
-		const uint rChannel = 0x01;
-		const uint panId = 0x0022;
+		
 		
 		// internal static bool sec = false;
 //#if COORDINATOR
 		// beacon settings
-		const uint nFrame = 16;
-		internal static uint rCount = 0;
 		
-		internal static byte[] beacon = new byte[32];
-		internal static uint bSeq = 0;
+		internal static uint rCount = 0; // counter of transmitted slots
+		internal static uint bOrder = 8; // beacon order
+		internal static uint sOrder = 7; // superframe order
+		internal static byte[] beacon = new byte[15]; // beacon header + payload
+		internal static uint bSeq = 0; // sequence of beacon
+		internal static uint associationPermitted = 1; // permette di far associare nodi al PANc
+		internal static uint gtsCount = 0; // GTS allocated counter
+		internal static uint gtsEnabled = 0; // GTS allocated counter
 		
-		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 384); // Beacon slot superframe duration
-		internal static long bInterval = 2 * nFrame * sInterval; // Beacon Interval
+		internal static long sInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^sOrder); // 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
+		internal static long bInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^bOrder); // Beacon Interval
 		
 		internal static uint nGTS = 0; // number of Guaranted Time Slotss
 		internal static Timer bTimer = new Timer();
-		internal static Timer sTimer = new Timer(); // sleep timer
 //#endif
 		
 		static Mac ()
@@ -54,7 +62,7 @@ namespace Oscilloscope
 //	    	LIP.open(PORT);
 			
 //#if COORDINATOR
-			
+						
 			radio.open(Radio.DID,null,0,0); // ricordare di chiudere la radio quando termina il beacon interval
 			radio.setPanId(panId,true);
 			radio.setChannel((byte)rChannel);
@@ -73,17 +81,37 @@ namespace Oscilloscope
 //#endif
 		}
 		
-		static void setBeaconInterval(long bInt) {
-			if (bInt < nFrame * sInterval)
-				bInterval = bInt;
+		static void setSuperframeOrder(uint sOrd) {
+			if (sOrd <= 15 && sOrd < bOrder) {
+				sOrder = sOrd;
+				sInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^sOrder);
+			}
 			else
+				ArgumentException.throwIt(ArgumentException.TOO_BIG);
+		}
+		
+		static void setBeaconOrder(uint bOrd) {
+			if (bOrd < 15 && bOrd > sOrder) {
+				bOrder = bOrd;
+				bInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^bOrder); 
+			}
+			else if (bOrd == 15 && bOrd > sOrder) {
+				bOrder = bOrd;
+				bInterval = 0; // il beacon può essere trasmesso solo su richiesta
+			}
+			else if (bOrd < sOrder)
 				ArgumentException.throwIt(ArgumentException.TOO_SMALL);
+			else
+				ArgumentException.throwIt(ArgumentException.TOO_BIG);
 		}
 		
 		static void sendBeacon(byte param, long time) {
 			rCount = 1;
 			Util.set16(beacon, 2, bSeq);  // sequence number
-			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,beacon,0,32,time+sInterval);
+			uint tmp = bOrder << 11 | sOrder << 7 | nFrame << 3 | 1 << 1 | associationPermitted;
+			Util.set16(beacon,10,tmp);
+			Util.set16(beacon,12,gtsCount<<5|gtsEnabled);
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,beacon,0,15,time+sInterval);
 			bSeq += 1;
 		}
 		
@@ -100,7 +128,7 @@ namespace Oscilloscope
 			}
 			else { // if the transmission's succeeded
 //				bTimer.cancelAlarm();
-				bTimer.setAlarmBySpan(bInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
+				bTimer.setAlarmBySpan(bInterval-sInterval); // si aspetta l'intervallo di beacon per ritrasmettere il beacon
 				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
 				rCount ++;
 				return 0;
@@ -115,7 +143,7 @@ namespace Oscilloscope
 					LED.setState((byte)0, (byte)0);
 				return 0;
 			}
-			if(rCount < 16) {
+			if(rCount < nFrame) {
 				radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,time, time + sInterval);
 				rCount ++;
 			}
@@ -137,6 +165,7 @@ namespace Oscilloscope
 //		internal static int onLIPEvent(uint flags, byte[] data, uint len){
 //			return -1;
 //		}
+		
 	}
 }
 
