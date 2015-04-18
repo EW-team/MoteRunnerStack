@@ -21,8 +21,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../Desktop/moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-1.1 Mac.cs Security.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../Desktop/moterunner/linux64/bin/mrgac --add mac-1.1.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-1.1 Mac.cs Security.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-1.1.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

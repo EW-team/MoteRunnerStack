@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/Mac.cs">
     <Files>
-      <File FileName="Oscilloscope/Mac.cs" Line="50" Column="1" />
+      <File FileName="Oscilloscope/Mac.cs" Line="83" Column="4" />
       <File FileName="Oscilloscope/Oscilloscope.cs" Line="7" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
