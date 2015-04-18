@@ -5,6 +5,7 @@ namespace Mac
 	using com.ibm.saguaro.system;
 	
 	public delegate int MacCallback(uint flags, byte[] data, uint len, uint info, long time);
+	public delegate int MacScanCallback(uint flags, byte[] data, uint chn, uint info, long time);
 		
 	public class Mac
 	{
@@ -23,6 +24,7 @@ namespace Mac
 		private MacCallback rxHandler;
 		private MacCallback txHandler;
 		private MacCallback eventHandler;
+		private MacScanCallback scanHandler;
 		
 		
 		private bool scanContinue = false;
@@ -65,6 +67,16 @@ namespace Mac
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
 		}
 		
+		public int onScanEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			if(flags == Radio.RXMODE_ED) {
+				
+			}				
+			else if(flags == Radio.RXMODE_NORMAL){
+				
+			}
+			return 0;
+		}
+		
 		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			
 			return 0;
@@ -78,6 +90,10 @@ namespace Mac
 		public int onEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			
 			return 0;
+		}
+		
+		public void setScanHandler(MacScanCallback callback) {
+			
 		}
 		
 		public void setTxHandler(MacCallback callback) {
@@ -117,28 +133,35 @@ namespace Mac
 		private void scanEd(uint channel) {
 			this.scanContinue = true;
 			this.radio.open(Radio.DID,null,0,0);
+			this.radio.setRxHandler(onScanEvent);
+			long aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^14);
 			if(channel == 0) {
 				for(int i=1; i <=27 && this.scanContinue; i++){
-					this.radio.setChannel((byte)i);
-					
+					this.radio.setChannel(Radio.std2chnl(channel));
+					this.radio.startRx(Radio.TIMED|Radio.RXMODE_ED,Time.currentTicks(),Time.currentTicks()+aScanInterval);
 				}
 			}
 			else {
-				
+				this.radio.setChannel(Radio.std2chnl(channel));
+				this.radio.startRx(Radio.TIMED|Radio.RXMODE_ED,Time.currentTicks(),Time.currentTicks()+aScanInterval);
 			}
 		}
 		
 		private void scanPassive(uint channel) {
 			this.scanContinue = true;
+			this.radio.open(Radio.DID,null,0,0);
+			this.radio.setRxHandler(onScanEvent);
+			long aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nFrame+1) * 2^14);
 			if(channel == 0) {
-				for(int i=0; i <=27 && this.scanContinue; i++){
-					
+				for(int i=1; i <=27 && this.scanContinue; i++){
+					this.radio.setChannel(Radio.std2chnl(channel));
+					this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,Time.currentTicks(),Time.currentTicks()+aScanInterval);
 				}
 			}
 			else {
-				
+				this.radio.setChannel(Radio.std2chnl(channel));
+				this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,Time.currentTicks(),Time.currentTicks()+aScanInterval);
 			}
-			
 		}
 	}
 }

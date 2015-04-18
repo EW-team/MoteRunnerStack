@@ -62,4 +62,10 @@
     <Compile Include="Security.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Mac\Mac.csproj">
+      <Project>{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}</Project>
+      <Name>Mac</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

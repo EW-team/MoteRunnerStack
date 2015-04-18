@@ -2,10 +2,15 @@ using System;
 
 namespace Oscilloscope
 {
+	using Mac;
+	
 	public class Oscilloscope
 	{
-		public Oscilloscope ()
+		private static Mac mac = new Mac();
+		
+		static Oscilloscope ()
 		{
+			
 		}
 	}
 }
