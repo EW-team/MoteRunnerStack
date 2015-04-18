@@ -34,6 +34,9 @@ namespace Mac
 		
 		public Mac () {
 			radio = new Radio();
+			radio.setEventHandler(this.onEvent);
+			radio.setTxHandler(this.onTxEvent);
+			radio.setRxHandler(this.onRxEvent);
 		}
 		
 		public void associate(uint channel, uint panId, uint cSaddr) {
