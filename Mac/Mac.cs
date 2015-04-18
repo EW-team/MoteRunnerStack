@@ -34,7 +34,7 @@ namespace Mac
 		
 		
 		public Mac () {
-			
+			radio = new Radio();
 		}
 		
 		public void associate(uint channel, uint panId, uint cSaddr) {
@@ -99,8 +99,10 @@ namespace Mac
 		
 		private void scanEd(uint channel) {
 			this.scanContinue = true;
+			this.radio.open(Radio.DID,null,0,0);
 			if(channel == 0) {
-				for(int i=0; i <=27 && this.scanContinue; i++){
+				for(int i=1; i <=27 && this.scanContinue; i++){
+					this.radio.setChannel((byte)i);
 					
 				}
 			}
@@ -122,7 +124,17 @@ namespace Mac
 			
 		}
 		
+		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+		}
 		
+		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+		}
+		
+		public int onEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+		}
 	}
 }
 
