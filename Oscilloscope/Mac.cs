@@ -12,7 +12,7 @@ namespace Oscilloscope
 #if DEBUG
 	using com.ibm.saguaro.logger;
 #endif
-	
+		
 	public class Mac
 	{
 		// constant
@@ -20,6 +20,9 @@ namespace Oscilloscope
 		const uint panId = 0x0022; // id of application PAN
 		const uint nFrame = 15; // n. of time slots in superframe
 		const uint symRate = 60; // symbol rate
+		const byte beaconFCF = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
+		const byte beaconFCA = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
+		const byte cmdFCF = Radio.FCF_CMD | Radio.FCF_ACKRQ; // FCF header: CMD + Acq request
 		
 		
 		// w\lip setup
@@ -33,14 +36,21 @@ namespace Oscilloscope
 		
 		
 		// internal static bool sec = false;
-//#if COORDINATOR
+		
+		// mote settings
+		internal static uint coordinatorSADDR = 0;
+		
+		
 		// beacon settings
 		
 		internal static uint rCount = 0; // counter of transmitted slots
 		internal static uint bOrder = 10; // beacon order
 		internal static uint sOrder = 7; // superframe order
-		internal static byte[] beacon = new byte[15]; // beacon header + payload
+		
+		
+		internal static byte[] cmd = new byte[27]; // command for address assignment
 		internal static uint bSeq = 0; // sequence of beacon
+		internal static uint aSeq = 0; // address assign sequence
 		internal static uint associationPermitted = 1; // permette di far associare nodi al PANc
 		internal static uint gtsCount = 0; // GTS allocated counter
 		internal static uint gtsEnabled = 0; // GTS allocated counter
@@ -50,7 +60,6 @@ namespace Oscilloscope
 		
 		internal static uint nGTS = 0; // number of Guaranted Time Slotss
 		internal static Timer bTimer = new Timer();
-//#endif
 		
 		static Mac ()
 		{
@@ -61,26 +70,27 @@ namespace Oscilloscope
 //	    	Assembly.setDataHandler(onLIPEvent);
 //	    	LIP.open(PORT);
 			
-//#if COORDINATOR
 			if(bInterval < sInterval)
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
 			
 			radio.open(Radio.DID,null,0,0); // ricordare di chiudere la radio quando termina il beacon interval
 			radio.setPanId(panId,true);
 			radio.setChannel((byte)rChannel);
-			
-			beacon[0] = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
-            beacon[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
-            Util.set16(beacon, 4, Radio.SADDR_BROADCAST); // setting broadcast receiver address
-			Util.set16(beacon, 6,radio.getShortAddr()); // set PAN coordinator address
-			
 			radio.setTxHandler(onTxEvent);
 			radio.setRxHandler(onRxEvent);
 			radio.setEventHandler(onRadioEvent);
 			
+			
+			
+			cmd[0] = cmdFCF;
+				
+			Util.set16(cmd, 4, radio.getPanId()); // setting this pan as receiver for command
+			Util.set16(cmd, 14, radio.getPanId()); // setting this pan as source for command
+			Util.set16 (cmd, 16, Mote.EUI64); // setting PANc XADDR		
+			
 			bTimer.setCallback(sendBeacon);			
-			bTimer.setAlarmBySpan(sInterval);
-//#endif
+			bTimer.setAlarmBySpan(bInterval);
+			radio.startRx(Radio.ASAP|Radio.RXMODE_NORMAL,Time.currentTicks(), Time.currentTicks() + bInterval);
 		}
 		
 		static void setSuperframeOrder(uint sOrd) {
@@ -109,6 +119,11 @@ namespace Oscilloscope
 		
 		static void sendBeacon(byte param, long time) {
 			rCount = 1;
+			byte[] beacon = new byte[15];
+			beacon[0] = beaconFCF;
+            beacon[1] = beaconFCA;
+            Util.set16(beacon, 4, Radio.SADDR_BROADCAST); // setting broadcast receiver address
+			Util.set16(beacon, 6,radio.getShortAddr()); // set PAN coordinator address
 			Util.set16(beacon, 2, bSeq);  // sequence number
 			uint tmp = bOrder << 11 | sOrder << 7 | nFrame << 3 | 1 << 1 | associationPermitted;
 			Util.set16(beacon,10,tmp);
@@ -139,11 +154,28 @@ namespace Oscilloscope
 		
 		static int onRxEvent (uint flags, byte[] data, uint len, uint info, long time) {
 			if (data != null) {
-				if( LED.getState((byte)0) == 0)
-					LED.setState((byte)0, (byte)1);
-				else
-					LED.setState((byte)0, (byte)0);
-				return 0;
+				if (data[0] == beaconFCF) {
+					if (coordinatorSADDR == 0) {
+						coordinatorSADDR = Util.get16(data, 6);
+						uint tmp = Util.get16(data, 10);
+						bOrder = tmp >> 11;
+						sOrder = (tmp << 4) >> 11;
+						tmp = Util.get16(data,12);
+						gtsCount = tmp >> 5;
+						gtsEnabled = (tmp << 10) >> 11;
+					}
+				}
+				else if (data[0] == cmdFCF) {
+						// test if association request then assignAddress
+						
+						// else test if data request send data to mote
+					
+						// ...
+				}
+			}
+			else{
+				if(coordinatorSADDR == 0)
+					sendBeacon((byte)0x00, Time.currentTicks());
 			}
 			if(rCount <= nFrame) {
 				blink();
@@ -166,6 +198,10 @@ namespace Oscilloscope
 				else
 					LED.setState((byte)i, (byte)1);
 			}
+		}
+		
+		internal static void assignAddress(byte[] dXADDR) {
+			
 		}
 		
 		// procedures to handle LIP in MAC LAYER
