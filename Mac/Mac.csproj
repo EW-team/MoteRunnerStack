@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Mac</RootNamespace>
+    <AssemblyName>Mac</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-1.0 Mac.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac mac-1.0" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="csharp-aux-2.0">
+      <HintPath>..\..\moterunner\lib\csharp-aux-2.0.dll</HintPath>
+    </Reference>
+    <Reference Include="avrraven-system-11.1">
+      <HintPath>..\..\moterunner\gac\avrraven-system-11.1.dll</HintPath>
+    </Reference>
+    <Reference Include="dust-system-11.0">
+      <HintPath>..\..\moterunner\gac\dust-system-11.0.dll</HintPath>
+    </Reference>
+    <Reference Include="iris-system-11.1">
+      <HintPath>..\..\moterunner\gac\iris-system-11.1.dll</HintPath>
+    </Reference>
+    <Reference Include="logger-11.0">
+      <HintPath>..\..\moterunner\gac\logger-11.0.dll</HintPath>
+    </Reference>
+    <Reference Include="saguaro-system-11.4">
+      <HintPath>..\..\moterunner\gac\saguaro-system-11.4.dll</HintPath>
+    </Reference>
+    <Reference Include="waspmote-system-14.0">
+      <HintPath>..\..\moterunner\gac\waspmote-system-14.0.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Mac.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
