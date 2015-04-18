@@ -9,8 +9,6 @@ namespace Mac
 	public class Mac
 	{
 		// Consts
-		const uint rChannel = 0x01; // n. of radio channel
-		const uint panId = 0x0022; // id of application PAN
 		const uint nFrame = 15; // n. of time slots in superframe
 		const uint symRate = 60; // symbol rate
 		const byte beaconFCF = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
@@ -31,7 +29,8 @@ namespace Mac
 			
 		// Radio
 		private Radio radio;
-		
+		private uint rChannel; // n. of radio channel
+		private uint panId; // id of application PAN
 		
 		public Mac () {
 			radio = new Radio();
@@ -61,6 +60,21 @@ namespace Mac
 				this.scanPassive(channel);
 			else
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
+		}
+		
+		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+			return 0;
+		}
+		
+		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+			return 0;
+		}
+		
+		public int onEvent(uint flags, byte[] data, uint len, uint info, long time) {
+			
+			return 0;
 		}
 		
 		public void setTxHandler(MacCallback callback) {
@@ -121,18 +135,6 @@ namespace Mac
 			else {
 				
 			}
-			
-		}
-		
-		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-			
-		}
-		
-		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-			
-		}
-		
-		public int onEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			
 		}
 	}
