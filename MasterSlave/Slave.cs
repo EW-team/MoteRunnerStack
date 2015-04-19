@@ -15,7 +15,7 @@ namespace MasterSlave
 		internal static Timer timer = new Timer();
 		internal static long span_TICKS;
 		internal static uint numLeds = LED.getNumLEDs();
-		internal static long rx_TICKS = Time.toTickSpan (Time.MILLISECS, 500);
+		internal static long rx_TICKS = Time.toTickSpan (Time.MILLISECS, 100);
 		
 		static Slave ()
 		{
@@ -32,7 +32,7 @@ namespace MasterSlave
 			Logger.flush(Mote.INFO);
 			
 			radio.setRxHandler(onMessageRx);
-			receive(Radio.TIMED);
+			receive(Radio.TIMED|Radio.RXMODE_ED, Time.currentTicks());
 		}
 		
 		static int onMessageRx(uint flags, byte[] data, uint len, uint info, long time) {
@@ -42,20 +42,23 @@ namespace MasterSlave
 			}	
 			else if (data != null) { // received something
 				byte[] msg = new byte[2];
-				uint i = 7;
+				uint i = 12;
 				msg[0] = data[i];
 				msg[1] = data[i+1];
 				Util.get16(msg,count);			
 				setLeds();
-				return 1;
 			}
-			else // end reception or Timed
-				receive(Radio.TIMED);
+			Logger.appendByte(data[0]);
+			Logger.flush(Mote.INFO);
+			Logger.appendUInt(Radio.FLAG_TIMED|Radio.RXMODE_ED);
+			Logger.flush(Mote.INFO);
+			if (data == null && info != Radio.S_RXTXING)
+				receive(Radio.TIMED|Radio.RXMODE_ED, time);
 			return 0;
 		}
 		
-		static void receive(uint mode) {
-			radio.startRx(mode, Time.currentTicks(), Time.currentTicks()+(5*rx_TICKS));
+		static void receive(uint mode, long time) {
+			radio.startRx(mode, time, time+rx_TICKS);
 		}
 		
 		static void setLeds () {

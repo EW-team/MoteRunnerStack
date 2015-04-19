@@ -21,8 +21,10 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../Desktop/moterunner/linux64/bin/mrc  --verbose --assembly=master-1.1 Master.cs -r:logger-11.0" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../Desktop/moterunner/linux64/bin/mrc  --verbose --assembly=slave-1.1 Slave.cs -r:logger-11.0" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc  --verbose --assembly=master-1.1 Master.cs -r:logger-11.0" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc  --verbose --assembly=slave-1.1 Slave.cs -r:logger-11.0" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add master-1.1.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add slave-1.1.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

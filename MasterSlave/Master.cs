@@ -5,19 +5,18 @@ namespace MasterSlave
 	
 	public class Master
 	{
-		internal static byte channel = (byte)1; // channel 11 on IEEE 802.15.4
+		internal static byte channel = (byte) Radio.std2chnl(1); // channel 11 on IEEE 802.15.4
 		internal static uint panid = 0x023E;
 		internal static uint slaveSADDR = 0x0C3E;
 		internal static uint masterSADDR = 0x303E;
 		
-		internal static ADC adc = new ADC();
 		internal static Radio radio = new Radio();
-		internal static uint count = 0;
+		internal static uint count = 1;
 		internal static uint txCount = 0;
 		internal static uint txFailedCount = 0;
 		internal static uint txLateCount = 0;
 		internal static Timer timer = new Timer();
-		internal static long span_TICKS = Time.toTickSpan (Time.MILLISECS, 400);
+		internal static long span_TICKS = Time.toTickSpan (Time.SECONDS, 1);
 		internal static byte[] buf;
 		internal static uint numLeds = LED.getNumLEDs();
 		
@@ -26,24 +25,26 @@ namespace MasterSlave
 			// open the radio for sending LED status
             radio.open(Radio.DID,null,0,0);
 			radio.setChannel(channel);
-			radio.setPanId(panid,false);
+			radio.setPanId(panid,true);
 			radio.setShortAddr(masterSADDR);
 			
 			radio.setTxHandler(onTxEvent);
 			radio.setRxHandler(onRxEvent);
 			
-            buf = new byte[11];
+            buf = new byte[14];
             // set up the beacon mesasge
-            buf[0] = Radio.FCF_DATA | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
+            buf[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;  // FCF header: data-frame & no-SRCPAN
             buf[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
-			buf[2] = 1;  // sequence number
-            Util.set16(buf, 3, Radio.PAN_BROADCAST); // setting the destination pan address to all PANs
-			Util.set16(buf, 5, slaveSADDR); // setting the destination mote address to slave one
-			Util.set16 (buf, 7, masterSADDR); // setting the source address
+//            Util.set16(buf, 3, RslaveSADDR); // setting the destination pan address to all PANs
+			Util.set16(buf, 3, panid); // setting broadcast receiver address
+			Util.set16(buf, 5, slaveSADDR);
+			Util.set16(buf, 7, radio.getPanId());
+			Util.set16(buf, 9,radio.getShortAddr()); // set PAN coordinator address
 
-			timer.setCallback(onTimerAlarm); // timer callback to transmit and increment the counter
-			timer.setAlarmBySpan(span_TICKS); // programming the timer to raise callback
-			blinkLed();
+//			timer.setCallback(onTimerAlarm); // timer callback to transmit and increment the counter
+//			timer.setAlarmBySpan(span_TICKS); // programming the timer to raise callback
+//			blinkLed();
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, buf, 0, 14, Time.currentTicks() + span_TICKS); // transmit at the specified Time
 		}
 		
 		static int onTxEvent (uint flags, byte[] data, uint len, uint info, long time) {
@@ -54,8 +55,9 @@ namespace MasterSlave
 			else // if the transmission's succeeded
 			{
 				txCount ++;
+				radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, buf, 0, 14, time + span_TICKS); // transmit at the specified Time
 			}
-			return 1;
+			return 0;
 		}
 		
 		static int onRxEvent (uint flags, byte[] data, uint len, uint info, long time) {
@@ -64,7 +66,7 @@ namespace MasterSlave
 				Logger.flush(Mote.INFO);
 			}	
 			else if (data != null) { // received something
-				return 1;
+				return 0;
 			}
 			else // end reception or Timed
 				timer.setAlarmBySpan(span_TICKS); // reset timer to raise callback again
@@ -72,13 +74,14 @@ namespace MasterSlave
 		}
 		
 		static void onTimerAlarm(byte param, long time){
-			Util.set16(buf, 9, count); // set pdu as counter value: 2 byte
+			buf[2] = (byte) count; 
+			Util.set16(buf, 12, count); // set pdu as counter value: 2 byte
 //			radio.transmit(Radio.ASAP, buf, 0, 8, Time.currentTicks() + (span_TICKS >> 1));
-			radio.transmit(Radio.EXACT, buf, 0, 12, Time.currentTicks() + (span_TICKS)); // transmit at the specified Time
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, buf, 0, 14, time + span_TICKS); // transmit at the specified Time
 			count += 1;
-			blinkLed();
+//			blinkLed();
 //			count = count % 10;
-			timer.setAlarmBySpan(span_TICKS); // reset timer to raise callback again
+			timer.setAlarmTime(time+2*span_TICKS); // reset timer to raise callback again
 		}
 		
 		static void blinkLed() {
