@@ -12,6 +12,7 @@ namespace Mac
 		// Consts
 		const uint nFrame = 15; // n. of time slots in superframe
 		const uint symRate = 60; // symbol rate
+		
 		const byte beaconFCF = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
 		const byte beaconFCA = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
 		const byte cmdFCF = Radio.FCF_CMD | Radio.FCF_ACKRQ; // FCF header: CMD + Acq request
@@ -67,6 +68,10 @@ namespace Mac
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
 		}
 		
+		public void stopScan() {
+			this.scanContinue = false;
+		}
+		
 		public int onScanEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			uint mode = radio.getRxMode();
 			if(mode == Radio.RXMODE_ED) {
@@ -115,10 +120,6 @@ namespace Mac
 		
 		// static methods
 		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
-			
-		}
-		
-		static void stopScan() {
 			
 		}
 		
