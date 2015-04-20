@@ -38,6 +38,7 @@ namespace Mac
 		private Radio radio;
 		private uint rChannel; // n. of radio channel
 		private uint panId; // id of application PAN
+		private byte[] pdu;
 		
 		// Pan parameters
 		private uint associationPermitted = 1;
@@ -84,12 +85,13 @@ namespace Mac
 		
 		public void enable(bool onOff){
 			if (onOff) {
-				
+				radio.open();
 			}
 			else {
 				timer1.cancelAlarm();
 				radio.close();
 			}
+			this.slotCounter = 0;
 		}
 		
 		public void scan(int channel, uint mode) {
@@ -136,6 +138,12 @@ namespace Mac
 						timer1.setParam(MAC_SLEEP_TILL_BEACON);
 						timer1.setAlarmBySpan(time+beaconInterval-nSlot*slotInterval);
 					}
+				}
+				else if (this.pdu != null) { // there's something to transmit
+					
+				}
+				else if (this.pdu == null) { // nothing to transmit -> back to sleep
+					
 				}
 			}
 			else if (flags == Radio.FLAG_FAILED) {
@@ -192,7 +200,10 @@ namespace Mac
 		}
 		
 		public void transmit(uint dstSaddr, byte[] data) {
-			
+			this.pdu = Util.alloca(127, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
+			int i = 15; // numero iniziale del campo dati nel pdu MAC
+			int e = 127-15; // lunghezza fittizia del pdu, valori da settare bene
+			Util.copyData(data, 0, this.pdu, i, e);
 		}
 		
 		// static methods
