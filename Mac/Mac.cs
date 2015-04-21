@@ -253,16 +253,18 @@ namespace Mac_Layer
 		}
 		
 		private void sendBeacon() {
-			byte[] beacon = new byte[10];
+			byte[] beacon = new byte[13];
 			beacon[0] = beaconFCF;
 			beacon[1] = beaconFCA;
 			beacon[2] = (byte)this.beaconSequence;
 			this.beaconSequence += 1;
-			Util.set16(beacon, 3, Radio.SADDR_BROADCAST);
-			Util.set16(beacon, 5, this.radio.getShortAddr());
-			beacon[7] = (byte)(this.BO << 4 | this.SO);
-			beacon[8] = (byte)(nSlot << 3 | 1 << 1 | this.associationPermitted);
-			beacon[9] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
+			Util.set16(beacon,3,Radio.PAN_BROADCAST);
+			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
+			Util.set16(beacon, 7, this.radio.getPanId());
+			Util.set16(beacon, 9, this.radio.getShortAddr());
+			beacon[10] = (byte)(this.BO << 4 | this.SO);
+			beacon[11] = (byte)(nSlot << 3 | 1 << 1 | this.associationPermitted);
+			beacon[12] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
 			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, 10,Time.currentTicks()+slotInterval);
 		}
 		
