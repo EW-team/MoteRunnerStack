@@ -249,7 +249,7 @@ namespace Mac_Layer
 		
 		// private methods
 		private void trackBeacon() { // da definire, nei diagrammi è espresso anche come scanBeacon()
-			
+			this.radio.startRx(Radio.ASAP, 0, Time.currentTicks()+nSlot*slotInterval*(2^14+1));
 		}
 		
 		private void sendBeacon() {
