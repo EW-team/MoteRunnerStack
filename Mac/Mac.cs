@@ -199,11 +199,20 @@ namespace Mac
 			this.eventHandler = callback;
 		}
 		
-		public void transmit(uint dstSaddr, byte[] data) {
-			this.pdu = Util.alloca(127, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
-			int i = 15; // numero iniziale del campo dati nel pdu MAC
-			int e = 127-15; // lunghezza fittizia del pdu, valori da settare bene
-			Util.copyData(data, 0, this.pdu, i, e);
+		public void transmit(uint dstSaddr, uint seq, byte[] data) {
+			int dataLen = data.Length;
+			int headerLen = 11; // lunghezza del header del pdu dati
+			if (dataLen + headerLen > 127)
+				return; // throw exception
+			this.pdu = Util.alloca(headerLen + dataLen, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
+			this.pdu[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ; // data FCF with request of acknowledge
+			this.pdu[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA with destination short address and source short address
+			this.pdu[2] = (byte) seq;
+			Util.set16(this.pdu,3,this.radio.getPanId()); // NOTA: panId potrebbe essere rimosso dagli attributi di classe essendo recuperabile da radio
+			Util.set16(this.pdu, 5, dstSaddr);
+			Util.set16(this.pdu, 7, this.radio.getPanId());
+			Util.set16(this.pdu, 9, this.radio.getShortAddr());
+			Util.copyData(data, 0, this.pdu, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
 		}
 		
 		// static methods
