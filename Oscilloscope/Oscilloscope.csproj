@@ -21,8 +21,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-1.1 Mac.cs Security.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-1.1.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscope-1.0 Oscilloscope.cs -r:mac-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-1.0.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -58,14 +58,12 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Oscilloscope.cs" />
-    <Compile Include="Mac.cs" />
-    <Compile Include="Security.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Mac\Mac.csproj">
+    <ProjectReference Include="..\Mac\Mac_Layer.csproj">
       <Project>{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}</Project>
-      <Name>Mac</Name>
+      <Name>Mac_Layer</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

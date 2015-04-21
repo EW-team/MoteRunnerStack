@@ -52,6 +52,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="Slave.cs" />
+    <Compile Include="Mac.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

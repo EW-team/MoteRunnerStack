@@ -1,10 +1,9 @@
 using System;
 
-namespace Mac
+namespace Mac_Layer
 {
 	using com.ibm.saguaro.system;
 	
-	public delegate int MacCallback(uint flags, byte[] data, uint len, uint info, long time);
 	public delegate int MacScanCallback(uint flags, byte[] data, int chn, uint info, long time);
 		
 	public class Mac
@@ -19,6 +18,8 @@ namespace Mac
 		
 		const uint MAC_SCAN_ED = Radio.RXMODE_ED;
 		const uint MAC_SCAN_PASSIVE = Radio.RXMODE_NORMAL;
+		const uint MAC_TX_COMPLETE = 0xE001;
+		
 		
 		// Timer parameters
 		private const byte MAC_CMODE = (byte)0;
@@ -26,9 +27,9 @@ namespace Mac
 		
 		
 		// Callbacks
-		private MacCallback rxHandler;
-		private MacCallback txHandler;
-		private MacCallback eventHandler;
+		private DevCallback rxHandler;
+		private DevCallback txHandler;
+		private DevCallback eventHandler;
 		private MacScanCallback scanHandler;
 		
 		
@@ -39,6 +40,7 @@ namespace Mac
 		private uint rChannel; // n. of radio channel
 		private uint panId; // id of application PAN
 		private byte[] pdu;
+		private uint pduLen;
 		
 		// Pan parameters
 		private uint associationPermitted = 1;
@@ -87,7 +89,7 @@ namespace Mac
 		
 		public void enable(bool onOff){
 			if (onOff) {
-				this.radio.open();
+				this.radio.open(Radio.DID,null,0,0);
 			}
 			else {
 				this.timer1.cancelAlarm();
@@ -134,7 +136,7 @@ namespace Mac
 		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
 				if (this.coordinator) { // the device is transmitting beacons
-					if (this.slotCounter < this.nSlot)
+					if (this.slotCounter < nSlot)
 						this.timer1.setAlarmBySpan(time+slotInterval);
 					else { // superframe is ended
 						this.slotCounter = 0;
@@ -144,7 +146,7 @@ namespace Mac
 				}
 				else if (data[0] >> 4 == Radio.FCF_BEACON >> 4) { //beacon received
 					if (this.pdu != null  && this.slotCounter < nSlot) { // there's something to transmit
-						this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+						this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+slotInterval);
 					}
 					else if (this.pdu == null) { // nothing to transmit -> back to sleep
 						
@@ -165,18 +167,21 @@ namespace Mac
 				if (data[0] == beaconFCF) {
 					this.slotCounter += 1;
 					this.timer1.setParam((byte)MAC_CMODE);
-					this.timer1.setAlarm(time);
+					this.timer1.setAlarmBySpan(time);
+				}
+				else if (data[0] >> 4 == Radio.FCF_DATA >> 4) {
+					this.txHandler(MAC_TX_COMPLETE,data,len,info,time);
 				}
 			}						
 			else if (flags == Radio.FLAG_FAILED) {
 				if (this.pdu != null && this.slotCounter < nSlot) {
-					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
 				}
 				return 0;
 			}
 			else if (flags == Radio.FLAG_WASLATE) {
 				if (this.pdu != null  && this.slotCounter < nSlot) {
-					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
 				}
 				return 0;
 			}
@@ -195,24 +200,25 @@ namespace Mac
 			this.scanHandler = callback;
 		}
 		
-		public void setTxHandler(MacCallback callback) {
+		public void setTxHandler(DevCallback callback) {
 			this.txHandler = callback;
 		}
 		
-		public void setRxHandler(MacCallback callback) {
+		public void setRxHandler(DevCallback callback) {
 			this.rxHandler = callback;
 		}
 		
-		public void setEventHandler(MacCallback callback) {
+		public void setEventHandler(DevCallback callback) {
 			this.eventHandler = callback;
 		}
 		
 		public void transmit(uint dstSaddr, uint seq, byte[] data) {
-			int dataLen = data.Length;
-			int headerLen = 11; // lunghezza del header del pdu dati
+			uint dataLen = (uint)data.Length;
+			uint headerLen = 11; // lunghezza del header del pdu dati
 			if (dataLen + headerLen > 127)
 				return; // throw exception
-			this.pdu = Util.alloca(headerLen + dataLen, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
+			this.pduLen = (uint)(dataLen + headerLen);
+			this.pdu = (byte[])Util.alloca((byte)this.pduLen, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
 			this.pdu[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ; // data FCF with request of acknowledge
 			this.pdu[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA with destination short address and source short address
 			this.pdu[2] = (byte) seq;
@@ -220,7 +226,7 @@ namespace Mac
 			Util.set16(this.pdu, 5, dstSaddr);
 			Util.set16(this.pdu, 7, this.radio.getPanId());
 			Util.set16(this.pdu, 9, this.radio.getShortAddr());
-			Util.copyData(data, 0, this.pdu, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
+			Util.copyData((object)data, 0, (object)this.pdu, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
 		}
 		
 		// static methods

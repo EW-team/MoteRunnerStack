@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app", "app\app\app.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oscilloscope", "Oscilloscope\Oscilloscope.csproj", "{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac", "Mac\Mac.csproj", "{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac_Layer", "Mac\Mac_Layer.csproj", "{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

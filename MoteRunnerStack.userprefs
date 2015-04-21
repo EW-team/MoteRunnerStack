@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Mac/Mac.cs">
     <Files>
-      <File FileName="Mac/Mac.cs" Line="206" Column="43" />
+      <File FileName="Mac/Mac.cs" Line="92" Column="41" />
+      <File FileName="Oscilloscope/Oscilloscope.cs" Line="12" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
