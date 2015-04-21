@@ -42,6 +42,7 @@ namespace Mac
 		
 		// Pan parameters
 		private uint associationPermitted = 1;
+		private bool coordinator = false;
 		
 		// Beacon & Superframe Parameters
 		private uint beaconSequence = 0; // sequence of beacon
@@ -75,6 +76,7 @@ namespace Mac
 			this.radio.setShortAddr(0x0001);
 			this.slotInterval = Time.toTickSpan(Time.MILLISECS, 3*2^SO);
 			this.beaconInterval = Time.toTickSpan(Time.MILLISECS, 3*nSlot*2^BO);
+			this.coordinator = true;
 			this.sendBeacon();
 		}
 		
@@ -85,11 +87,12 @@ namespace Mac
 		
 		public void enable(bool onOff){
 			if (onOff) {
-				radio.open();
+				this.radio.open();
 			}
 			else {
-				timer1.cancelAlarm();
-				radio.close();
+				this.timer1.cancelAlarm();
+				this.coordinator = false;
+				this.radio.close();
 			}
 			this.slotCounter = 0;
 		}
@@ -113,7 +116,7 @@ namespace Mac
 				slotCounter += 1;
 			}
 			else if (param == MAC_SLEEP_TILL_BEACON) {
-				this.sendBeacon();	
+				this.sendBeacon();
 			}
 		}
 		
@@ -130,20 +133,22 @@ namespace Mac
 		
 		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
-				if (slotCounter > 0) { // the device is transmitting beacons
-					if (slotCounter < nSlot)
-						timer1.setAlarmBySpan(time+slotInterval);
+				if (this.coordinator) { // the device is transmitting beacons
+					if (this.slotCounter < this.nSlot)
+						this.timer1.setAlarmBySpan(time+slotInterval);
 					else { // superframe is ended
-						slotCounter = 0;
-						timer1.setParam(MAC_SLEEP_TILL_BEACON);
-						timer1.setAlarmBySpan(time+beaconInterval-nSlot*slotInterval);
+						this.slotCounter = 0;
+						this.timer1.setParam(MAC_SLEEP_TILL_BEACON);
+						this.timer1.setAlarmBySpan(time+beaconInterval-nSlot*slotInterval);
 					}
 				}
-				else if (this.pdu != null) { // there's something to transmit
-					
-				}
-				else if (this.pdu == null) { // nothing to transmit -> back to sleep
-					
+				else if (data[0] >> 4 == Radio.FCF_BEACON >> 4) { //beacon received
+					if (this.pdu != null  && this.slotCounter < nSlot) { // there's something to transmit
+						this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+					}
+					else if (this.pdu == null) { // nothing to transmit -> back to sleep
+						
+					}
 				}
 			}
 			else if (flags == Radio.FLAG_FAILED) {
@@ -159,17 +164,20 @@ namespace Mac
 			if (flags == Radio.FLAG_ASAP | flags == Radio.FLAG_EXACT | flags == Radio.FLAG_TIMED) {
 				if (data[0] == beaconFCF) {
 					this.slotCounter += 1;
-					timer1 = new Timer();
-					timer1.setParam((byte)MAC_CMODE);
-					
+					this.timer1.setParam((byte)MAC_CMODE);
+					this.timer1.setAlarm(time);
 				}
 			}						
 			else if (flags == Radio.FLAG_FAILED) {
-								
+				if (this.pdu != null && this.slotCounter < nSlot) {
+					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+				}
 				return 0;
 			}
 			else if (flags == Radio.FLAG_WASLATE) {
-				
+				if (this.pdu != null  && this.slotCounter < nSlot) {
+					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pdu.Length(),time+sInterval);
+				}
 				return 0;
 			}
 			else {
