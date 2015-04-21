@@ -46,6 +46,10 @@ namespace Mac_Layer
 		private uint associationPermitted = 1;
 		private bool coordinator = false;
 		
+		// Max number of associations and current associated
+		private uint maxAssociated = 5;
+		private uint currentAssociated = 0;
+		
 		// Beacon & Superframe Parameters
 		private uint beaconSequence = 0; // sequence of beacon
 		private uint slotCounter = 0; // counter of transmitted slots
@@ -69,7 +73,16 @@ namespace Mac_Layer
 		}
 		
 		public void associate(uint channel, uint panId, uint cSaddr) {
-			
+			byte[] assRequest = new byte[13];
+			assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
+			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			assRequest[2] = (byte)Util.rand8();
+			Util.set16(assRequest, 3, panId);
+			Util.set16(assRequest, 5, cSaddr);
+			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
+			Util.set16(assRequest, 9, this.radio.getShortAddr);
+			assRequest[12] = 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 1;
+			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,assRequest,0,13,Time.currentTicks()+this.slotInterval);
 		}
 		
 		public void createPan(int channel, uint panId) {		
@@ -240,7 +253,7 @@ namespace Mac_Layer
 		}
 		
 		private void sendBeacon() {
-			byte[] beacon = new byte[15];
+			byte[] beacon = new byte[10];
 			beacon[0] = beaconFCF;
 			beacon[1] = beaconFCA;
 			beacon[2] = (byte)this.beaconSequence;
