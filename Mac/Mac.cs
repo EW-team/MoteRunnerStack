@@ -28,6 +28,8 @@ namespace Mac_Layer
 		// Timer parameters
 		private const byte MAC_CMODE = (byte)10;
 		private const byte MAC_SLEEP_TILL_BEACON = (byte)11;
+		private const byte MAC_SLEEP_WAITING_BEACON = (byte)12;
+		private const byte MAC_SLEEP = (byte)13;
 		
 		
 		// Callbacks
@@ -51,10 +53,14 @@ namespace Mac_Layer
 		// Pan parameters
 		private uint associationPermitted = 1;
 		private bool coordinator = false;
+		private uint coordinatorSADDR;
+		private uint lastAssigned;
+		private bool associated = false;
 		
 		// Max number of associations and current associated
 		private uint maxAssociated = 5;
 		private uint currentAssociated = 0;
+		private short seq = Util.rand8(); // random sequence number for cmd
 		
 		// Beacon & Superframe Parameters
 		private uint beaconSequence = 0; // sequence of beacon
@@ -65,12 +71,17 @@ namespace Mac_Layer
 		private uint SO = 7; // superframe order
 		private long slotInterval; // Superframe duration = 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
 		private long beaconInterval; // Beacon Interval = 60sym * nSlot * 2^BO / 20kbps [s] = 3 * nSlot * 2^BO [ms]
+		private bool duringSuperframe;
 		
 		private Timer timer1;
+		private Timer timer2;
 		
 		public Mac () {
 			this.timer1 = new Timer();
 			this.timer1.setCallback(onTimerEvent);
+			this.timer2 = new Timer();
+			this.timer2.setParam(MAC_SLEEP);
+			this.timer2.setCallback(onTimerEvent);
 			
 			this.radio = new Radio();
 			this.radio.setEventHandler(this.onEvent);
@@ -78,23 +89,34 @@ namespace Mac_Layer
 			this.radio.setRxHandler(this.onRxEvent);
 		}
 		
-		public void associate(uint channel, uint panId, uint cSaddr) {
-			byte[] assRequest = new byte[13];
+		public void setChannel(uint channel) {
+			this.radio.setChannel((byte)channel);	
+		}
+		
+		public void associate() {
+			this.associated = false;
+			this.trackBeacon();
+			byte[] assRequest = new byte[18];
+			Logger.appendString(csr.s2b("Associate Begin"));
+			Logger.flush(Mote.INFO);
 			assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
-			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
-			assRequest[2] = (byte)Util.rand8();
-			Util.set16(assRequest, 3, panId);
-			Util.set16(assRequest, 5, cSaddr);
+			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
+			assRequest[2] = (byte)seq;
+			Util.set16(assRequest, 3, this.radio.getPanId());
+			Util.set16(assRequest, 5, this.coordinatorSADDR);
 			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
-			Util.set16(assRequest, 9, this.radio.getShortAddr());
-			assRequest[12] = 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 1;
-			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,assRequest,0,13,Time.currentTicks()+this.slotInterval);
+			Mote.getParam(Mote.EUI64, assRequest, 9);
+//			Util.set16(assRequest, 9, Mote.EUI64);
+			assRequest[17] = (byte) 0x01;
+			assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
+			this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
 		}
 		
 		public void createPan(int channel, uint panId) {		
 			this.radio.setPanId(panId, true);
 			this.radio.setChannel((byte)channel);
 			this.radio.setShortAddr(0x0001);
+			this.lastAssigned = this.radio.getShortAddr();
 			this.slotInterval = Time.toTickSpan(Time.MILLISECS, 3*2^SO);
 			this.beaconInterval = Time.toTickSpan(Time.MILLISECS, 3*nSlot*2^BO);
 			this.coordinator = true;
@@ -112,6 +134,7 @@ namespace Mac_Layer
 			}
 			else {
 				this.timer1.cancelAlarm();
+				this.disassociate();
 				this.coordinator = false;
 				this.radio.close();
 			}
@@ -161,6 +184,15 @@ namespace Mac_Layer
 			}
 			else if (param == MAC_SLEEP_TILL_BEACON) {
 				this.sendBeacon();
+			}
+			else if (param == MAC_SLEEP) { // spegnere tutto
+				this.duringSuperframe = false;
+				this.timer2.setParam(MAC_SLEEP_WAITING_BEACON);
+				this.timer2.setAlarmTime(time+this.beaconInterval-nSlot*this.slotInterval);
+			}			
+			else if (param == MAC_SLEEP_WAITING_BEACON) {
+				this.timer2.setParam(MAC_SLEEP);
+				this.trackBeacon();	
 			}
 			else if ((param == (byte)Radio.RXMODE_ED || 
 			          param == (byte)Radio.RXMODE_NORMAL) && this.scanContinue) {
@@ -215,15 +247,64 @@ namespace Mac_Layer
 						this.timer1.setAlarmBySpan(time+beaconInterval-nSlot*slotInterval);
 					}
 				}
-				else if (data != null) {
-					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07)) { //beacon received
-						if (this.pdu != null  && this.slotCounter <= nSlot) { // there's something to transmit
+				if (data != null) {
+					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07) && !this.coordinator) { //beacon received
+						this.timer2.setAlarmTime(time+nSlot*slotInterval);
+						this.duringSuperframe = true;
+						this.radio.setPanId(Util.get16(data,7),false);
+						this.coordinatorSADDR = Util.get16(data,9);
+						if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
 							this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+slotInterval);
 						}
 						else if (this.pdu == null) { // nothing to transmit -> back to sleep
 							
 						}
 					}
+					else if((data[0] & 0x07) == Radio.FCF_CMD) {
+						if (data[17] == 0x01) { // association request handle - coordinator
+							Logger.appendString(csr.s2b("Received Association Request"));
+							Logger.flush(Mote.INFO);
+							byte[] assRes = new byte[27];
+							assRes[0] = data[0];
+							assRes[1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_XADDR;
+							assRes[2] = Util.rand8();
+							Util.set16(assRes,3,this.radio.getPanId());
+							Util.copyData((object)data, 9, (object)assRes, 5, 8);
+							Util.set16(assRes,13,this.radio.getPanId());
+							Mote.getParam(Mote.EUI64, assRes, 15);
+							
+							if (this.associationPermitted == 1) {
+								this.lastAssigned += 1;
+								Util.set16(assRes,24,this.lastAssigned);
+								assRes[26] = 0x00;
+							}
+							else{
+								assRes[26] = 0x01;
+							}
+							this.radio.transmit(Radio.ASAP,assRes,0,27,time+(this.slotInterval>>1));
+						}
+						else if (data[17] == 0x04) { // data request handle - coordinator
+							
+						}
+						else if (data[17] == 0x02) { // association response handle - not coordinator
+							Logger.appendString(csr.s2b("Received Association Response"));
+							Logger.flush(Mote.INFO);
+							if (data[26] == 0x00) { // association successful
+								this.radio.setShortAddr(Util.get16(data,24));
+								this.associated = true;
+								this.trackBeacon();
+							}
+							else if (data[26] == 0x01) {
+								
+							}
+							else {
+								
+							}
+						}
+					}
+				}
+				else if (data == null) {
+					
 				}
 			}
 			else if (flags == Radio.FLAG_FAILED) {
@@ -239,23 +320,30 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if ((data[0] & 0x07) == (int)Radio.FCF_BEACON) {
-					this.slotCounter += 1;
+					this.slotCounter = 1;
 					this.timer1.setParam((byte)MAC_CMODE);
 					this.timer1.setAlarmTime(Time.currentTicks());
 				}
 				else if ((data[0] & 0x07) == Radio.FCF_DATA) {
 					this.txHandler(MAC_TX_COMPLETE,data,len,info,time);
 				}
+				else if((data[0] & 0x07) == Radio.FCF_CMD) {
+					if (data[17] == 0x01) { // association request - not coordinator
+						Logger.appendString(csr.s2b("Waiting Response"));
+						Logger.flush(Mote.INFO);
+						this.radio.startRx(Radio.TIMED, time, time+slotInterval);
+					}
+					else if (data[17] == 0x04) { // data request - not coordinator
+						
+					}
+				}
 			}						
-			else if (flags == Radio.FLAG_FAILED) {
-				if (this.pdu != null && this.slotCounter < nSlot) {
+			else if (flags == Radio.FLAG_FAILED || flags == Radio.FLAG_WASLATE) {
+				if (this.pdu != null && this.duringSuperframe) {
 					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
 				}
-				return 0;
-			}
-			else if (flags == Radio.FLAG_WASLATE) {
-				if (this.pdu != null  && this.slotCounter < nSlot) {
-					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
+				else { // pdu = null || this.slotCounter >= nSlot
+					// impostare il risparmio energetico
 				}
 				return 0;
 			}
@@ -301,6 +389,10 @@ namespace Mac_Layer
 			Util.set16(this.pdu, 7, this.radio.getPanId());
 			Util.set16(this.pdu, 9, this.radio.getShortAddr());
 			Util.copyData((object)data, 0, (object)this.pdu, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
+		}
+		
+		public uint getCoordinatorSADDR() {
+			return this.coordinatorSADDR;
 		}
 		
 		// static methods

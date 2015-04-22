@@ -13,8 +13,26 @@ namespace Oscilloscope
 			mac = new Mac();
 			mac.enable(true);
 			mac.setScanHandler(onScan);
-			mac.scan(0,Mac.MAC_SCAN_ED);
-//			mac.createPan(1, 0x0234);			
+			mac.setChannel(1);
+//			mac.scan(0,Mac.MAC_SCAN_ED);
+#if MASTER
+			mac.createPan(1, 0x0234);			
+#endif
+#if SLAVE
+//			mac.setEventHandler(onMacEvent);
+			mac.associate();
+			byte[] data = new byte[2];
+			data[0] = 0xFF;
+			data[1] = 0xCA;
+			mac.transmit(0x0001,1,data);
+#endif
+		}
+		
+		static int onMacEvent(uint flag, byte[] data, uint info, uint len, long time) {
+//			if (flag == Mac.MAC_ASSOCIATED) {
+//				
+//			}
+			return 0;
 		}
 		
 		

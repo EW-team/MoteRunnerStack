@@ -21,8 +21,10 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscope-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS -DMASTER --assembly=oscilloscope-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-1.0.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS -DSLAVE --assembly=oscill-slave-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscill-slave-1.0.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
