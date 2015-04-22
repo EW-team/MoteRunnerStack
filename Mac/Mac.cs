@@ -36,9 +36,11 @@ namespace Mac_Layer
 		private DevCallback eventHandler;
 		private MacScanCallback scanHandler;
 		
-		
+		// Scan parameters
 		private bool scanContinue = false;
-		private long aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nSlot+1) * 2^14);
+		private uint scanOrder = 5;
+		private long aScanInterval;
+		private int scanChannel = 1;
 			
 		// Radio
 		private Radio radio;
@@ -69,13 +71,13 @@ namespace Mac_Layer
 		private long shortTime = Time.fromTickSpan(Time.MILLISECS, 400);
 		
 		public Mac () {
-			timer1 = new Timer();
-			timer1.setCallback(onTimerEvent);
+			this.timer1 = new Timer();
+			this.timer1.setCallback(onTimerEvent);
 			
-			radio = new Radio();
-			radio.setEventHandler(this.onEvent);
-			radio.setTxHandler(this.onTxEvent);
-			radio.setRxHandler(this.onRxEvent);
+			this.radio = new Radio();
+			this.radio.setEventHandler(this.onEvent);
+			this.radio.setTxHandler(this.onTxEvent);
+			this.radio.setRxHandler(this.onRxEvent);
 		}
 		
 		public void associate(uint channel, uint panId, uint cSaddr) {
@@ -88,7 +90,7 @@ namespace Mac_Layer
 			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
 			Util.set16(assRequest, 9, this.radio.getShortAddr());
 			assRequest[12] = 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 1;
-			radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,assRequest,0,13,Time.currentTicks()+this.slotInterval);
+			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX,assRequest,0,13,Time.currentTicks()+this.slotInterval);
 		}
 		
 		public void createPan(int channel, uint panId) {		
@@ -109,7 +111,6 @@ namespace Mac_Layer
 		public void enable(bool onOff){
 			if (onOff) {
 				this.radio.open(Radio.DID,null,0,0);
-				this.radio.setPanId(0,false);
 			}
 			else {
 				this.timer1.cancelAlarm();
@@ -122,28 +123,26 @@ namespace Mac_Layer
 		public void scan(int channel, uint mode) {
 			uint scanMode = Radio.TIMED;
 			if (mode == MAC_SCAN_ED){
-				scanMode = scanMode|Radio.RXMODE_ED;
-				timer1.setParam((byte)MAC_SCAN_ED);
+				scanMode = scanMode | Radio.RXMODE_ED;
+//				this.radio.setRxMode(Radio.RXMODE_ED);
+				this.timer1.setParam((byte)Radio.RXMODE_ED);
 			}
 			else if (mode == MAC_SCAN_PASSIVE) {
-				scanMode = scanMode|Radio.RXMODE_NORMAL;
-				timer1.setParam((byte)MAC_SCAN_PASSIVE);	
+				scanMode = scanMode | Radio.RXMODE_NORMAL;
+//				this.radio.setRxMode(Radio.RXMODE_NORMAL);
+				this.timer1.setParam((byte)Radio.RXMODE_NORMAL);	
 			}
 			else{
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
 				return;	
 			}
-			this.scanContinue = true;
 			this.radio.setRxHandler(onScanEvent);
+			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nSlot+1) * (2^scanOrder+1));
 			if (channel == 0) {
-				this.radio.setChannel((byte)1);
-				this.radio.startRx(scanMode,Time.currentTicks(),Time.currentTicks()+shortTime);
+				this.scanContinue = true;
 			}
-			else {
-				this.scanContinue= false;
-				this.radio.setChannel((byte)Radio.std2chnl(channel));
-				this.radio.startRx(scanMode,Time.currentTicks(),Time.currentTicks()+shortTime);
-			}
+			this.radio.setChannel((byte)channel);
+			this.radio.startRx(scanMode,Time.currentTicks(),Time.currentTicks()+this.aScanInterval);
 		}
 		
 		public void stopScan() {
@@ -153,49 +152,48 @@ namespace Mac_Layer
 		public void onTimerEvent(byte param, long time){
 			if (param == MAC_CMODE) {
 				this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,time,time+this.slotInterval);
-				slotCounter += 1;
+				this.slotCounter += 1;
 			}
 			else if (param == MAC_SLEEP_TILL_BEACON) {
 				this.sendBeacon();
 			}
-			else if (param == (byte)MAC_SCAN_ED && this.scanContinue) {
+			else if ((param == (byte)Radio.RXMODE_ED || 
+			          param == (byte)Radio.RXMODE_NORMAL) && this.scanContinue) {
 				int chnl = (int)this.radio.getChannel();
-				Logger.appendByte(this.radio.getChannel());
-				Logger.flush(Mote.INFO);
-				chnl += 1;
-				if (chnl <= 27) {
+				if (chnl < 27) {
+					Logger.appendUInt(this.radio.getRxMode());
+					Logger.flush(Mote.INFO);
+					chnl += 1;
 					if(chnl == 27)
 						this.scanContinue = false;
 					this.radio.setChannel((byte)chnl);
-					this.radio.startRx(Radio.TIMED|Radio.RXMODE_ED,time,time+shortTime);
-				}
-			}
-			else if (param == (byte)MAC_SCAN_PASSIVE && this.scanContinue) {
-				int chnl = Radio.chnl2std(this.radio.getChannel()) + 1;
-				if (chnl <= 27) {
-					if(chnl == 27)
-						this.scanContinue = false;
-					this.radio.setChannel((byte)chnl);
-					this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,time,time+aScanInterval);
+					this.radio.startRx(Radio.TIMED|param,time,Time.currentTicks()+this.aScanInterval);
 				}
 			}
 			else if (!this.scanContinue){
+				this.radio.setRxMode(Radio.RXMODE_NORMAL);
 				this.radio.setRxHandler(onRxEvent);
 			}
 		}
 		
 		public int onScanEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			uint mode = radio.getRxMode();
+			Logger.appendChar(100);
+			Logger.flush(Mote.INFO);
+			Logger.appendUInt(this.radio.getRxMode());
+			Logger.flush(Mote.INFO);
 			if (mode == Radio.RXMODE_ED) {
-				scanHandler(MAC_SCAN_ED,data,Radio.chnl2std(this.radio.getChannel()),info,time);
+				this.scanHandler(MAC_SCAN_ED,data,this.radio.getChannel(),info,time);
 			}
 			else if (mode == Radio.RXMODE_NORMAL) {
-				scanHandler(MAC_SCAN_PASSIVE,data,Radio.chnl2std(this.radio.getChannel()),info,time);
+				this.scanHandler(MAC_SCAN_PASSIVE,data,this.radio.getChannel(),info,time);
 			}
-			if (!this.scanContinue)
+			if (!this.scanContinue) {
+				this.radio.setRxMode(Radio.RXMODE_NORMAL);
 				this.radio.setRxHandler(onRxEvent);
+			}
 			else
-				this.timer1.setAlarmTime(time+2*shortTime);
+				this.timer1.setAlarmBySpan(0);
 			return 0;
 		}
 		
@@ -203,7 +201,7 @@ namespace Mac_Layer
 			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
 				if (this.coordinator) { // the device is transmitting beacons
 					if (this.slotCounter < nSlot)
-						this.timer1.setAlarmBySpan(time+slotInterval);
+						this.timer1.setAlarmBySpan(slotInterval);
 					else { // superframe is ended
 						this.slotCounter = 0;
 						this.timer1.setParam(MAC_SLEEP_TILL_BEACON);
@@ -231,16 +229,16 @@ namespace Mac_Layer
 		}
 		
 		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-			if (flags == Radio.FLAG_ASAP | flags == Radio.FLAG_EXACT | flags == Radio.FLAG_TIMED) {
+//			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
 				if ((data[0] & 0xE0) == (uint)Radio.FCF_BEACON) {
 					this.slotCounter += 1;
 					this.timer1.setParam((byte)MAC_CMODE);
-					this.timer1.setAlarmBySpan(time);
+					this.timer1.setAlarmTime(Time.currentTicks());
 				}
 				else if ((data[0] & 0xE0) == Radio.FCF_DATA) {
 					this.txHandler(MAC_TX_COMPLETE,data,len,info,time);
 				}
-			}						
+//			}						
 			else if (flags == Radio.FLAG_FAILED) {
 				if (this.pdu != null && this.slotCounter < nSlot) {
 					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
@@ -320,7 +318,7 @@ namespace Mac_Layer
 			beacon[10] = (byte)(this.BO << 4 | this.SO);
 			beacon[11] = (byte)(nSlot << 3 | 1 << 1 | this.associationPermitted);
 			beacon[12] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
-			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, 10,Time.currentTicks()+slotInterval);
+			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, 13,Time.currentTicks()+slotInterval);
 		}
 	}
 }

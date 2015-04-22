@@ -13,7 +13,8 @@ namespace Oscilloscope
 			mac = new Mac();
 			mac.enable(true);
 			mac.setScanHandler(onScan);
-			mac.scan (0, Mac.MAC_SCAN_ED);			
+//			mac.scan(4,Mac.MAC_SCAN_PASSIVE);
+			mac.createPan(1, 0x0234);			
 		}
 		
 		
