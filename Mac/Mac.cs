@@ -23,6 +23,7 @@ namespace Mac_Layer
 		
 		// MAC Notify codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
+		public const uint MAC_ASSOCIATED = 0xE002;
 		
 		
 		// Timer parameters
@@ -93,23 +94,10 @@ namespace Mac_Layer
 			this.radio.setChannel((byte)channel);	
 		}
 		
-		public void associate() {
+		public void associate(uint pan) {
 			this.associated = false;
-			this.radio.setPanId(panId, false);
+			this.radio.setPanId(pan, false);
 			this.trackBeacon();
-//			byte[] assRequest = new byte[18];
-//			Logger.appendString(csr.s2b("Associate Begin"));
-//			Logger.flush(Mote.INFO);
-//			assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
-//			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
-//			assRequest[2] = (byte)seq;
-//			Util.set16(assRequest, 3, this.radio.getPanId());
-//			Util.set16(assRequest, 5, this.coordinatorSADDR);
-//			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
-//			Mote.getParam(Mote.EUI64, assRequest, 9);
-//			assRequest[17] = (byte) 0x01;
-//			assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
-//			this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
 		}
 		
 		public void createPan(int channel, uint panId) {		
@@ -179,7 +167,7 @@ namespace Mac_Layer
 		
 		public void onTimerEvent(byte param, long time){
 			if (param == MAC_CMODE) {
-				this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,time,time+this.slotInterval);
+				this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,Time.currentTicks(),time+this.slotInterval);
 				this.slotCounter += 1;
 			}
 			else if (param == MAC_SLEEP_TILL_BEACON) {
@@ -239,6 +227,8 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (this.coordinator) { // the device is transmitting beacons
+//					Logger.appendString(csr.s2b("I'm a fucking coordinator!"));
+//					Logger.flush(Mote.INFO);
 					if (this.slotCounter <= nSlot)
 						this.timer1.setAlarmBySpan(slotInterval>>1);
 					else { // superframe is ended
@@ -247,27 +237,29 @@ namespace Mac_Layer
 						this.timer1.setAlarmBySpan(time+beaconInterval-nSlot*slotInterval);
 					}
 				}
+
 				if (data != null) {
 					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07) && !this.coordinator) { //beacon received
+						this.radio.stopRx();
+						this.setBeaconParameter((data[10] & 0xF0) >> 4, data[10] & 0x0F);
 						this.timer2.setAlarmTime(time+nSlot*slotInterval);
 						this.duringSuperframe = true;
 						this.radio.setPanId(Util.get16(data,7),false);
-						this.setBeaconParameter((data[10] & 0xF0) >> 4, data[10] & 0x0F);
 						this.coordinatorSADDR = Util.get16(data,9);
 						if (!this.associated) {
-							byte[] assRequest = new byte[18];
+							byte[] assRequest = new byte[19];
 							Logger.appendString(csr.s2b("Associate Begin"));
 							Logger.flush(Mote.INFO);
 							assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
 							assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
 							assRequest[2] = (byte)seq;
 							Util.set16(assRequest, 3, this.radio.getPanId());
-							Util.set16(assRequest, 5, this.coordinatorSADDR);
+							Util.set16(assRequest, 5, 0x0001);
 							Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
 							Mote.getParam(Mote.EUI64, assRequest, 9);
 							assRequest[17] = (byte) 0x01;
-							assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
-							this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
+							assRequest[18] = (byte)(1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0);
+							this.radio.transmit(Radio.TIMED,assRequest,0,19,time+this.slotInterval);
 						}
 						else if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
 							this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+slotInterval);
@@ -293,6 +285,8 @@ namespace Mac_Layer
 								this.lastAssigned += 1;
 								Util.set16(assRes,24,this.lastAssigned);
 								assRes[26] = 0x00;
+								if(this.eventHandler != null)
+									this.eventHandler(MAC_ASSOCIATED,data,len,info,time);
 							}
 							else{
 								assRes[26] = 0x01;
@@ -318,16 +312,17 @@ namespace Mac_Layer
 							}
 						}
 					}
-				}
-				else if (data == null) {
-					
+					else if((data[0] & 0x07) == Radio.FCF_DATA) {
+						// notificare rxHandler	
+					}
+					else if (data == null) {
+						
+					}
 				}
 			}
-			else if (flags == Radio.FLAG_FAILED) {
-				
-			}
-			else if (flags == Radio.FLAG_WASLATE) {
-				
+			else if (flags == Radio.FLAG_FAILED || flags == Radio.FLAG_WASLATE) {
+				Logger.appendString(csr.s2b("Rx Error"));
+				Logger.flush(Mote.INFO);
 			}
 			return 0;
 		}
@@ -417,10 +412,9 @@ namespace Mac_Layer
 		}
 		
 		// private methods
-		private void trackBeacon() { // da definire, nei diagrammi è espresso anche come scanBeacon()
-			Logger.appendString(csr.s2b("TRACKING BEACON"));
-			Logger.flush(Mote.INFO);
-			this.radio.startRx(Radio.ASAP, 0, Time.currentTicks()+nSlot*slotInterval*(2^14+1));
+		private void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
+			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nSlot+1) * (2^14+1));
+			this.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.aScanInterval);
 		}
 		
 		private void sendBeacon() {
@@ -432,7 +426,7 @@ namespace Mac_Layer
 			Util.set16(beacon,3,Radio.PAN_BROADCAST);
 			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
 			Util.set16(beacon, 7, this.radio.getPanId());
-			Util.set16(beacon, 9, this.radio.getShortAddr());
+			Util.set16(beacon, 9, 0x0001);
 			beacon[10] = (byte)(this.BO << 4 | this.SO);
 			beacon[11] = (byte)(nSlot << 3 | 1 << 1 | this.associationPermitted);
 			beacon[12] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
