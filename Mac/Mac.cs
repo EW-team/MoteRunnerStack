@@ -95,21 +95,21 @@ namespace Mac_Layer
 		
 		public void associate() {
 			this.associated = false;
+			this.radio.setPanId(panId, false);
 			this.trackBeacon();
-			byte[] assRequest = new byte[18];
-			Logger.appendString(csr.s2b("Associate Begin"));
-			Logger.flush(Mote.INFO);
-			assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
-			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
-			assRequest[2] = (byte)seq;
-			Util.set16(assRequest, 3, this.radio.getPanId());
-			Util.set16(assRequest, 5, this.coordinatorSADDR);
-			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
-			Mote.getParam(Mote.EUI64, assRequest, 9);
-//			Util.set16(assRequest, 9, Mote.EUI64);
-			assRequest[17] = (byte) 0x01;
-			assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
-			this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
+//			byte[] assRequest = new byte[18];
+//			Logger.appendString(csr.s2b("Associate Begin"));
+//			Logger.flush(Mote.INFO);
+//			assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
+//			assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
+//			assRequest[2] = (byte)seq;
+//			Util.set16(assRequest, 3, this.radio.getPanId());
+//			Util.set16(assRequest, 5, this.coordinatorSADDR);
+//			Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
+//			Mote.getParam(Mote.EUI64, assRequest, 9);
+//			assRequest[17] = (byte) 0x01;
+//			assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
+//			this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
 		}
 		
 		public void createPan(int channel, uint panId) {		
@@ -252,8 +252,24 @@ namespace Mac_Layer
 						this.timer2.setAlarmTime(time+nSlot*slotInterval);
 						this.duringSuperframe = true;
 						this.radio.setPanId(Util.get16(data,7),false);
+						this.setBeaconParameter((data[10] & 0xF0) >> 4, data[10] & 0x0F);
 						this.coordinatorSADDR = Util.get16(data,9);
-						if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
+						if (!this.associated) {
+							byte[] assRequest = new byte[18];
+							Logger.appendString(csr.s2b("Associate Begin"));
+							Logger.flush(Mote.INFO);
+							assRequest[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
+							assRequest[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
+							assRequest[2] = (byte)seq;
+							Util.set16(assRequest, 3, this.radio.getPanId());
+							Util.set16(assRequest, 5, this.coordinatorSADDR);
+							Util.set16(assRequest, 7, Radio.SADDR_BROADCAST);
+							Mote.getParam(Mote.EUI64, assRequest, 9);
+							assRequest[17] = (byte) 0x01;
+							assRequest[18] = 1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0;
+							this.radio.transmit(Radio.TIMED,assRequest,0,18,Time.currentTicks()+this.slotInterval);
+						}
+						else if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
 							this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+slotInterval);
 						}
 						else if (this.pdu == null) { // nothing to transmit -> back to sleep
@@ -295,7 +311,7 @@ namespace Mac_Layer
 								this.trackBeacon();
 							}
 							else if (data[26] == 0x01) {
-								
+								this.associated = false;
 							}
 							else {
 								
@@ -402,6 +418,8 @@ namespace Mac_Layer
 		
 		// private methods
 		private void trackBeacon() { // da definire, nei diagrammi è espresso anche come scanBeacon()
+			Logger.appendString(csr.s2b("TRACKING BEACON"));
+			Logger.flush(Mote.INFO);
 			this.radio.startRx(Radio.ASAP, 0, Time.currentTicks()+nSlot*slotInterval*(2^14+1));
 		}
 		
@@ -420,6 +438,12 @@ namespace Mac_Layer
 			beacon[12] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
 			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, 13,Time.currentTicks()+slotInterval);
 		}
+		
+		private void setBeaconParameter(int Bo, int So) {
+			this.BO = (uint) BO;
+			this.SO = (uint) SO;
+			this.slotInterval = Time.toTickSpan(Time.MILLISECS, 3*2^SO);
+			this.beaconInterval = Time.toTickSpan(Time.MILLISECS, 3*nSlot*2^BO);
+		}
 	}
 }
-
