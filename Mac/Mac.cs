@@ -26,8 +26,8 @@ namespace Mac_Layer
 		
 		
 		// Timer parameters
-		private const byte MAC_CMODE = (byte)0;
-		private const byte MAC_SLEEP_TILL_BEACON = (byte)1;
+		private const byte MAC_CMODE = (byte)10;
+		private const byte MAC_SLEEP_TILL_BEACON = (byte)11;
 		
 		
 		// Callbacks
@@ -40,7 +40,6 @@ namespace Mac_Layer
 		private bool scanContinue = false;
 		private uint scanOrder = 5;
 		private long aScanInterval;
-		private int scanChannel = 1;
 			
 		// Radio
 		private Radio radio;
@@ -68,7 +67,6 @@ namespace Mac_Layer
 		private long beaconInterval; // Beacon Interval = 60sym * nSlot * 2^BO / 20kbps [s] = 3 * nSlot * 2^BO [ms]
 		
 		private Timer timer1;
-		private long shortTime = Time.fromTickSpan(Time.MILLISECS, 400);
 		
 		public Mac () {
 			this.timer1 = new Timer();
@@ -95,7 +93,7 @@ namespace Mac_Layer
 		
 		public void createPan(int channel, uint panId) {		
 			this.radio.setPanId(panId, true);
-			this.radio.setChannel((byte)Radio.std2chnl(channel));
+			this.radio.setChannel((byte)channel);
 			this.radio.setShortAddr(0x0001);
 			this.slotInterval = Time.toTickSpan(Time.MILLISECS, 3*2^SO);
 			this.beaconInterval = Time.toTickSpan(Time.MILLISECS, 3*nSlot*2^BO);
@@ -123,12 +121,12 @@ namespace Mac_Layer
 		public void scan(int channel, uint mode) {
 			uint scanMode = Radio.TIMED;
 			if (mode == MAC_SCAN_ED){
-				scanMode = scanMode | Radio.RXMODE_ED;
-//				this.radio.setRxMode(Radio.RXMODE_ED);
+				scanMode = Radio.RXMODE_ED;
+				this.radio.setRxMode(Radio.RXMODE_ED);
 				this.timer1.setParam((byte)Radio.RXMODE_ED);
 			}
 			else if (mode == MAC_SCAN_PASSIVE) {
-				scanMode = scanMode | Radio.RXMODE_NORMAL;
+				scanMode = Radio.RXMODE_NORMAL;
 //				this.radio.setRxMode(Radio.RXMODE_NORMAL);
 				this.timer1.setParam((byte)Radio.RXMODE_NORMAL);	
 			}
@@ -147,6 +145,13 @@ namespace Mac_Layer
 		
 		public void stopScan() {
 			this.scanContinue = false;
+			this.timer1.cancelAlarm();
+			this.radio.setRxHandler(onRxEvent);
+			Logger.appendChar(83);			
+			Logger.appendChar(84);		
+			Logger.appendChar(79);		
+			Logger.appendChar(80);	
+			Logger.flush(Mote.INFO);
 		}
 		
 		public void onTimerEvent(byte param, long time){
@@ -160,40 +165,41 @@ namespace Mac_Layer
 			else if ((param == (byte)Radio.RXMODE_ED || 
 			          param == (byte)Radio.RXMODE_NORMAL) && this.scanContinue) {
 				int chnl = (int)this.radio.getChannel();
+				Logger.appendChar(69);
+				Logger.appendChar(86);
+				Logger.flush(Mote.INFO);
 				if (chnl < 27) {
-					Logger.appendUInt(this.radio.getRxMode());
-					Logger.flush(Mote.INFO);
 					chnl += 1;
 					if(chnl == 27)
 						this.scanContinue = false;
 					this.radio.setChannel((byte)chnl);
-					this.radio.startRx(Radio.TIMED|param,time,Time.currentTicks()+this.aScanInterval);
+					this.radio.startRx(param,time,Time.currentTicks()+this.aScanInterval);
 				}
-			}
-			else if (!this.scanContinue){
-				this.radio.setRxMode(Radio.RXMODE_NORMAL);
-				this.radio.setRxHandler(onRxEvent);
 			}
 		}
 		
 		public int onScanEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			uint mode = radio.getRxMode();
-			Logger.appendChar(100);
-			Logger.flush(Mote.INFO);
-			Logger.appendUInt(this.radio.getRxMode());
-			Logger.flush(Mote.INFO);
 			if (mode == Radio.RXMODE_ED) {
-				this.scanHandler(MAC_SCAN_ED,data,this.radio.getChannel(),info,time);
+				Logger.appendChar(69);
+				Logger.appendChar(68);
+				Logger.flush(Mote.INFO);
+				this.scanHandler(MAC_SCAN_ED,data,Radio.std2chnl(this.radio.getChannel()),info,time);
 			}
 			else if (mode == Radio.RXMODE_NORMAL) {
+				Logger.appendChar(78);
+				Logger.appendChar(79);
+				Logger.appendChar(82);
+				Logger.appendChar(77);
+				Logger.flush(Mote.INFO);
 				this.scanHandler(MAC_SCAN_PASSIVE,data,this.radio.getChannel(),info,time);
 			}
-			if (!this.scanContinue) {
-				this.radio.setRxMode(Radio.RXMODE_NORMAL);
-				this.radio.setRxHandler(onRxEvent);
+			
+			if (!this.scanContinue){
+				this.stopScan();
 			}
 			else
-				this.timer1.setAlarmBySpan(0);
+				this.timer1.setAlarmBySpan(this.aScanInterval>>1);
 			return 0;
 		}
 		
