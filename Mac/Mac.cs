@@ -198,10 +198,11 @@ namespace Mac_Layer
 		}
 		
 		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
+			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
+			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (this.coordinator) { // the device is transmitting beacons
-					if (this.slotCounter < nSlot)
-						this.timer1.setAlarmBySpan(slotInterval);
+					if (this.slotCounter <= nSlot)
+						this.timer1.setAlarmBySpan(slotInterval>>1);
 					else { // superframe is ended
 						this.slotCounter = 0;
 						this.timer1.setParam(MAC_SLEEP_TILL_BEACON);
@@ -209,8 +210,8 @@ namespace Mac_Layer
 					}
 				}
 				else if (data != null) {
-					if (Radio.FCF_BEACON == ((byte)(data[0] & 0xE0))) { //beacon received
-						if (this.pdu != null  && this.slotCounter < nSlot) { // there's something to transmit
+					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07)) { //beacon received
+						if (this.pdu != null  && this.slotCounter <= nSlot) { // there's something to transmit
 							this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+slotInterval);
 						}
 						else if (this.pdu == null) { // nothing to transmit -> back to sleep
@@ -229,16 +230,17 @@ namespace Mac_Layer
 		}
 		
 		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-//			if (flags == Radio.FLAG_ASAP || flags == Radio.FLAG_EXACT || flags == Radio.FLAG_TIMED) {
-				if ((data[0] & 0xE0) == (uint)Radio.FCF_BEACON) {
+			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
+			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
+				if ((data[0] & 0x07) == (int)Radio.FCF_BEACON) {
 					this.slotCounter += 1;
 					this.timer1.setParam((byte)MAC_CMODE);
 					this.timer1.setAlarmTime(Time.currentTicks());
 				}
-				else if ((data[0] & 0xE0) == Radio.FCF_DATA) {
+				else if ((data[0] & 0x07) == Radio.FCF_DATA) {
 					this.txHandler(MAC_TX_COMPLETE,data,len,info,time);
 				}
-//			}						
+			}						
 			else if (flags == Radio.FLAG_FAILED) {
 				if (this.pdu != null && this.slotCounter < nSlot) {
 					this.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA,this.pdu,0,this.pduLen,time+this.slotInterval);
