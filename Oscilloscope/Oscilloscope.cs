@@ -1,3 +1,5 @@
+using System;
+
 namespace Oscilloscope
 {
 	using com.ibm.saguaro.system;
@@ -12,19 +14,19 @@ namespace Oscilloscope
 		{
 			mac = new Mac();
 			mac.enable(true);
-			mac.setScanHandler(onScan);
+//			mac.setScanHandler(onScan);
 //			mac.scan(4,Mac.MAC_SCAN_PASSIVE);
-			mac.createPan(1, 0x0234);			
+			mac.createPan(1, 0x0234);
 		}
 		
 		
-		static int onScan(uint flag, byte[] data, int chn, uint len, long time) {
-			Logger.appendInt(chn);
-			Logger.flush(Mote.INFO);
-			if(chn == 27)
-				mac.createPan(1, 0x0234);
-			return 0;
-		}
+//		public static int onScan(uint flag, byte[] data, int chn, uint len, long time) {
+//			Logger.appendInt(chn);
+//			Logger.flush(Mote.INFO);
+//			if(chn == 27)
+//				mac.createPan(1, 0x0234);
+//			return 0;
+//		}
 		
 	}
 }

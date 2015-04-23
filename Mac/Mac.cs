@@ -80,9 +80,6 @@ namespace Mac_Layer
 			this.radio.setPanId(panId, true);
 			this.radio.setChannel((byte)channel);
 			this.radio.setShortAddr(0x0001);
-//			this.lastAssigned = this.radio.getShortAddr();
-//			this.slotInterval = Time.toTickSpan(Time.MILLISECS, 3*2^SO);
-//			this.beaconInterval = Time.toTickSpan(Time.MILLISECS, 3*nSlot*2^BO);
 			this.coordinator = true;
 			this.sendBeacon();
 		}
