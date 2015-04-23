@@ -47,39 +47,39 @@ namespace Oscilloscope
 //			mac.createPan(1, 0x0234);	
 			
 			
-			#if MOTE
+		
 				//GPIO
-				pwrPins.open(); 
-				pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+				//pwrPins.open(); 
+				//pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
 				//ADC
-				adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
-			    adc.setReadHandler(adcReadCallback);
+				//adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			    //adc.setReadHandler(adcReadCallback);
 				
 			 	//invio pacchetto con lettura
 			
-				mac.setTxHandler(onTxPdu);
-			#endif
+				//mac.setTxHandler(onTxPdu);
 		
 		
-			#if COORDINATOR
+		
+		
 				 // Register a method for network message directed to this assembly.
-		    	Assembly.setDataHandler(onLipData);
+		    	//Assembly.setDataHandler(onLipData);
 		    	// Handle system events
-		    	Assembly.setSystemInfoCallback(onSysInfo);
+		    	//Assembly.setSystemInfoCallback(onSysInfo);
 		    	// Open specific fixed LIP port
-		    	LIP.open(MR_APP_PORT);
+		    	//LIP.open(MR_APP_PORT);
 				
 				//ricezione pacchetto con lettura
-				mac.setRxHandler(onRxPdu);
+				//mac.setRxHandler(onRxPdu);
 			
 				//invio tramite LIP
-			
-			#endif
+
 			
 			
 			//			mac.setScanHandler(onScan);
 						mac.setChannel(1);
 			//			mac.scan(0,Mac.MAC_SCAN_ED);
+			
 			#if MASTER
 						mac.createPan(1, 0x0234);
 			#endif
