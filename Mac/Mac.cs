@@ -18,8 +18,8 @@ namespace Mac_Layer
 		const byte cmdFCF = Radio.FCF_CMD | Radio.FCF_ACKRQ; // FCF header: CMD + Acq request
 		
 		// MAC scan modes
-		public const uint MAC_SCAN_ED = Radio.RXMODE_ED;
-		public const uint MAC_SCAN_PASSIVE = Radio.RXMODE_NORMAL;
+		public const byte MAC_SCAN_ED = (byte)10;
+		public const byte MAC_SCAN_PASSIVE = (byte)11;
 		
 		// MAC Notify codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
@@ -125,12 +125,12 @@ namespace Mac_Layer
 			if (mode == MAC_SCAN_ED){
 				scanMode = scanMode | Radio.RXMODE_ED;
 //				this.radio.setRxMode(Radio.RXMODE_ED);
-				this.timer1.setParam((byte)Radio.RXMODE_ED);
+				this.timer1.setParam(MAC_SCAN_ED);
 			}
 			else if (mode == MAC_SCAN_PASSIVE) {
 				scanMode = scanMode | Radio.RXMODE_NORMAL;
 //				this.radio.setRxMode(Radio.RXMODE_NORMAL);
-				this.timer1.setParam((byte)Radio.RXMODE_NORMAL);	
+				this.timer1.setParam(MAC_SCAN_PASSIVE);	
 			}
 			else{
 				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
@@ -157,8 +157,8 @@ namespace Mac_Layer
 			else if (param == MAC_SLEEP_TILL_BEACON) {
 				this.sendBeacon();
 			}
-			else if ((param == (byte)Radio.RXMODE_ED || 
-			          param == (byte)Radio.RXMODE_NORMAL) && this.scanContinue) {
+			else if ((param == (byte)MAC_SCAN_PASSIVE || 
+			          param == (byte)MAC_SCAN_ED) && this.scanContinue) {
 				int chnl = (int)this.radio.getChannel();
 				if (chnl < 27) {
 					Logger.appendUInt(this.radio.getRxMode());

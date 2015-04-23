@@ -61,7 +61,8 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Mac.cs" />
-    <Compile Include="Security.cs" />
+    <Compile Include="Frame.cs" />
+    <Compile Include="MacState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
