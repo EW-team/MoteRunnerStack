@@ -1,10 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/Mac.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/Frame.cs">
     <Files>
-      <File FileName="Mac/Mac.cs" Line="7" Column="18" />
-      <File FileName="Mac/Frame.cs" Line="7" Column="22" />
-      <File FileName="Mac/MacConfig.cs" Line="22" Column="9" />
+      <File FileName="Mac/Mac.cs" Line="333" Column="44" />
+      <File FileName="Mac/Frame.cs" Line="93" Column="30" />
+      <File FileName="Mac/MacConfig.cs" Line="25" Column="62" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
