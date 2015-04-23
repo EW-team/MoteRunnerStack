@@ -21,10 +21,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS -DMASTER --assembly=oscilloscope-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DMASTER --system=iris --assembly=oscilloscope-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-1.0.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS -DSLAVE --assembly=oscill-slave-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscill-slave-1.0.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -39,22 +37,25 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="csharp-aux-2.0">
-      <HintPath>..\..\Desktop\moterunner\lib\csharp-aux-2.0.dll</HintPath>
+      <HintPath>..\..\moterunner\lib\csharp-aux-2.0.dll</HintPath>
     </Reference>
     <Reference Include="saguaro-system-11.4">
-      <HintPath>..\..\Desktop\moterunner\gac\saguaro-system-11.4.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\saguaro-system-11.4.dll</HintPath>
     </Reference>
     <Reference Include="iris-system-11.1">
-      <HintPath>..\..\Desktop\moterunner\gac\iris-system-11.1.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\iris-system-11.1.dll</HintPath>
     </Reference>
     <Reference Include="logger-11.0">
-      <HintPath>..\..\Desktop\moterunner\gac\logger-11.0.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\logger-11.0.dll</HintPath>
     </Reference>
     <Reference Include="dust-system-11.0">
-      <HintPath>..\..\Desktop\moterunner\gac\dust-system-11.0.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\dust-system-11.0.dll</HintPath>
     </Reference>
     <Reference Include="avrraven-system-11.1">
-      <HintPath>..\..\Desktop\moterunner\gac\avrraven-system-11.1.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\avrraven-system-11.1.dll</HintPath>
+    </Reference>
+    <Reference Include="waspmote-system-14.0">
+      <HintPath>..\..\moterunner\gac\waspmote-system-14.0.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

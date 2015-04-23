@@ -81,7 +81,7 @@ namespace Oscilloscope
 						mac.setChannel(1);
 			//			mac.scan(0,Mac.MAC_SCAN_ED);
 			#if MASTER
-						mac.createPan(1, 0x0234);			
+						mac.createPan(1, 0x0234);
 			#endif
 			#if SLAVE
 						mac.setEventHandler(onMacEvent);
