@@ -4,6 +4,7 @@ namespace Mac_Layer
 {
 	using com.ibm.saguaro.system;
 	using com.ibm.saguaro.logger;
+	using Mac_Layer;
 	
 	public delegate int MacScanCallback(uint flags, byte[] data, int chn, uint info, long time);
 		
@@ -44,10 +45,7 @@ namespace Mac_Layer
 			
 		// Radio
 		private Radio radio;
-		private uint rChannel; // n. of radio channel
-		private uint panId; // id of application PAN
-		private byte[] pdu;
-		private uint pduLen;
+
 		
 		// Pan parameters
 		private uint associationPermitted = 1;
@@ -69,8 +67,16 @@ namespace Mac_Layer
 		
 		private Timer timer1;
 		private long shortTime = Time.fromTickSpan(Time.MILLISECS, 400);
-		
+
+		//----------------------------------------------------------------------------------------//
+		// ---------------------------------------------------------------------------------------// RESTART HERE
+		//----------------------------------------------------------------------------------------//
+
+		private MacConfig state;
+
 		public Mac () {
+
+			this.state = new MacState ();
 			this.timer1 = new Timer();
 			this.timer1.setCallback(onTimerEvent);
 			
@@ -306,19 +312,9 @@ namespace Mac_Layer
 		}
 		
 		private void sendBeacon() {
-			byte[] beacon = new byte[13];
-			beacon[0] = beaconFCF;
-			beacon[1] = beaconFCA;
-			beacon[2] = (byte)this.beaconSequence;
-			this.beaconSequence += 1;
-			Util.set16(beacon,3,Radio.PAN_BROADCAST);
-			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
-			Util.set16(beacon, 7, this.radio.getPanId());
-			Util.set16(beacon, 9, this.radio.getShortAddr());
-			beacon[10] = (byte)(this.BO << 4 | this.SO);
-			beacon[11] = (byte)(nSlot << 3 | 1 << 1 | this.associationPermitted);
-			beacon[12] = (byte)(this.gtsSlots<<5|this.gtsEnabled);
-			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, 13,Time.currentTicks()+slotInterval);
+			byte[] beacon = Frame.getBeacon (this.radio.getPanId (), this.radio.getShortAddr ());
+			MacConfig.beaconSequence ++;
+			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, beacon.Length,Time.currentTicks()+slotInterval);
 		}
 	}
 }

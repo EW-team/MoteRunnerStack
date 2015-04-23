@@ -21,7 +21,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-4.0 Mac.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-4.0 Mac.cs Frame.cs MacConfig.cs-r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-4.0.sba mac-4.0.sdx mac-4.0.sxp" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
@@ -62,7 +62,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Mac.cs" />
     <Compile Include="Frame.cs" />
-    <Compile Include="MacState.cs" />
+    <Compile Include="MacConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
