@@ -16,7 +16,12 @@ namespace Oscilloscope
 			mac.enable(true);
 			mac.setScanHandler(new MacScanCallback(Oscilloscope.onScan));
 //			mac.scan(4,Mac.MAC_SCAN_PASSIVE);
+#if MASTER
 			mac.createPan(1, 0x0234, 0x0002);
+#else
+			mac.setChannel (1);
+			mac.associate(0x0234);
+#endif
 		}
 		
 		

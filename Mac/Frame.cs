@@ -17,12 +17,14 @@ namespace Mac_Layer
 		}
 
 		public static byte[] getBeaconFrame(uint panId, uint saddr, MacConfig config) {
+#if DEBUG
 			Logger.appendString(csr.s2b("getBeaconFrame("));
 			Logger.appendUInt (panId);
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendUInt (saddr);
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
+#endif
 			byte[] beacon = new byte[13];
 			beacon[0] = beaconFCF;
 			beacon[1] = beaconFCA;
@@ -44,13 +46,36 @@ namespace Mac_Layer
 			return beacon;
 		}
 
+		public static void getBeaconInfo(byte[] beacon, MacConfig config){
+			config.coordinatorSADDR = Util.get16 (beacon, 9);
+			config.BO = (uint)(beacon [10] & 0xF0) >> 4;
+			config.SO = (uint)beacon [10] & 0x0F;
+			config.panId = Util.get16 (beacon, 7);
+#if DEBUG
+			Logger.appendString(csr.s2b("coordinatorSADDR"));
+			Logger.appendUInt (config.coordinatorSADDR);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendString(csr.s2b("BO"));
+			Logger.appendUInt (config.BO);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendString(csr.s2b("SO"));
+			Logger.appendUInt (config.SO);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendString(csr.s2b("panId"));
+			Logger.appendUInt (config.panId);
+			Logger.flush(Mote.INFO);
+#endif
+		}
+
 		public static byte[] getCMDAssReqFrame(uint panId, uint saddr, MacConfig config) {
+#if DEBUG
 			Logger.appendString(csr.s2b("getCMDAssReqFrame("));
 			Logger.appendUInt (panId);
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendUInt (saddr);
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
+#endif
 			byte[] cmd = new byte[19];
 			cmd[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
 			cmd[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
@@ -65,10 +90,12 @@ namespace Mac_Layer
 		}
 
 		public static byte[] getCMDAssRespFrame(byte[] req, uint panId, MacConfig config) {
+#if DEBUG
 			Logger.appendString(csr.s2b("getCMDAssRespFrame("));
 			Logger.appendUInt (panId);
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
+#endif
 			byte[] cmd = new byte[27];
 			cmd[0] = req[0];
 			cmd[1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_XADDR;
@@ -96,6 +123,7 @@ namespace Mac_Layer
 		}
 
 		public static byte[] getDataFrame(byte[] data, uint panId, uint saddr, uint dsaddr, short seq) {
+#if DEBUG
 			Logger.appendString(csr.s2b("getDataFrame("));
 			Logger.appendUInt (panId);
 			Logger.appendString(csr.s2b(", "));
@@ -106,6 +134,7 @@ namespace Mac_Layer
 			Logger.appendInt (seq);
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
+#endif
 			uint dataLen = (uint)data.Length;
 			uint headerLen = 11; // lunghezza del header del pdu dati
 			if (dataLen + headerLen > 127) {

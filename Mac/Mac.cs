@@ -195,11 +195,10 @@ namespace Mac_Layer
 				if (data != null) {
 					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07) && !this.coordinator) { //beacon received
 						this.radio.stopRx();
-						this.setBeaconParameter((data[10] & 0xF0) >> 4, data[10] & 0x0F);
+						Frame.getBeaconInfo (data, this.config);
 						this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
+						this.radio.setPanId (config.panId, false);
 						this.duringSuperframe = true;
-						this.radio.setPanId(Util.get16(data,7),false);
-						config.coordinatorSADDR = Util.get16(data,9);
 						if (!this.associated) {
 							byte[] assRequest = Frame.getCMDAssReqFrame (this.radio.getPanId (), config.coordinatorSADDR, config);
 							this.radio.transmit(config.txMode,assRequest,0,Frame.getLength (assRequest),time+config.slotInterval);
@@ -330,7 +329,6 @@ namespace Mac_Layer
 		}
 
 		private void sendBeacon() {
-			this.radio.setShortAddr (0x0001);
 			byte[] beacon = Frame.getBeaconFrame (this.radio.getPanId (), this.radio.getShortAddr (), this.config);
 			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+config.slotInterval);
 		}
