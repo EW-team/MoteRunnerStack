@@ -181,7 +181,7 @@ namespace Mac_Layer
 		}
 
 		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
+			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (this.coordinator) { // the device is transmitting beacons
 					if (this.slotCounter <= config.nSlot)
@@ -193,59 +193,58 @@ namespace Mac_Layer
 					}
 				}
 				if (data != null) {
-					if (Radio.FCF_BEACON == (byte)(data[0] & 0x07) && !this.coordinator) { //beacon received
-						this.radio.stopRx();
-						Frame.getBeaconInfo (data, this.config);
-						this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
-						this.radio.setPanId (config.panId, false);
-						this.duringSuperframe = true;
-						if (!this.associated) {
-							byte[] assRequest = Frame.getCMDAssReqFrame (this.radio.getPanId (), config.coordinatorSADDR, config);
-							this.radio.transmit(config.txMode,assRequest,0,Frame.getLength (assRequest),time+config.slotInterval);
-						}
-						else if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
-							this.radio.transmit(config.txMode,this.pdu,0,Frame.getLength (this.pdu),time+config.slotInterval);
-						}
-						else if (this.pdu == null) { // nothing to transmit -> back to sleep
-
-						}
-					}
-					else if((data[0] & 0x07) == Radio.FCF_CMD) {
-						if (data[17] == 0x01) { // association request handle - coordinator
-							Logger.appendString(csr.s2b("Received Association Request"));
-							Logger.flush(Mote.INFO);
-							byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
-							this.radio.transmit(config.txMode,assRes,0,Frame.getLength (assRes),time+(config.slotInterval>>1));
-						}
-						else if (data[17] == 0x04) { // data request handle - coordinator
-
-						}
-						else if (data[17] == 0x02) { // association response handle - not coordinator
-							Logger.appendString(csr.s2b("Received Association Response"));
-							Logger.flush(Mote.INFO);
-							if (data[26] == 0x00) { // association successful
-								this.radio.setShortAddr(Util.get16(data,24));
-								this.associated = true;
-								this.trackBeacon();
+					switch(Frame.getFrameType (data)) {
+						case Radio.FCF_BEACON:
+							if(!this.coordinator) {
+								this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
+								Frame.getBeaconInfo (data, this.config);
+								this.handleBeaconReceived (time);
 							}
-							else if (data[26] == 0x01) {
-								this.associated = false;
+							break;
+						case Radio.FCF_CMD:
+							switch(Frame.getCMDType (data)){
+								case 0x01: // association request handle - coordinator
+									Logger.appendString (csr.s2b ("Received Association Request"));
+									Logger.flush (Mote.INFO);
+									byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
+									this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + (config.slotInterval >> 1));
+									break;
+								case 0x04: // data request handle - coordinator
+									break;
+								case 0x02: // association response handle - not coordinator
+									Logger.appendString(csr.s2b("Received Association Response"));
+									Logger.flush(Mote.INFO);
+									switch(data[26]){
+										case 0x00: // association successful
+											this.radio.setShortAddr (Util.get16 (data, 24));
+											this.associated = true;
+											this.trackBeacon ();
+											break;
+										case 0x01:
+											this.associated = false;
+											break;
+										default:
+											return 0;
+									}
+									break;
+								default:
+									return 0;
 							}
-							else {
-
-							}
-						}
-					}
-					else if((data[0] & 0x07) == Radio.FCF_DATA) {
-						// notificare rxHandler	
-					}
-					else if (data == null) {
-
+							break;
+						case Radio.FCF_DATA:
+							
+							break;
+						default:
+							return 0;
 					}
 				}
 			}
 			else if (flags == Radio.FLAG_FAILED || flags == Radio.FLAG_WASLATE) {
 				Logger.appendString(csr.s2b("Rx Error"));
+				Logger.flush(Mote.INFO);
+			}
+			else{
+				Logger.appendString(csr.s2b("Rx what else?"));
 				Logger.flush(Mote.INFO);
 			}
 			return 0;
@@ -333,9 +332,24 @@ namespace Mac_Layer
 			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+config.slotInterval);
 		}
 
-		private void setBeaconParameter(int Bo, int So) {
-			config.BO = (uint) Bo;
-			config.SO = (uint) So;
+		private void handleBeaconReceived(long time) {
+			this.radio.stopRx();
+			this.radio.setPanId (config.panId, false);
+			this.duringSuperframe = true;
+			if (!this.associated) {
+				byte[] assRequest = Frame.getCMDAssReqFrame (this.radio.getPanId (), config.coordinatorSADDR, config);
+				this.radio.transmit(config.txMode,assRequest,0,Frame.getLength (assRequest),time+config.slotInterval);
+			}
+			else if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
+				this.radio.transmit(config.txMode,this.pdu,0,Frame.getLength (this.pdu),time+config.slotInterval);
+			}
+			else if (this.pdu == null) { // nothing to transmit -> back to sleep
+
+			}
+		}
+
+		private void handleDataReceived(byte[] data) {
+
 		}
 	}
 }

@@ -39,20 +39,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="saguaro-system-11.4">
-      <HintPath>..\..\Desktop\moterunner\gac\saguaro-system-11.4.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\saguaro-system-11.4.dll</HintPath>
     </Reference>
     <Reference Include="logger-11.0">
-      <HintPath>..\..\Desktop\moterunner\gac\logger-11.0.dll</HintPath>
+      <HintPath>..\..\moterunner\gac\logger-11.0.dll</HintPath>
     </Reference>
     <Reference Include="csharp-aux-2.0">
-      <HintPath>..\..\Desktop\moterunner\lib\csharp-aux-2.0.dll</HintPath>
+      <HintPath>..\..\moterunner\lib\csharp-aux-2.0.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="Slave.cs" />
-    <Compile Include="Mac.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

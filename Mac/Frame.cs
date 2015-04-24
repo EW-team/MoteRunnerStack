@@ -157,6 +157,14 @@ namespace Mac_Layer
 		public static uint getLength(byte[] frame) {
 			return (uint)frame.Length;
 		}
+
+		public static uint getFrameType(byte[] frame) {
+			return (uint)frame [0] & 0x07;
+		}
+
+		public static uint getCMDType(byte[] cmd) {
+			return (uint)cmd[17];
+		}
 	}
 }
 

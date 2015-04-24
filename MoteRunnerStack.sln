@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoteRunnerStack", "MoteRunnerStack\MoteRunnerStack.csproj", "{9DAB4964-8D2A-44C4-AE05-299ACE044F39}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterSlave", "MasterSlave\MasterSlave.csproj", "{3E21342F-4003-4A98-A058-3FCC7F782722}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app", "app\app\app.csproj", "{EC1BFB73-7CE8-404C-B5EC-825978AA0A94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oscilloscope", "Oscilloscope\Oscilloscope.csproj", "{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}"
 EndProject
@@ -21,10 +17,6 @@ Global
 		{3E21342F-4003-4A98-A058-3FCC7F782722}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E21342F-4003-4A98-A058-3FCC7F782722}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E21342F-4003-4A98-A058-3FCC7F782722}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DAB4964-8D2A-44C4-AE05-299ACE044F39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,12 +25,8 @@ Global
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC1BFB73-7CE8-404C-B5EC-825978AA0A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC1BFB73-7CE8-404C-B5EC-825978AA0A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC1BFB73-7CE8-404C-B5EC-825978AA0A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC1BFB73-7CE8-404C-B5EC-825978AA0A94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = MoteRunnerStack\MoteRunnerStack.csproj
+		StartupItem = MasterSlave\MasterSlave.csproj
 	EndGlobalSection
 EndGlobal
