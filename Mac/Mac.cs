@@ -41,10 +41,10 @@ namespace Mac_Layer
 		public bool coordinator = false;
 
 		// Callbacks
-		private DevCallback rxHandler;
-		private DevCallback txHandler;
-		private DevCallback eventHandler;
-		private MacScanCallback scanHandler;
+		public DevCallback rxHandler;
+		public DevCallback txHandler;
+		public DevCallback eventHandler;
+		public MacScanCallback scanHandler;
 
 		// Configuration
 		private MacConfig config;
@@ -76,10 +76,10 @@ namespace Mac_Layer
 			this.trackBeacon();
 		}
 
-		public void createPan(int channel, uint panId) {		
+		public void createPan(int channel, uint panId, uint saddr) {	
 			this.radio.setPanId(panId, true);
 			this.radio.setChannel((byte)channel);
-			this.radio.setShortAddr(0x0001);
+			this.radio.setShortAddr(saddr);
 			this.coordinator = true;
 			this.sendBeacon();
 		}
@@ -331,7 +331,6 @@ namespace Mac_Layer
 
 		private void sendBeacon() {
 			this.radio.setShortAddr (0x0001);
-			this.radio.setPanId (config.panId,this.coordinator);
 			byte[] beacon = Frame.getBeaconFrame (this.radio.getPanId (), this.radio.getShortAddr (), this.config);
 			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+config.slotInterval);
 		}
