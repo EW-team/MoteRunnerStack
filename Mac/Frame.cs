@@ -25,7 +25,7 @@ namespace Mac_Layer
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
 #endif
-			byte[] beacon = new byte[13];
+			byte[] beacon = new byte[14];
 			beacon[0] = beaconFCF;
 			beacon[1] = beaconFCA;
 			beacon[2] = (byte)config.beaconSequence;
@@ -34,22 +34,22 @@ namespace Mac_Layer
 			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
 			Util.set16(beacon, 7, panId);
 			Util.set16(beacon, 9, saddr);
-			beacon[10] = (byte)(config.BO << 4 | config.SO);
+			beacon[11] = (byte)(config.BO << 4 | config.SO);
 			if (config.associationPermitted)
-	        	beacon[11] = (byte)(config.nSlot << 3 | 1 << 1 | 1);
+	        	beacon[12] = (byte)(config.nSlot << 3 | 1 << 1 | 1);
 			else
-				beacon[11] = (byte)(config.nSlot << 3 | 1 << 1 | 0);
+				beacon[12] = (byte)(config.nSlot << 3 | 1 << 1 | 0);
 			if (config.gtsEnabled)
-          		beacon[12] = (byte)(config.gtsSlots<<5| 1);
+          		beacon[13] = (byte)(config.gtsSlots<<5| 1);
 			else
-				beacon[12] = (byte)(config.gtsSlots<<5| 0);
+				beacon[13] = (byte)(config.gtsSlots<<5| 0);
 			return beacon;
 		}
 
 		public static void getBeaconInfo(byte[] beacon, MacConfig config){
-			config.coordinatorSADDR = Util.get16 (beacon, 9);
-			config.BO = (uint)(beacon [10] & 0xF0) >> 4;
-			config.SO = (uint)beacon [10] & 0x0F;
+			config.coordinatorSADDR = Util.get16(beacon, 9);
+			config.BO = (uint)(beacon [11] & 0xF0) >> 4;
+			config.SO = (uint)beacon [11] & 0x0F;
 			config.panId = Util.get16 (beacon, 7);
 #if DEBUG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));

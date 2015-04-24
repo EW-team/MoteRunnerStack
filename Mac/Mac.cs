@@ -192,54 +192,55 @@ namespace Mac_Layer
 						this.timer1.setAlarmBySpan(time+config.beaconInterval-config.nSlot*config.slotInterval);
 					}
 				}
+	
 				if (data != null) {
 					switch(Frame.getFrameType (data)) {
 						case Radio.FCF_BEACON:
-							if(!this.coordinator) {
-								this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
-								Frame.getBeaconInfo (data, this.config);
-								this.handleBeaconReceived (time);
-							}
-							break;
+						if(!this.coordinator) {
+							this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
+							Frame.getBeaconInfo (data, this.config);
+							this.handleBeaconReceived (time);
+						}
+						break;
 						case Radio.FCF_CMD:
-							switch(Frame.getCMDType (data)){
-								case 0x01: // association request handle - coordinator
-									Logger.appendString (csr.s2b ("Received Association Request"));
-									Logger.flush (Mote.INFO);
-									byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
-									this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + (config.slotInterval >> 1));
-									break;
-								case 0x04: // data request handle - coordinator
-									break;
-								case 0x02: // association response handle - not coordinator
-									Logger.appendString(csr.s2b("Received Association Response"));
-									Logger.flush(Mote.INFO);
-									switch(data[26]){
-										case 0x00: // association successful
-											this.radio.setShortAddr (Util.get16 (data, 24));
-											this.associated = true;
-											this.trackBeacon ();
-											break;
-										case 0x01:
-											this.associated = false;
-											break;
-										default:
-											return 0;
-									}
-									break;
+						switch(Frame.getCMDType (data)){
+							case 0x01: // association request handle - coordinator
+							Logger.appendString (csr.s2b ("Received Association Request"));
+							Logger.flush (Mote.INFO);
+							byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
+							this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + (config.slotInterval >> 1));
+							break;
+							case 0x04: // data request handle - coordinator
+							break;
+							case 0x02: // association response handle - not coordinator
+							Logger.appendString(csr.s2b("Received Association Response"));
+							Logger.flush(Mote.INFO);
+							switch(data[26]){
+								case 0x00: // association successful
+								this.radio.setShortAddr (Util.get16 (data, 24));
+								this.associated = true;
+								this.trackBeacon ();
+								break;
+								case 0x01:
+								this.associated = false;
+								break;
 								default:
-									return 0;
+								return 0;
 							}
 							break;
-						case Radio.FCF_DATA:
-							
-							break;
-						default:
+							default:
 							return 0;
+						}
+						break;
+						case Radio.FCF_DATA:
+						// handle fcf data
+						break;
+						default:
+						return 0;
 					}
 				}
 			}
-			else if (flags == Radio.FLAG_FAILED || flags == Radio.FLAG_WASLATE) {
+			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				Logger.appendString(csr.s2b("Rx Error"));
 				Logger.flush(Mote.INFO);
 			}
@@ -272,7 +273,7 @@ namespace Mac_Layer
 					}
 				}
 			}						
-			else if (flags == Radio.FLAG_FAILED || flags == Radio.FLAG_WASLATE) {
+			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				if (this.pdu != null && this.duringSuperframe) {
 					this.radio.transmit(config.txMode,this.pdu,0,Frame.getLength (this.pdu),time+config.slotInterval);
 				}
@@ -347,7 +348,7 @@ namespace Mac_Layer
 
 			}
 		}
-
+		//
 		private void handleDataReceived(byte[] data) {
 
 		}
