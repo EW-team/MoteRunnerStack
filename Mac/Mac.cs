@@ -28,7 +28,7 @@ namespace Mac_Layer
 		//----------------------------------------------------------------------//
 
 		// Instance Variables
-		private Radio radio;
+		internal Radio radio;
 		internal Timer timer1;
 		internal Timer timer2;
 		private byte[] pdu;
@@ -41,10 +41,10 @@ namespace Mac_Layer
 		public bool coordinator = false;
 
 		// Callbacks
-		public DevCallback rxHandler;
-		public DevCallback txHandler;
-		public DevCallback eventHandler;
-		public MacScanCallback scanHandler;
+		internal DevCallback rxHandler;
+		internal DevCallback txHandler;
+		internal DevCallback eventHandler;
+		internal MacScanCallback scanHandler;
 
 		// Configuration
 		internal MacConfig config;
