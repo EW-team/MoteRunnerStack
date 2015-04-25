@@ -35,6 +35,7 @@ namespace Mac_Layer
 		internal Timer timer1;
 //		internal Timer timer2;
 		internal byte[] pdu;
+		internal byte[] header;
 
 //		// Internal logic parameters
 //		private bool scanContinue = false;
@@ -56,20 +57,11 @@ namespace Mac_Layer
 //			this.timer2.setParam(MAC_SLEEP);
 //			this.timer2.setCallback(onTimerEvent);
 		}
-		
-		internal void setState(MacState state) {
-			this.state = state;
-			this.radio.setEventHandler(this.state.onRadioEvent);
-			this.radio.setTxHandler(this.state.onTxEvent);
-			this.radio.setRxHandler(this.state.onRxEvent);
-//			this.timer1.cancelAlarm ();
-			this.timer1.setCallback (this.state.onTimerEvent);
-		}
 
 		internal void onStateEvent(uint flag, uint param){
 			if(flag == MAC_ASSOCIATED){
-				this.state = new MacAssociatedState(this);
-				this.state.setNetwork (this.radio.getPanId (), param);
+				this.state = new MacAssociatedState(this, this.radio.getPanId (), param);
+				this.eventHandler(MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
 		}
 
@@ -78,15 +70,15 @@ namespace Mac_Layer
 //			this.config.rChannel = channel;
 		}
 
-		public void associate(uint pan) {
-			this.setState (new MacUnassociatedState(this));
-			this.state.setNetwork (pan, 0);
+		public void associate(uint panId) {
+			this.state = new MacUnassociatedState(this, panId);
+//			this.state.setNetwork (pan, 0);
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
 			this.setChannel ((byte)channel);
-			this.setState (new MacCoordinatorState(this));
-			this.state.setNetwork (panId, saddr);
+			this.state = new MacCoordinatorState(this, panId, saddr);
+//			this.state.setNetwork (panId, saddr);
 		}
 
 		// to define
@@ -122,7 +114,8 @@ namespace Mac_Layer
 		}
 
 		public void transmit(uint dstSaddr, short seq, byte[] data) {
-			this.pdu = Frame.getDataFrame (data,this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
+			this.pdu = data;
+			this.header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
 		}
 		
 		// static methods

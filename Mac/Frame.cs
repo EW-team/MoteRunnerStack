@@ -104,7 +104,7 @@ namespace Mac_Layer
 			Util.copyData((object)req, 9, (object)cmd, 5, 8);
 			Util.set16(cmd,13,panId);
             Mote.getParam(Mote.EUI64, cmd, 15);
-
+			cmd[23] = 0x02;
 			if (state.associationPermitted) {
 				state.lastAssigned += 1;
 				Util.set16(cmd,24,state.lastAssigned);
@@ -122,7 +122,7 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static byte[] getDataFrame(byte[] data, uint panId, uint saddr, uint dsaddr, short seq) {
+		public static void setDataFrame(ref object frame, ref object data, uint panId, uint saddr, uint dsaddr, short seq) {
 #if DEBUG
 			Logger.appendString(csr.s2b("getDataFrame("));
 			Logger.appendUInt (panId);
@@ -135,24 +135,41 @@ namespace Mac_Layer
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
 #endif
-			uint dataLen = (uint)data.Length;
-			uint headerLen = 11; // lunghezza del header del pdu dati
-			if (dataLen + headerLen > 127) {
-				ArgumentException.throwIt (ArgumentException.TOO_BIG);
-				return null; // throw exception
-			}
-			byte[] frame = new byte[dataLen + headerLen];
-//			this.pdu = (byte[])Util.alloca((byte)this.pduLen, Util.BYTE_ARRAY); // messo a max size, ma va variato in base alla dimensione dell'header e dei dati ricevuti
-			frame[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ; // data FCF with request of acknowledge
-			frame[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA with destination short address and source short address
-			frame[2] = (byte) seq;
-			Util.set16(frame,3, panId); // NOTA: panId potrebbe essere rimosso dagli attributi di classe essendo recuperabile da radio
-			Util.set16(frame, 5, dsaddr);
-			Util.set16(frame, 7, panId);
-			Util.set16(frame, 9, saddr);
-			Util.copyData((object)data, 0, (object)frame, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
-			
-			return frame;
+			frame = Util.alloca ((byte)(11 + ((byte[])data).Length), Util.BYTE_ARRAY);
+			Util.set16((byte[])frame,2, (uint)seq);
+			Util.set16((byte[])frame,0, ((Radio.FCF_DATA | Radio.FCF_ACKRQ)<<8)|Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR);
+//			((byte[])frame[0]) = Radio.FCF_DATA | Radio.FCF_ACKRQ; // data FCF with request of acknowledge
+//			((byte[])frame[1]) = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA with destination short address and source short address
+//			((byte[])frame[2]) = (byte) seq;
+			Util.set16(((byte[])frame),3, panId);
+			Util.set16(((byte[])frame), 5, dsaddr);
+			Util.set16(((byte[])frame), 7, panId);
+			Util.set16(((byte[])frame), 9, saddr);
+			Util.copyData(data, 0, frame, 11, (uint)((byte[])data).Length); // Insert data from upper layer into MAC frame
+		}
+		
+		public static byte[] getDataHeader(uint panId, uint saddr, uint dsaddr, short seq) {
+#if DEBUG
+			Logger.appendString(csr.s2b("getDataHaeder("));
+			Logger.appendUInt (panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt (saddr);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt (dsaddr);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendInt (seq);
+			Logger.appendString(csr.s2b(");"));
+			Logger.flush(Mote.INFO);
+#endif
+			byte[] header = new byte[11];
+			header[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
+			header[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			header[2] = (byte) seq;
+			Util.set16(header,3, panId);
+			Util.set16(header, 5, dsaddr);
+			Util.set16(header, 7, panId);
+			Util.set16(header, 9, saddr);
+			return header;
 		}
 
 		public static uint getLength(byte[] frame) {
@@ -164,7 +181,41 @@ namespace Mac_Layer
 		}
 
 		public static uint getCMDType(byte[] cmd) {
-			return (uint)cmd[17];
+			uint srcSaddr = (uint)(cmd[1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(cmd[1] & Radio.FCA_DST_MASK);
+#if DEBUG
+			Logger.appendString(csr.s2b("getCMDType-"));
+			Logger.appendString(csr.s2b("srcSaddr"));
+			Logger.appendUInt (srcSaddr);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendString(csr.s2b("dstSaddr"));
+			Logger.appendUInt (dstSaddr);
+			Logger.flush(Mote.INFO);
+#endif
+			if( dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR)
+				return (uint)cmd[11];
+			else if((dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR) || (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_SADDR))
+				return (uint)cmd[17];
+			else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+				return (uint)cmd[23];
+			else
+				SystemException.throwIt (SystemException.NOT_SUPPORTED);
+			return 0;
+		}
+		
+		public static uint getPayloadPosition(byte[] data) {
+			uint srcSaddr = (uint)(data[1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(data[1] & Radio.FCA_DST_MASK);
+			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR)
+				return 11;
+			else if ((dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR) ||
+					 (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_SADDR))
+				return 17;
+			else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+				return 23;
+			else
+				SystemException.throwIt (SystemException.NOT_SUPPORTED);
+			return 0;
 		}
 	}
 }

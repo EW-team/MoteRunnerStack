@@ -78,13 +78,16 @@ namespace Mac_Layer
 		public MacState (Mac mac)
 		{
 			this.mac = mac;
+			this.mac.radio.setEventHandler(this.onRadioEvent);
+			this.mac.radio.setTxHandler(this.onTxEvent);
+			this.mac.radio.setRxHandler(this.onRxEvent);
+			this.mac.timer1.setCallback (this.onTimerEvent);
 			this.scanOrder = 10;
 			this.BO = 8;
 			this.SO = 5;
-//			this.radio = new Radio();
 		}
 		
-		public abstract void setNetwork(uint panId, uint saddr);
+		public abstract void dispose(); // destroy this instance
 		
 		public abstract int onRxEvent(uint flags, byte[] data, uint len, uint info, long time);
 		

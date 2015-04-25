@@ -5,13 +5,21 @@ namespace Mac_Layer
 {
 	internal class MacAssociatedState : MacUnassociatedState
 	{
-		public MacAssociatedState (Mac mac) : base(mac)
+		
+		public MacAssociatedState (Mac mac,uint panId, uint saddr) : base(mac, panId)
 		{
+			this.coordinatorSADDR = saddr;
+			this.trackBeacon ();
 		}
 		
-		public override void setNetwork(uint panId, uint saddr){
-			this.coordinatorSADDR = saddr;
-			this.trackBeacon();
+//		public override void setNetwork(uint panId, uint saddr){
+//			this.coordinatorSADDR = saddr;
+//			this.trackBeacon();
+//		}
+		
+		public override void dispose ()
+		{
+			
 		}
 		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
@@ -106,7 +114,9 @@ namespace Mac_Layer
 
 		internal void transmit(long time) {
 			this.mac.radio.stopRx();
-			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+this.slotInterval);
+//			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,(byte[])this.mac.pdu,0,Frame.getLength ((byte[])this.mac.pdu),time+this.slotInterval);
+			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
+										this.mac.pdu,0,(uint)this.mac.pdu.Length,time+this.slotInterval);
 		}
 		
 	}

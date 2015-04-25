@@ -17,15 +17,22 @@ namespace Mac_Layer
 		public uint currentlyAssociated = 0;
 		public short seq = Util.rand8(); // random sequence number for cmd
 		
-		public MacCoordinatorState (Mac mac) : base(mac)
+		public MacCoordinatorState (Mac mac, uint panId, uint saddr) : base(mac)
 		{
-//			this.timer = new Timer();
-		}
-		
-		public override void setNetwork(uint panId, uint saddr) {
 			this.mac.radio.setPanId (panId, true);
 			this.mac.radio.setShortAddr (saddr);
 			this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
+		}
+		
+//		public override void setNetwork(uint panId, uint saddr) {
+//			this.mac.radio.setPanId (panId, true);
+//			this.mac.radio.setShortAddr (saddr);
+//			this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
+//		}
+
+		public override void dispose ()
+		{
+			
 		}
 		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){

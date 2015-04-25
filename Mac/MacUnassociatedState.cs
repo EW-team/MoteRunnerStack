@@ -1,5 +1,7 @@
 using com.ibm.saguaro.system;
 using com.ibm.saguaro.logger;
+using System;
+using Mac_Layer;
 
 namespace Mac_Layer
 {
@@ -10,14 +12,22 @@ namespace Mac_Layer
 		public uint coordinatorSADDR;
 		public uint panId;
 	
-		public MacUnassociatedState (Mac mac) : base(mac)
+		public MacUnassociatedState (Mac mac, uint panId) : base(mac)
 		{
-		}
-		
-		public override void setNetwork(uint panId, uint saddr){
 			this.mac.radio.setPanId(panId, false);
 			this.panId = panId;
 			this.trackBeacon();
+		}
+		
+//		public override void setNetwork(uint panId, uint saddr){
+//			this.mac.radio.setPanId(panId, false);
+//			this.panId = panId;
+//			this.trackBeacon();
+//		}
+	
+		public override void dispose ()
+		{
+			
 		}
 		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
@@ -38,17 +48,19 @@ namespace Mac_Layer
 													Frame.getLength (assRequest),time+this.slotInterval);
 							break;
 						case Radio.FCF_CMD:
-							switch(Frame.getCMDType (data)){
+							uint pos = Frame.getPayloadPosition(data);
+							switch((uint)data[pos]){
 								case 0x02: // association response handle - not coordinator
 									Logger.appendString(csr.s2b("Received Association Response"));
 									Logger.flush(Mote.INFO);
-									switch(data[26]){
+									switch((uint)data[pos+3]){
 										case 0x00: // association successful
-											this.mac.radio.setShortAddr (Util.get16 (data, 24));
+											this.mac.radio.stopRx ();
+											this.mac.radio.setShortAddr (Util.get16 (data, pos+1)); // The SAddr have to be setted when radio is not on!
 											this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
 											break;
 										case 0x01: // association failed
-											//TODO 
+											//TODO
 											break;
 									}
 									break;
@@ -83,7 +95,7 @@ namespace Mac_Layer
 				switch (data [0] & 0x07) {
 					case Radio.FCF_CMD:
 						if (data [17] == 0x01) { // association request - not coordinator
-//							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 						} else if (data [17] == 0x04) { // data request - not coordinator
 
 						}
