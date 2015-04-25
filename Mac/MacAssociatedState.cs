@@ -5,7 +5,7 @@ namespace Mac_Layer
 {
 	internal class MacAssociatedState : MacUnassociatedState
 	{
-		public MacAssociatedState (Mac mac, MacConfig config) : base(mac, config)
+		public MacAssociatedState (Mac mac) : base(mac)
 		{
 		}
 		
@@ -21,11 +21,11 @@ namespace Mac_Layer
 						case Radio.FCF_BEACON: // look for pending data here
 							this.duringSuperframe = true;
 							this.mac.timer1.setParam (Mac.MAC_SLEEP);
-							this.mac.timer1.setAlarmTime(time+this.config.nSlot*this.config.slotInterval);
-							Frame.getBeaconInfo (data, this.config);
+							this.mac.timer1.setAlarmTime(time+this.nSlot*this.slotInterval);
+							Frame.getBeaconInfo (data, this);
 							this.mac.radio.stopRx();
 							if (this.mac.pdu != null  && this.duringSuperframe) { // there's something to transmit
-								this.mac.radio.transmit(config.txMode,this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+config.slotInterval);
+								this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+this.slotInterval);
 							}
 							break;
 						case Radio.FCF_CMD:
@@ -90,8 +90,8 @@ namespace Mac_Layer
 //				this.duringSuperframe = false;
 //				this.mac.radio.stopRx ();
 //				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
-//				this.mac.timer1.setAlarmTime (time + this.config.beaconInterval -
-//											(this.config.nSlot+1)*this.config.slotInterval);
+//				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
+//											(this.nSlot+1)*this.slotInterval);
 //			}
 //			else if (param == Mac.MAC_WAKEUP) {
 //				this.trackBeacon ();
@@ -100,12 +100,12 @@ namespace Mac_Layer
 //		
 //		// private methods
 //		private void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
-//			this.config.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (this.config.nSlot+1) * (2^14+1));
-//			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.config.aScanInterval);
+//			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (this.nSlot+1) * (2^14+1));
+//			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.aScanInterval);
 //		}
 
 		internal void transmit(long time) {
-			this.mac.radio.transmit(config.txMode,this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+config.slotInterval);
+			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+this.slotInterval);
 		}
 		
 	}

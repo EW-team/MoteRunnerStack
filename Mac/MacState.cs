@@ -46,7 +46,7 @@ namespace Mac_Layer
 
 				} else if (value > 15 || value > this._BO) {
 					this._SO = this._BO - 1;
-					ArgArgumentException.throwIt (ArgumentException.TOO_BIG);
+					ArgumentException.throwIt (ArgumentException.TOO_BIG);
 				} else {
 					this._SO = this._BO - 1;
 					ArgumentException.throwIt (ArgumentException.TOO_SMALL);
