@@ -6,7 +6,6 @@ namespace Mac_Layer
 	internal abstract class MacState
 	{
 		internal Mac mac;
-		internal MacConfig config;
 		internal bool duringSuperframe;
 //		internal Radio radio;
 		
@@ -56,10 +55,9 @@ namespace Mac_Layer
 			}
 		}
 	
-		public MacState (Mac mac, MacConfig config)
+		public MacState (Mac mac)
 		{
 			this.mac = mac;
-			this.config = config;
 //			this.radio = new Radio();
 		}
 		
