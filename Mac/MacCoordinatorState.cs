@@ -6,6 +6,16 @@ namespace Mac_Layer
 
 	internal class MacCoordinatorState : MacState
 	{	
+
+		// Pan parameters
+		public bool associationPermitted = true;
+		public uint lastAssigned = 0x0100;
+		
+		// Max number of associations and currently associated
+		public uint maxAssociated = 5;
+		public uint currentlyAssociated = 0;
+		public short seq = Util.rand8(); // random sequence number for cmd
+		
 		public MacCoordinatorState (Mac mac, MacConfig config) : base(mac, config)
 		{
 //			this.timer = new Timer();
