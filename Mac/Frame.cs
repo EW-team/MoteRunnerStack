@@ -16,7 +16,7 @@ namespace Mac_Layer
 		{
 		}
 
-		public static byte[] getBeaconFrame(uint panId, uint saddr, MacConfig config) {
+		public static byte[] getBeaconFrame(uint panId, uint saddr, MacCoordinatorState state) {
 #if DEBUG
 			Logger.appendString(csr.s2b("getBeaconFrame("));
 			Logger.appendUInt (panId);
@@ -28,46 +28,46 @@ namespace Mac_Layer
 			byte[] beacon = new byte[14];
 			beacon[0] = beaconFCF;
 			beacon[1] = beaconFCA;
-			beacon[2] = (byte)config.beaconSequence;
-			config.beaconSequence += 1;
+			beacon[2] = (byte)state.beaconSequence;
+			state.beaconSequence += 1;
 			Util.set16(beacon,3,Radio.PAN_BROADCAST);
 			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
 			Util.set16(beacon, 7, panId);
 			Util.set16(beacon, 9, saddr);
-			beacon[11] = (byte)(config.BO << 4 | config.SO);
-			if (config.associationPermitted)
-	        	beacon[12] = (byte)(config.nSlot << 3 | 1 << 1 | 1);
+			beacon[11] = (byte)(state.BO << 4 | state.SO);
+			if (state.associationPermitted)
+	        	beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
 			else
-				beacon[12] = (byte)(config.nSlot << 3 | 1 << 1 | 0);
-			if (config.gtsEnabled)
-          		beacon[13] = (byte)(config.gtsSlots<<5| 1);
+				beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
+			if (state.gtsEnabled)
+          		beacon[13] = (byte)(state.gtsSlots<<5| 1);
 			else
-				beacon[13] = (byte)(config.gtsSlots<<5| 0);
+				beacon[13] = (byte)(state.gtsSlots<<5| 0);
 			return beacon;
 		}
 
-		public static void getBeaconInfo(byte[] beacon, MacConfig config){
-			config.coordinatorSADDR = Util.get16(beacon, 9);
-			config.BO = (uint)(beacon [11] & 0xF0) >> 4;
-			config.SO = (uint)beacon [11] & 0x0F;
-			config.panId = Util.get16 (beacon, 7);
+		public static void getBeaconInfo(byte[] beacon, MacUnassociatedState state){
+			state.coordinatorSADDR = Util.get16(beacon, 9);
+			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
+			state.SO = (uint)beacon [11] & 0x0F;
+			state.panId = Util.get16 (beacon, 7);
 #if DEBUG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));
-			Logger.appendUInt (config.coordinatorSADDR);
+			Logger.appendUInt (state.coordinatorSADDR);
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendString(csr.s2b("BO"));
-			Logger.appendUInt (config.BO);
+			Logger.appendUInt (state.BO);
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendString(csr.s2b("SO"));
-			Logger.appendUInt (config.SO);
+			Logger.appendUInt (state.SO);
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendString(csr.s2b("panId"));
-			Logger.appendUInt (config.panId);
+			Logger.appendUInt (state.panId);
 			Logger.flush(Mote.INFO);
 #endif
 		}
 
-		public static byte[] getCMDAssReqFrame(uint panId, uint saddr, MacConfig config) {
+		public static byte[] getCMDAssReqFrame(uint panId, uint saddr, MacState state) {
 #if DEBUG
 			Logger.appendString(csr.s2b("getCMDAssReqFrame("));
 			Logger.appendUInt (panId);
@@ -79,7 +79,7 @@ namespace Mac_Layer
 			byte[] cmd = new byte[19];
 			cmd[0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
 			cmd[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_XADDR;
-			cmd[2] = (byte)config.seq;
+			cmd[2] = (byte)Util.rand8 ();
 			Util.set16(cmd, 3, panId);
 			Util.set16(cmd, 5, saddr);
 			Util.set16(cmd, 7, Radio.SADDR_BROADCAST);
@@ -89,7 +89,7 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static byte[] getCMDAssRespFrame(byte[] req, uint panId, MacConfig config) {
+		public static byte[] getCMDAssRespFrame(byte[] req, uint panId, MacCoordinatorState state) {
 #if DEBUG
 			Logger.appendString(csr.s2b("getCMDAssRespFrame("));
 			Logger.appendUInt (panId);
@@ -105,9 +105,9 @@ namespace Mac_Layer
 			Util.set16(cmd,13,panId);
             Mote.getParam(Mote.EUI64, cmd, 15);
 
-			if (config.associationPermitted) {
-				config.lastAssigned += 1;
-				Util.set16(cmd,24,config.lastAssigned);
+			if (state.associationPermitted) {
+				state.lastAssigned += 1;
+				Util.set16(cmd,24,state.lastAssigned);
 				cmd[26] = (byte)0x00;
 			}
 			else{

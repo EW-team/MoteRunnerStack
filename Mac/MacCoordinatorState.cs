@@ -1,9 +1,10 @@
-using com.ibm.saguaro.system;
-using com.ibm.saguaro.logger;
+
 
 namespace Mac_Layer
 {
-
+	using com.ibm.saguaro.system;
+	using com.ibm.saguaro.logger;
+	
 	internal class MacCoordinatorState : MacState
 	{	
 
@@ -16,7 +17,7 @@ namespace Mac_Layer
 		public uint currentlyAssociated = 0;
 		public short seq = Util.rand8(); // random sequence number for cmd
 		
-		public MacCoordinatorState (Mac mac, MacConfig config) : base(mac, config)
+		public MacCoordinatorState (Mac mac) : base(mac)
 		{
 //			this.timer = new Timer();
 		}
@@ -25,7 +26,6 @@ namespace Mac_Layer
 			this.mac.radio.open (Radio.DID, null, 0, 0);
 			this.mac.radio.setPanId (panId, true);
 			this.mac.radio.setShortAddr (saddr);
-			
 		}
 		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
@@ -40,9 +40,9 @@ namespace Mac_Layer
 								case 0x01: // association request handle - coordinator
 									Logger.appendString (csr.s2b ("Received Association Request"));
 									Logger.flush (Mote.INFO);
-									byte[] assRes = Frame.getCMDAssRespFrame (data, this.config.panId, this.config);
+									byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId(), this);
 //									this.radio.stopRx ();
-									this.mac.radio.transmit (this.config.txMode, assRes, 0, Frame.getLength (assRes), time + this.config.slotInterval);
+									this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes), time + this.slotInterval);
 									break;
 								case 0x04: // data request handle - coordinator
 									break;
@@ -76,20 +76,20 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (Frame.getFrameType (data)) {
-				case Radio.FCF_BEACON:
-					this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
-					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
-					break;
-				case Radio.FCF_DATA:
-					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
-					break;
-				case Radio.FCF_CMD:
-					if (data [17] == 0x01) { // association request - not coordinator
-						this.mac.radio.startRx (this.config.rxMode, Time.currentTicks (), time + this.config.slotInterval);
-					} else if (data [17] == 0x04) { // data request - not coordinator
-
-					}
-					break;
+					case Radio.FCF_BEACON:
+						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+						this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
+						break;
+					case Radio.FCF_DATA:
+						this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
+						break;
+					case Radio.FCF_CMD:
+						if (data [17] == 0x01) { // association request - not coordinator
+//							this.mac.radio.startRx (this.rxMode, Time.currentTicks (), time + this.slotInterval); // parte di dubbia utilità
+						} else if (data [17] == 0x04) { // data request - not coordinator
+	
+						}
+						break;
 				}
 			}						
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
@@ -111,20 +111,20 @@ namespace Mac_Layer
 				this.duringSuperframe = false;
 				this.mac.radio.stopRx ();
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
-				this.mac.timer1.setAlarmTime (time + this.config.beaconInterval-this.config.nSlot*this.config.slotInterval);
+				this.mac.timer1.setAlarmTime (time + this.beaconInterval-this.nSlot*this.slotInterval);
 			}
 			else if (param == Mac.MAC_WAKEUP) {
 				this.sendBeacon();
 				this.mac.timer1.setParam (Mac.MAC_SLEEP);
-				this.mac.timer1.setAlarmBySpan (this.config.nSlot*this.config.slotInterval);
+				this.mac.timer1.setAlarmBySpan (this.nSlot*this.slotInterval);
 				this.duringSuperframe = true;
 			}
 		}
 		
 		// protected methods
 		private void sendBeacon() {
-			byte[] beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this.config);
-			this.mac.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+this.config.slotInterval);
+			byte[] beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
+			this.mac.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+this.slotInterval);
 		}
 	}
 }

@@ -1,4 +1,3 @@
-using System;
 using com.ibm.saguaro.system;
 
 namespace Mac_Layer
@@ -6,9 +5,8 @@ namespace Mac_Layer
 	internal abstract class MacState
 	{
 		internal Mac mac;
-		internal MacConfig config;
+//		internal MacConfig config;
 		internal bool duringSuperframe;
-//		internal Radio radio;
 		
 		// Beacon & Superframe Parameters
 		public uint nSlot = 15; // n. of time slots in superframe
@@ -48,7 +46,7 @@ namespace Mac_Layer
 
 				} else if (value > 15 || value > this._BO) {
 					this._SO = this._BO - 1;
-					ArgumentException.throwIt (ArgumentException.TOO_BIG);
+					ArgArgumentException.throwIt (ArgumentException.TOO_BIG);
 				} else {
 					this._SO = this._BO - 1;
 					ArgumentException.throwIt (ArgumentException.TOO_SMALL);
@@ -56,10 +54,9 @@ namespace Mac_Layer
 			}
 		}
 	
-		public MacState (Mac mac, MacConfig config)
+		public MacState (Mac mac)
 		{
 			this.mac = mac;
-			this.config = config;
 //			this.radio = new Radio();
 		}
 		
