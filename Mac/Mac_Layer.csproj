@@ -64,6 +64,13 @@
     <Compile Include="Mac.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="MacConfig.cs" />
+    <Compile Include="MacState.cs" />
+    <Compile Include="MacCoordinatorState.cs" />
+    <Compile Include="MacAssociatedState.cs" />
+    <Compile Include="MacUnassociatedState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="run.mrsh" />
+  </ItemGroup>
 </Project>

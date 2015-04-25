@@ -14,14 +14,14 @@ namespace Mac_Layer
 		public const byte MAC_SCAN_ED = (byte)0x01;
 
 		// Timer parameters
-		private const byte MAC_CMODE = (byte)0x10;
-		private const byte MAC_SLEEP_TILL_BEACON = (byte)0x11;
+		private const byte MAC_WAKEUP = (byte)0x10;
+		private const byte MAC_SLEEP = (byte)0x11;
 		private const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
-		private const byte MAC_SLEEP = (byte)0x13;
 
 		// MAC Flags codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
 		public const uint MAC_ASSOCIATED = 0xE002;
+		public const uint MAC_BEACON_SENT = 0xE003;
 
 		//----------------------------------------------------------------------//
 		//-------------------------    RESTART HERE    -------------------------//
@@ -29,8 +29,8 @@ namespace Mac_Layer
 
 		// Instance Variables
 		private Radio radio;
-		private Timer timer1;
-		private Timer timer2;
+		internal Timer timer1;
+		internal Timer timer2;
 		private byte[] pdu;
 
 		// Internal logic parameters
@@ -47,7 +47,7 @@ namespace Mac_Layer
 		public MacScanCallback scanHandler;
 
 		// Configuration
-		private MacConfig config;
+		internal MacConfig config;
 
 		public Mac () {
 			this.config = new MacConfig ();
@@ -135,11 +135,19 @@ namespace Mac_Layer
 
 		public void onTimerEvent(byte param, long time){
 			if (param == MAC_CMODE) {
-				this.radio.startRx(Radio.TIMED|Radio.RXMODE_NORMAL,Time.currentTicks(),time+config.slotInterval);
-				this.slotCounter += 1;
+//				this.radio.startRx(Radio.ASAP|Radio.RXMODE_PROMISCUOUS,Time.currentTicks(),time+config.slotInterval);
+//				this.slotCounter += 1;
+				this.duringSuperframe = false;
+				this.radio.stopRx ();
+				this.timer1.setParam (MAC_SLEEP_TILL_BEACON);
+				this.timer1.setAlarmBySpan (this.config.beaconInterval-this.config.nSlot*this.config.slotInterval);
 			}
 			else if (param == MAC_SLEEP_TILL_BEACON) {
 				this.sendBeacon();
+				this.slotCounter = 1;
+				this.timer1.setParam ((byte)MAC_CMODE);
+				this.timer1.setAlarmBySpan (this.config.nSlot*this.config.slotInterval);
+				this.duringSuperframe = true;
 			}
 			else if (param == MAC_SLEEP) { // spegnere tutto
 				this.duringSuperframe = false;
@@ -196,47 +204,42 @@ namespace Mac_Layer
 				if (data != null) {
 					switch(Frame.getFrameType (data)) {
 						case Radio.FCF_BEACON:
-						if(!this.coordinator) {
-							this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
-							Frame.getBeaconInfo (data, this.config);
-							this.handleBeaconReceived (time);
-						}
-						break;
-						case Radio.FCF_CMD:
-						switch(Frame.getCMDType (data)){
-							case 0x01: // association request handle - coordinator
-							Logger.appendString (csr.s2b ("Received Association Request"));
-							Logger.flush (Mote.INFO);
-							byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
-							this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + (config.slotInterval >> 1));
-							break;
-							case 0x04: // data request handle - coordinator
-							break;
-							case 0x02: // association response handle - not coordinator
-							Logger.appendString(csr.s2b("Received Association Response"));
-							Logger.flush(Mote.INFO);
-							switch(data[26]){
-								case 0x00: // association successful
-								this.radio.setShortAddr (Util.get16 (data, 24));
-								this.associated = true;
-								this.trackBeacon ();
-								break;
-								case 0x01:
-								this.associated = false;
-								break;
-								default:
-								return 0;
+							if(!this.coordinator) {
+								this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
+								Frame.getBeaconInfo (data, this.config);
+								this.handleBeaconReceived (time);
 							}
 							break;
-							default:
-							return 0;
-						}
-						break;
+						case Radio.FCF_CMD:
+							switch(Frame.getCMDType (data)){
+								case 0x01: // association request handle - coordinator
+									Logger.appendString (csr.s2b ("Received Association Request"));
+									Logger.flush (Mote.INFO);
+									byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
+//									this.radio.stopRx ();
+									this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + this.config.slotInterval);
+									break;
+								case 0x04: // data request handle - coordinator
+									break;
+								case 0x02: // association response handle - not coordinator
+									Logger.appendString(csr.s2b("Received Association Response"));
+									Logger.flush(Mote.INFO);
+									switch(data[26]){
+										case 0x00: // association successful
+											this.radio.setShortAddr (Util.get16 (data, 24));
+											this.associated = true;
+											this.trackBeacon ();
+											break;
+										case 0x01:
+											this.associated = false;
+											break;
+									}
+									break;
+							}
+							break;
 						case Radio.FCF_DATA:
-						// handle fcf data
-						break;
-						default:
-						return 0;
+							// handle fcf data
+							break;
 					}
 				}
 			}
@@ -254,23 +257,21 @@ namespace Mac_Layer
 		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-				if ((data[0] & 0x07) == (int)Radio.FCF_BEACON) {
-					this.slotCounter = 1;
-					this.timer1.setParam((byte)MAC_CMODE);
-					this.timer1.setAlarmTime(Time.currentTicks());
-				}
-				else if ((data[0] & 0x07) == Radio.FCF_DATA) {
-					this.txHandler(MAC_TX_COMPLETE,data,len,info,time);
-				}
-				else if((data[0] & 0x07) == Radio.FCF_CMD) {
-					if (data[17] == 0x01) { // association request - not coordinator
-						Logger.appendString(csr.s2b("Waiting Response"));
-						Logger.flush(Mote.INFO);
-						this.radio.startRx(config.rxMode, Time.currentTicks (), time+config.slotInterval);
-					}
-					else if (data[17] == 0x04) { // data request - not coordinator
+				switch (data [0] & 0x07) {
+					case Radio.FCF_BEACON:
+						this.radio.startRx (Radio.ASAP|Radio.RX4EVER,0,0);
+						this.eventHandler (MAC_BEACON_SENT, data, len, info, time);
+						break;
+					case Radio.FCF_DATA:
+						this.txHandler (MAC_TX_COMPLETE, data, len, info, time);
+						break;
+					case Radio.FCF_CMD:
+						if (data [17] == 0x01) { // association request - not coordinator
+							this.radio.startRx (config.rxMode, Time.currentTicks (), time + config.slotInterval);
+						} else if (data [17] == 0x04) { // data request - not coordinator
 
-					}
+						}
+						break;
 				}
 			}						
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
@@ -280,7 +281,6 @@ namespace Mac_Layer
 				else { // pdu = null || this.slotCounter >= nSlot
 					// impostare il risparmio energetico
 				}
-				return 0;
 			}
 			else {
 

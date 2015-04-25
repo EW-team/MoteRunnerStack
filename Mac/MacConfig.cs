@@ -39,7 +39,7 @@ namespace Mac_Layer
 		// Pan parameters
 		public bool associationPermitted = true;
 		public uint coordinatorSADDR;
-		public uint lastAssigned;
+		public uint lastAssigned = 0x0100;
 
 		// Max number of associations and currently associated
 		public uint maxAssociated = 5;
