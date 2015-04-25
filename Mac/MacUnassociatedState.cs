@@ -6,6 +6,8 @@ namespace Mac_Layer
 	
 	internal class MacUnassociatedState : MacState
 	{
+		
+		public uint coordinatorSADDR;
 	
 		public MacUnassociatedState (Mac mac, MacConfig config) : base(mac, config)
 		{
