@@ -23,7 +23,6 @@ namespace Mac_Layer
 		}
 		
 		public override void setNetwork(uint panId, uint saddr) {
-			this.mac.radio.open (Radio.DID, null, 0, 0);
 			this.mac.radio.setPanId (panId, true);
 			this.mac.radio.setShortAddr (saddr);
 		}
@@ -41,7 +40,7 @@ namespace Mac_Layer
 									Logger.appendString (csr.s2b ("Received Association Request"));
 									Logger.flush (Mote.INFO);
 									byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId(), this);
-//									this.radio.stopRx ();
+									this.mac.radio.stopRx ();
 									this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes), time + this.slotInterval);
 									break;
 								case 0x04: // data request handle - coordinator
@@ -73,11 +72,13 @@ namespace Mac_Layer
 		
 		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
+			if (this.duringSuperframe)
+				this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (Frame.getFrameType (data)) {
 					case Radio.FCF_BEACON:
-						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+//						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 						this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 						break;
 					case Radio.FCF_DATA:

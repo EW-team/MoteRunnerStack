@@ -23,9 +23,8 @@ namespace Mac_Layer
 							this.mac.timer1.setParam (Mac.MAC_SLEEP);
 							this.mac.timer1.setAlarmTime(time+this.nSlot*this.slotInterval);
 							Frame.getBeaconInfo (data, this);
-							this.mac.radio.stopRx();
 							if (this.mac.pdu != null  && this.duringSuperframe) { // there's something to transmit
-								this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+this.slotInterval);
+								this.transmit(time);
 							}
 							break;
 						case Radio.FCF_CMD:
@@ -105,6 +104,7 @@ namespace Mac_Layer
 //		}
 
 		internal void transmit(long time) {
+			this.mac.radio.stopRx();
 			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,this.mac.pdu,0,Frame.getLength (this.mac.pdu),time+this.slotInterval);
 		}
 		
