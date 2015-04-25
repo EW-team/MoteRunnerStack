@@ -14,7 +14,7 @@ namespace Oscilloscope
 		{
 			mac = new Mac();
 			mac.enable(true);
-			mac.setScanHandler(new MacScanCallback(Oscilloscope.onScan));
+//			mac.setScanHandler(new MacScanCallback(Oscilloscope.onScan));
 //			mac.scan(4,Mac.MAC_SCAN_PASSIVE);
 #if MASTER
 			mac.createPan(1, 0x0234, 0x0002);
@@ -25,13 +25,13 @@ namespace Oscilloscope
 		}
 		
 		
-		public static int onScan(uint flag, byte[] data, int chn, uint len, long time) {
-			Logger.appendInt(chn);
-			Logger.flush(Mote.INFO);
-			if(chn == 27)
-				mac.createPan(1, 0x0234, 0x0002);
-			return 0;
-		}
+//		public static int onScan(uint flag, byte[] data, int chn, uint len, long time) {
+//			Logger.appendInt(chn);
+//			Logger.flush(Mote.INFO);
+//			if(chn == 27)
+//				mac.createPan(1, 0x0234, 0x0002);
+//			return 0;
+//		}
 		
 	}
 }
