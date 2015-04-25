@@ -22,9 +22,9 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DMASTER -DIRIS --assembly=oscilloscope-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-3.0.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscopes-1.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DMASTER -DIRIS --assembly=oscilloscope-4.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.0.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscopes-2.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-1.0.sba" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>

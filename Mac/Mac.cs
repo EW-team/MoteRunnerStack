@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO.IsolatedStorage;
 
 namespace Mac_Layer
 {
@@ -113,6 +115,8 @@ namespace Mac_Layer
 		public void transmit(uint dstSaddr, short seq, byte[] data) {
 			this.pdu = Frame.getDataFrame (data,this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
 		}
+		
+		public int onMockEvent(uint flags, byte[] data, uint len, uint info, long time)
 		
 		// static methods
 		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
