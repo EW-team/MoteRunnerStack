@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO.IsolatedStorage;
+using System.Runtime.Remoting.Messaging;
 
 namespace Mac_Layer
 {
@@ -35,8 +36,8 @@ namespace Mac_Layer
 //		internal Timer timer2;
 		internal byte[] pdu;
 
-		// Internal logic parameters
-		private bool scanContinue = false;
+//		// Internal logic parameters
+//		private bool scanContinue = false;
 
 		// Callbacks
 		internal DevCallback rxHandler = new DevCallback(onMockEvent);
@@ -63,6 +64,13 @@ namespace Mac_Layer
 			this.radio.setRxHandler(this.state.onRxEvent);
 //			this.timer1.cancelAlarm ();
 			this.timer1.setCallback (this.state.onTimerEvent);
+		}
+
+		internal void onStateEvent(uint flag, uint param){
+			if(flag == MAC_ASSOCIATED){
+				this.state = new MacAssociatedState(this);
+				this.state.setNetwork (this.radio.getPanId (), param);
+			}
 		}
 
 		public void setChannel(uint channel) {

@@ -45,10 +45,7 @@ namespace Mac_Layer
 									switch(data[26]){
 										case 0x00: // association successful
 											this.mac.radio.setShortAddr (Util.get16 (data, 24));
-//											this.associated = true;
-// ---------------------------------------> Change state to Associated and start associated behaviour // Le due righe sotto sono da cambiare
-											this.mac.setState (new MacAssociatedState(this.mac));
-											this.mac.state.setNetwork (0, this.coordinatorSADDR);
+											this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
 											break;
 										case 0x01: // association failed
 											//TODO 
