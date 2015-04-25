@@ -53,10 +53,34 @@ namespace Mac_Layer
 				}
 			}
 		}
+		
+		// Scan parameters
+		public long aScanInterval;
+		private uint _scanOrder;
+		public uint scanOrder {
+			get {
+				return this._scanOrder;
+			}
+			set {
+				if (value < 15 && value > 0) {
+					this._scanOrder = value;
+					this.aScanInterval = Time.toTickSpan (Time.MILLISECS, 3 * (nSlot + 1) * (2 ^ scanOrder + 1));
+				} else if (value > 15) {
+					this._scanOrder = 5;
+					ArgumentException.throwIt (ArgumentException.TOO_BIG);
+				} else {
+					this._scanOrder = 5;
+					ArgumentException.throwIt (ArgumentException.TOO_SMALL);
+				}
+			}
+		}
 	
 		public MacState (Mac mac)
 		{
 			this.mac = mac;
+			this.scanOrder = 5;
+			this.BO = 8;
+			this.SO = 5;
 //			this.radio = new Radio();
 		}
 		

@@ -8,7 +8,7 @@ namespace Mac_Layer
 	{
 		
 		public uint coordinatorSADDR;
-		public uind panId;
+		public uint panId;
 	
 		public MacUnassociatedState (Mac mac) : base(mac)
 		{

@@ -43,11 +43,9 @@ namespace Mac_Layer
 //		internal MacScanCallback scanHandler;
 
 		// Configuration
-		internal MacConfig config;
 		internal MacState state;
 
 		public Mac () {
-			this.config = new MacConfig ();
 			this.timer1 = new Timer();
 			this.radio = new Radio();
 //			this.timer1.setCallback(onTimerEvent);
@@ -61,7 +59,7 @@ namespace Mac_Layer
 			this.radio.setEventHandler(this.state.onRadioEvent);
 			this.radio.setTxHandler(this.state.onTxEvent);
 			this.radio.setRxHandler(this.state.onRxEvent);
-			this.timer1.cancelAlarm ();
+//			this.timer1.cancelAlarm ();
 			this.timer1.setCallback (this.state.onTimerEvent);
 		}
 
@@ -72,7 +70,7 @@ namespace Mac_Layer
 
 		public void associate(uint pan) {
 			this.setState (new MacUnassociatedState(this));
-			this.state.setNetwork (pan, null);
+			this.state.setNetwork (pan, 0);
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
