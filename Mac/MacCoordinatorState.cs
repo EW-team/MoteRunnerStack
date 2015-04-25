@@ -11,14 +11,14 @@ namespace Mac_Layer
 //			this.timer = new Timer();
 		}
 		
-		public void setNetwork(uint panId, uint saddr) {
+		public override void setNetwork(uint panId, uint saddr) {
 			this.mac.radio.open (Radio.DID, null, 0, 0);
 			this.mac.radio.setPanId (panId, true);
 			this.mac.radio.setShortAddr (saddr);
 			
 		}
 		
-		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
@@ -61,17 +61,17 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
+		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (Frame.getFrameType (data)) {
 				case Radio.FCF_BEACON:
 					this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
-					this.mac.eventHandler (MAC_BEACON_SENT, data, len, info, time);
+					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
-					this.mac.txHandler (MAC_TX_COMPLETE, data, len, info, time);
+					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:
 					if (data [17] == 0x01) { // association request - not coordinator
@@ -91,11 +91,12 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public int onRadioEvent(uint flags, byte[] data, uint len, uint info, long time){
-		
+		public override int onRadioEvent(uint flags, byte[] data, uint len, uint info, long time){
+			//TODO
+			return 0;
 		}
 		
-		public void onTimerEvent(byte param, long time){
+		public override void onTimerEvent(byte param, long time){
 			if (param == Mac.MAC_SLEEP) {
 				this.duringSuperframe = false;
 				this.mac.radio.stopRx ();

@@ -30,7 +30,7 @@ namespace Mac_Layer
 		// Instance Variables
 		internal Radio radio;
 		internal Timer timer1;
-		internal Timer timer2;
+//		internal Timer timer2;
 		internal byte[] pdu;
 
 		// Internal logic parameters
@@ -55,16 +55,14 @@ namespace Mac_Layer
 
 			this.timer1 = new Timer();
 			this.timer1.setCallback(onTimerEvent);
-			this.timer2 = new Timer();
-			this.timer2.setParam(MAC_SLEEP);
-			this.timer2.setCallback(onTimerEvent);
+//			this.timer2 = new Timer();
+//			this.timer2.setParam(MAC_SLEEP);
+//			this.timer2.setCallback(onTimerEvent);
 
 			this.radio = new Radio();
 			this.radio.setEventHandler(this.onEvent);
 			this.radio.setTxHandler(this.onTxEvent);
-			this.radio.setRxHandler(this.onRxEvent);
-			
-			
+			this.radio.setRxHandler(this.onRxEvent);			
 		}
 
 		public void setChannel(uint channel) {
@@ -73,10 +71,12 @@ namespace Mac_Layer
 		}
 
 		public void associate(uint pan) {
-			this.associated = false;
-			this.radio.setPanId(pan, false);
-			this.config.panId = pan;
-			this.trackBeacon();
+			this.state = new MacUnassociatedState(this, this.config);
+			this.state.setNetwork (pan, null);
+//			this.associated = false;
+//			this.radio.setPanId(pan, false);
+//			this.config.panId = pan;
+//			this.trackBeacon();
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
