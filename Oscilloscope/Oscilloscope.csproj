@@ -26,6 +26,8 @@
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.0.sba" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscopes-2.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-1.0.sba" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscope" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscopes" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

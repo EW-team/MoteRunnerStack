@@ -22,9 +22,9 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="Clean" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-9.0 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacAssociatedState.cs MacUnassociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-9.0.sba mac-9.0.sdx mac-9.0.sxp" workingdir="${ProjectDir}" />
-        <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --prune mac" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-9.1 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacAssociatedState.cs MacUnassociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-9.1.sba mac-9.0.sdx mac-9.0.sxp" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del mac" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

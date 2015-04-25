@@ -1,12 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/Mac.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/MacCoordinatorState.cs">
     <Files>
-      <File FileName="Mac/Mac.cs" Line="205" Column="46" />
+      <File FileName="Mac/Mac.cs" Line="119" Column="20" />
       <File FileName="Oscilloscope/Oscilloscope.cs" Line="1" Column="1" />
       <File FileName="Mac/Frame.cs" Line="1" Column="1" />
       <File FileName="Mac/MacState.cs" Line="87" Column="3" />
-      <File FileName="Mac/MacCoordinatorState.cs" Line="25" Column="60" />
+      <File FileName="Mac/MacCoordinatorState.cs" Line="85" Column="74" />
       <File FileName="Mac/MacUnassociatedState.cs" Line="82" Column="58" />
       <File FileName="Mac/MacAssociatedState.cs" Line="70" Column="27" />
     </Files>

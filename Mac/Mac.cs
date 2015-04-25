@@ -39,9 +39,9 @@ namespace Mac_Layer
 		private bool scanContinue = false;
 
 		// Callbacks
-		internal DevCallback rxHandler;
-		internal DevCallback txHandler;
-		internal DevCallback eventHandler;
+		internal DevCallback rxHandler = new DevCallback(onMockEvent);
+		internal DevCallback txHandler = new DevCallback(onMockEvent);
+		internal DevCallback eventHandler = new DevCallback(onMockEvent);
 //		internal MacScanCallback scanHandler;
 
 		// Configuration
@@ -76,6 +76,7 @@ namespace Mac_Layer
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
+			this.setChannel ((byte)channel);
 			this.setState (new MacCoordinatorState(this));
 			this.state.setNetwork (panId, saddr);
 		}
@@ -116,9 +117,12 @@ namespace Mac_Layer
 			this.pdu = Frame.getDataFrame (data,this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
 		}
 		
-		public int onMockEvent(uint flags, byte[] data, uint len, uint info, long time)
-		
 		// static methods
+		public static int onMockEvent(uint flags, byte[] data, uint len, uint info, long time){
+			
+			return 0;
+		}
+		
 		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
 
 		}

@@ -25,7 +25,7 @@ namespace Mac_Layer
 		public override void setNetwork(uint panId, uint saddr) {
 			this.mac.radio.setPanId (panId, true);
 			this.mac.radio.setShortAddr (saddr);
-			this.sendBeacon ();
+			this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
 		}
 		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
@@ -73,15 +73,10 @@ namespace Mac_Layer
 		
 		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
-			if(this.duringSuperframe){
-				this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
-			}
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (Frame.getFrameType (data)) {
-					case Radio.FCF_BEACON:
-						this.duringSuperframe = true;
-//						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+					case Radio.FCF_BEACON:					
 						this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 						break;
 					case Radio.FCF_DATA:
@@ -95,14 +90,18 @@ namespace Mac_Layer
 						}
 						break;
 				}
+				if(this.duringSuperframe){
+					this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+				}
 			}						
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				
+				if (Frame.getFrameType (data) == Radio.FCF_BEACON){
+					this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
+				}
 			}
 			else {
 
-			}
-			
+			}		
 			return 0;
 		}
 		

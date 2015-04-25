@@ -78,7 +78,7 @@ namespace Mac_Layer
 		public MacState (Mac mac)
 		{
 			this.mac = mac;
-			this.scanOrder = 5;
+			this.scanOrder = 10;
 			this.BO = 8;
 			this.SO = 5;
 //			this.radio = new Radio();

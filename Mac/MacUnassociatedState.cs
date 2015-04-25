@@ -46,8 +46,9 @@ namespace Mac_Layer
 										case 0x00: // association successful
 											this.mac.radio.setShortAddr (Util.get16 (data, 24));
 //											this.associated = true;
-// ---------------------------------------> Change state to Associated and start associated behaviour
-											this.trackBeacon ();
+// ---------------------------------------> Change state to Associated and start associated behaviour // Le due righe sotto sono da cambiare
+											this.mac.setState (new MacAssociatedState(this.mac));
+											this.mac.state.setNetwork (0, this.coordinatorSADDR);
 											break;
 										case 0x01: // association failed
 											//TODO 
@@ -61,8 +62,12 @@ namespace Mac_Layer
 							break;
 					}
 				}
+				else{
+					this.trackBeacon ();
+				}
 			}
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+				this.trackBeacon ();
 				Logger.appendString(csr.s2b("Rx Error"));
 				Logger.flush(Mote.INFO);
 			}
@@ -74,12 +79,14 @@ namespace Mac_Layer
 		}
 		
 		public override int onTxEvent(uint flags, byte[] data, uint len, uint info, long time){
+			if(this.duringSuperframe)
+				this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (data [0] & 0x07) {
 					case Radio.FCF_CMD:
 						if (data [17] == 0x01) { // association request - not coordinator
-							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, Time.currentTicks (), time + this.slotInterval);
+//							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 						} else if (data [17] == 0x04) { // data request - not coordinator
 
 						}
@@ -117,8 +124,7 @@ namespace Mac_Layer
 		
 		// protected methods
 		internal void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
-			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (this.nSlot+1) * (2^14+1));
-			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.aScanInterval);
+			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, 0);
 		}
 	}
 }

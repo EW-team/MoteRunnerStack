@@ -18,12 +18,12 @@ namespace Mac_Layer
 
 		public static byte[] getBeaconFrame(uint panId, uint saddr, MacCoordinatorState state) {
 #if DEBUG
-			Logger.appendString(csr.s2b("getBeaconFrame("));
-			Logger.appendUInt (panId);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendUInt (saddr);
-			Logger.appendString(csr.s2b(");"));
-			Logger.flush(Mote.INFO);
+//			Logger.appendString(csr.s2b("getBeaconFrame("));
+//			Logger.appendUInt (panId);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendUInt (saddr);
+//			Logger.appendString(csr.s2b(");"));
+//			Logger.flush(Mote.INFO);
 #endif
 			byte[] beacon = new byte[14];
 			beacon[0] = beaconFCF;
@@ -151,6 +151,7 @@ namespace Mac_Layer
 			Util.set16(frame, 7, panId);
 			Util.set16(frame, 9, saddr);
 			Util.copyData((object)data, 0, (object)frame, headerLen+1, dataLen); // Insert data from upper layer into MAC frame
+			
 			return frame;
 		}
 

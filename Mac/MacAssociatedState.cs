@@ -10,6 +10,7 @@ namespace Mac_Layer
 		}
 		
 		public override void setNetwork(uint panId, uint saddr){
+			this.coordinatorSADDR = saddr;
 			this.trackBeacon();
 		}
 		
