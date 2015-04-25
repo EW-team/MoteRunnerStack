@@ -14,9 +14,9 @@ namespace Mac_Layer
 		public const byte MAC_SCAN_ED = (byte)0x01;
 
 		// Timer parameters
-		private const byte MAC_WAKEUP = (byte)0x10;
-		private const byte MAC_SLEEP = (byte)0x11;
-		private const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
+		internal const byte MAC_WAKEUP = (byte)0x10;
+		internal const byte MAC_SLEEP = (byte)0x11;
+		internal const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
 
 		// MAC Flags codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
@@ -31,7 +31,7 @@ namespace Mac_Layer
 		internal Radio radio;
 		internal Timer timer1;
 		internal Timer timer2;
-		private byte[] pdu;
+		internal byte[] pdu;
 
 		// Internal logic parameters
 		private uint slotCounter = 0; // counter of transmitted slots
@@ -48,6 +48,7 @@ namespace Mac_Layer
 
 		// Configuration
 		internal MacConfig config;
+		internal MacState state;
 
 		public Mac () {
 			this.config = new MacConfig ();
@@ -62,6 +63,8 @@ namespace Mac_Layer
 			this.radio.setEventHandler(this.onEvent);
 			this.radio.setTxHandler(this.onTxEvent);
 			this.radio.setRxHandler(this.onRxEvent);
+			
+			
 		}
 
 		public void setChannel(uint channel) {
@@ -76,12 +79,9 @@ namespace Mac_Layer
 			this.trackBeacon();
 		}
 
-		public void createPan(int channel, uint panId, uint saddr) {	
-			this.radio.setPanId(panId, true);
-			this.radio.setChannel((byte)channel);
-			this.radio.setShortAddr(saddr);
-			this.coordinator = true;
-			this.sendBeacon();
+		public void createPan(int channel, uint panId, uint saddr) {
+			this.state = new MacCoordinatorState(this, this.config);
+			this.state.setNetwork (panId, saddr);
 		}
 
 		// to define

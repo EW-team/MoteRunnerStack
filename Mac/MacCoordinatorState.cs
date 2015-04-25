@@ -1,20 +1,14 @@
-using System;
-using System.ComponentModel.Design;
 using com.ibm.saguaro.system;
 using com.ibm.saguaro.logger;
-using Mac_Layer;
 
 namespace Mac_Layer
 {
 
-	internal class CoordinatorState : MacState
-	{
-		private bool duringSuperframe = false;
-		private Timer timer;
-	
-		public CoordinatorState (Mac mac, MacConfig config) : base(mac, config)
+	internal class MacCoordinatorState : MacState
+	{	
+		public MacCoordinatorState (Mac mac, MacConfig config) : base(mac, config)
 		{
-			this.timer = new Timer();
+//			this.timer = new Timer();
 		}
 		
 		public void setNetwork(uint panId, uint saddr) {
@@ -102,20 +96,21 @@ namespace Mac_Layer
 		}
 		
 		public void onTimerEvent(byte param, long time){
-			if (param == MAC_WAKEUP) {
+			if (param == Mac.MAC_SLEEP) {
 				this.duringSuperframe = false;
 				this.mac.radio.stopRx ();
-				this.timer1.setParam (MAC_SLEEP_TILL_BEACON);
-				this.timer1.setAlarmBySpan (this.config.beaconInterval-this.config.nSlot*this.config.slotInterval);
+				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
+				this.mac.timer1.setAlarmTime (time + this.config.beaconInterval-this.config.nSlot*this.config.slotInterval);
 			}
-			else if (param == MAC_SLEEP) {
+			else if (param == Mac.MAC_WAKEUP) {
 				this.sendBeacon();
-				this.mac.timer1.setParam ((byte)MAC_CMODE);
+				this.mac.timer1.setParam (Mac.MAC_SLEEP);
 				this.mac.timer1.setAlarmBySpan (this.config.nSlot*this.config.slotInterval);
 				this.duringSuperframe = true;
 			}
 		}
 		
+		// protected methods
 		private void sendBeacon() {
 			byte[] beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this.config);
 			this.mac.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+this.config.slotInterval);
