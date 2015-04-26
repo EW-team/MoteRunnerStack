@@ -4,24 +4,23 @@ namespace Oscilloscope
 	using com.ibm.saguaro.logger;
 	using Mac_Layer;
 
-	#if CFG_iris
-		using com.ibm.iris;
-	#endif
-
+	
+	using com.ibm.iris;
+	
 	public class Oscilloscope
 	{
 
 		static Mac mac;
-		static byte[] data;
-		static Timer timer = new Timer();
+		static Timer timer;
 
-		static uint PAYLOAD = 9;
 
 		const uint PAYLOAD_SIZE = 5; // 3 bytes flag + 2 bytes data
+		
+		internal static byte[]	rpdu = new byte[PAYLOAD_SIZE];	// The read PDU 
+		
+		static long READ_INTERVAL;	// Read ADC every (Secs)
 
-		static readonly int READ_INTERVAL = 2;	// Read ADC every (Secs)
-
-		static readonly int MDA100_ADC_CHANNEL_MASK = 0x02;	// Bit associated with the shared ADC
+		static readonly uint MDA100_ADC_CHANNEL_MASK = 0x02;	// Bit associated with the shared ADC
 		// channel (channel 1 is shared between
 		// temp and light sensor)
 		// See ADC class documentation
@@ -30,15 +29,15 @@ namespace Oscilloscope
 		// Payload flags
 		internal static readonly byte[] FLAG_TEMP	 = csr.s2b("TMP");	// Flag for temperature data
 		internal static readonly byte[] FLAG_LIGHT	 = csr.s2b("LGT");	// Flag for light data
-		#if CFG_iris
+	
 		// Sensors power pins
 		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
 		internal static readonly byte LIGHT_PWR_PIN   = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
-		#endif
+	
 		// To read sensor values
-		internal static ADC	adc = new ADC();
+		static ADC adc ;
 		// To power on the sensors
-		internal static GPIO pwrPins = new GPIO();
+		static GPIO pwrPins;
 		
 
 
@@ -46,21 +45,30 @@ namespace Oscilloscope
 		{
 			mac = new Mac();
 			mac.enable(true);
+			timer = new Timer();
 			timer.setCallback (onTimeEvent);
 			mac.setChannel (1);
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
 			mac.setEventHandler (new DevCallback(onEvent));
-			mac.associate(0x0234);
-		    
-			#if CFG_iris
+			//mac.associate(0x0234);
+		    	
+				// convert 2 seconds to the platform ticks
+            	READ_INTERVAL = Time.toTickSpan(Time.SECONDS, 2);
+		
 				//GPIO, power pins
+				pwrPins = new GPIO();
+				
 				pwrPins.open(); 
 				pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+				
 				//ADC
+				adc = new ADC();
+				
+				
 				adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+				
 				adc.setReadHandler(adcReadCallback);
-			#endif
 		}
 		
 		static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {
@@ -69,20 +77,18 @@ namespace Oscilloscope
 				LED.setState(IRIS.LED_RED,(byte)1);
 				return 0;
 			}
-			int dataOffset;
+			
 			byte[] dataFlag;
 			// We alternate between powering the temperature and the light sensor
-			// Temperature values are at offset 0.
-			// Light values are at offset 2.
+			
 			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
-				dataOffset = 0;
 				dataFlag = FLAG_TEMP;
 				// Powers ON light and OFF temperature sensor
 				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
 				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
 			}
 			else {	// Light read
-				dataOffset = 2;
+				
 				dataFlag = FLAG_LIGHT;
 				// Powers ON temperature and ON light sensor
 				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
@@ -91,13 +97,13 @@ namespace Oscilloscope
 
 			// Sends data
 			uint flagLength = (uint)dataFlag.Length;
-			Util.copyData((object)dataFlag, 0, (object)data, PAYLOAD, flagLength);		// Payload flag bytes, FLAG_TEMP || FLAG_LIGHT
-			Util.copyData((object)data, 0, (object)data, PAYLOAD+flagLength, 2);	// Payload data bytes
+			Util.copyData(dataFlag, 0, rpdu, 0, flagLength);		// Payload flag bytes, FLAG_TEMP || FLAG_LIGHT
+			Util.copyData(data, 0, rpdu, flagLength, 2);	// Payload data bytes
 			//Transmission  
-			mac.transmit(0x0002, 1, data);
+			mac.transmit(0x0002, 1, rpdu);
 
 			// Schedule next read
-			adc.read(Device.TIMED, 1, Time.currentTicks()+Time.toTickSpan(Time.SECONDS,READ_INTERVAL));
+			adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
 			return 0;
 		}
 		
