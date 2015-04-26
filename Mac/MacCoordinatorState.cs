@@ -45,8 +45,7 @@ namespace Mac_Layer
 						case Radio.FCF_CMD:
 							switch(Frame.getCMDType (data)){
 								case 0x01: // association request handle - coordinator
-									Logger.appendString (csr.s2b ("Received Association Request"));
-									Logger.flush (Mote.INFO);
+									this.mac.eventHandler(Mac.MAC_ASS_REQ,data,len,info,time);
 									byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId(), this);
 									this.mac.radio.stopRx ();
 									this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes), time + this.slotInterval);
@@ -90,10 +89,8 @@ namespace Mac_Layer
 						this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 						break;
 					case Radio.FCF_CMD:
-						if (data [17] == 0x01) { // association request - not coordinator
-//							this.mac.radio.startRx (this.rxMode, Time.currentTicks (), time + this.slotInterval); // parte di dubbia utilità
-						} else if (data [17] == 0x04) { // data request - not coordinator
-	
+						if (data [17] == 0x02) { // association response
+							this.mac.txHandler(Mac.MAC_ASS_RESP,data,len,info,time);
 						}
 						break;
 				}

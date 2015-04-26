@@ -25,6 +25,9 @@ namespace Mac_Layer
 		public const uint MAC_TX_COMPLETE = 0xE001;
 		public const uint MAC_ASSOCIATED = 0xE002;
 		public const uint MAC_BEACON_SENT = 0xE003;
+		public const uint MAC_ASS_REQ = 0xE004;
+		public const uint MAC_ASS_RESP = 0xE005;
+		public const uint MAC_BEACON_RXED = 0xE006;
 
 		//----------------------------------------------------------------------//
 		//-------------------------    RESTART HERE    -------------------------//

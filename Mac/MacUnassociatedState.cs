@@ -40,6 +40,7 @@ namespace Mac_Layer
 							this.mac.timer1.setParam (Mac.MAC_SLEEP);
 							this.mac.timer1.setAlarmTime(time+this.nSlot*this.slotInterval);
 							Frame.getBeaconInfo (data, this);
+							this.mac.eventHandler(Mac.MAC_BEACON_RXED, data, len, info, time);
 							this.mac.radio.stopRx();
 //							this.mac.radio.setPanId (this.panId, false);
 							byte[] assRequest = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
@@ -95,6 +96,7 @@ namespace Mac_Layer
 				switch (data [0] & 0x07) {
 					case Radio.FCF_CMD:
 						if (data [17] == 0x01) { // association request - not coordinator
+							this.mac.txHandler(Mac.MAC_ASS_REQ, data, len, info, time);
 							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 						} else if (data [17] == 0x04) { // data request - not coordinator
 
