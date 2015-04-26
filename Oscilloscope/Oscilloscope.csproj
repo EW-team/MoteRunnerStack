@@ -22,10 +22,10 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-4.1 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.1.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscopes-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-3.0.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-5.0 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-5.0.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscopes-4.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-4.0.sba" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscope" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscopes" workingdir="${ProjectDir}" />
       </CustomCommands>
@@ -68,5 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="run.mrsh" />
+    <None Include="Oscilloscope.js" />
   </ItemGroup>
 </Project>

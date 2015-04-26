@@ -4,9 +4,9 @@ namespace Oscilloscope
 	using com.ibm.saguaro.logger;
 	using Mac_Layer;
 
-	#if CFG_iris
-		using com.ibm.iris;
-	#endif
+
+	using com.ibm.iris;
+
 
 	public class Oscilloscope
 	{
@@ -30,11 +30,11 @@ namespace Oscilloscope
 		// Payload flags
 		internal static readonly byte[] FLAG_TEMP	 = csr.s2b("TMP");	// Flag for temperature data
 		internal static readonly byte[] FLAG_LIGHT	 = csr.s2b("LGT");	// Flag for light data
-		#if CFG_iris
+
 		// Sensors power pins
 		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
 		internal static readonly byte LIGHT_PWR_PIN   = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
-		#endif
+
 		// To read sensor values
 		internal static ADC	adc = new ADC();
 		// To power on the sensors
@@ -46,21 +46,19 @@ namespace Oscilloscope
 		{
 			mac = new Mac();
 			mac.enable(true);
-			timer.setCallback (onTimeEvent);
+			timer.setCallback (Oscilloscope.onTimeEvent);
 			mac.setChannel (1);
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
 			mac.setEventHandler (new DevCallback(onEvent));
 			mac.associate(0x0234);
 		    
-			#if CFG_iris
-				//GPIO, power pins
-				pwrPins.open(); 
-				pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
-				//ADC
-				adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
-				adc.setReadHandler(adcReadCallback);
-			#endif
+			//GPIO, power pins
+			pwrPins.open(); 
+			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			//ADC
+			adc.open(/* chmap */ (uint)MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			adc.setReadHandler(adcReadCallback);
 		}
 		
 		static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {

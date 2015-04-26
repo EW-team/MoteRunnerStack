@@ -27,6 +27,8 @@ namespace Oscilloscope
 		const uint IPADDR_LEN = 4;
 		const byte PWR_PIN    = WASPMOTE.PIN_DIGITAL1;
 		const byte ALARM_PIN  = WASPMOTE.PIN_RESERVED;
+#else
+		const uint IPADDR_LEN = 4;
 #endif
 		// Fixed MR port for this application.
 		const byte MR_APP_PORT   =  126;
@@ -56,7 +58,7 @@ namespace Oscilloscope
 //			// Register a method for network message directed to this assembly.
 //		    Assembly.setDataHandler(onLipData);
 		    // Handle system events
-		    Assembly.setSystemInfoCallback(onSysInfo);
+		    Assembly.setSystemInfoCallback(new SystemInfo(onSysInfo));
 			// Open specific fixed LIP port
 	    	LIP.open(MR_APP_PORT);
 	    	
@@ -90,7 +92,7 @@ namespace Oscilloscope
 					header[ROFF_MSG_TAG] = (byte)MSG_NO_DATA;
 				Util.set32 (header, ROFF_TIME, time);
 				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR
-				LIP.send (header, headerLength, data, len+3, data.Length-len);
+				LIP.send (header, headerLength, data, len+3, (uint)data.Length-len);
 			}
 			return 0;
 		}
