@@ -1,5 +1,5 @@
-using System;
 using com.ibm.iris;
+using System.Reflection;
 
 namespace Oscilloscope
 {
@@ -10,7 +10,9 @@ namespace Oscilloscope
 	public class Oscilloscope
 	{
 		static Mac mac;
-
+#if !MASTER
+		static Timer timer = new Timer();
+#endif
 		static Oscilloscope ()
 		{
 			mac = new Mac();
@@ -21,6 +23,7 @@ namespace Oscilloscope
 			LIP.open (IRIS.DID_UART);
 			mac.createPan(1, 0x0234, 0x0002);
 #else
+			timer.setCallback (onTimeEvent);
 			mac.setChannel (1);
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
@@ -29,13 +32,22 @@ namespace Oscilloscope
 #endif
 		}
 		
+		public static void onTimeEvent(byte param, long time) {
+			
+		}
+		
 		public static int onTxEvent (uint flag, byte[] data, uint info, uint len, long time) {
 			
 			return 0;
 		}
 		
 		public static int onRxEvent (uint flag, byte[] data, uint info, uint len, long time) {
+#if MASTER
 			
+#endif
+			if(flag == Mac.MAC_TX_COMPLETE){
+				LIP.
+			}
 			return 0;
 		}
 		

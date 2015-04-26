@@ -35,6 +35,14 @@ namespace Mac_Layer
 			
 		}
 		
+		internal void setNextAddr() {
+			this.lastAssigned ++;
+		}
+		
+		internal uint getNextAddr() {
+			return this.lastAssigned;
+		}
+		
 		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
@@ -90,6 +98,7 @@ namespace Mac_Layer
 						break;
 					case Radio.FCF_CMD:
 						if (data [17] == 0x02) { // association response
+							this.setNextAddr ();
 							this.mac.txHandler(Mac.MAC_ASS_RESP,data,len,info,time);
 						}
 						break;

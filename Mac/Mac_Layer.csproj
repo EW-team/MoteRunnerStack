@@ -69,6 +69,7 @@
     <Compile Include="MacCoordinatorState.cs" />
     <Compile Include="MacAssociatedState.cs" />
     <Compile Include="MacUnassociatedState.cs" />
+    <Compile Include="Security.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

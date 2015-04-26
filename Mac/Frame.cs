@@ -106,8 +106,7 @@ namespace Mac_Layer
             Mote.getParam(Mote.EUI64, cmd, 15);
 			cmd[23] = 0x02;
 			if (state.associationPermitted) {
-				state.lastAssigned += 1;
-				Util.set16(cmd,24,state.lastAssigned);
+				Util.set16(cmd,24,state.getNextAddr ());
 				cmd[26] = (byte)0x00;
 			}
 			else{
