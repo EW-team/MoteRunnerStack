@@ -63,7 +63,10 @@ namespace Mac_Layer
 							}
 							break;
 						case Radio.FCF_DATA:
-							// handle fcf data
+//							uint dataPos = Frame.getPayloadPosition (data);
+//							byte[] payload = (byte[])Util.alloca ((byte)(data.Length-dataPos+1), Util.BYTE_ARRAY);
+//							Util.copyData ((object)data, dataPos, (object)payload, 0, (uint)data.Length);
+							this.mac.rxHandler(Mac.MAC_DATA_RXED, data, Frame.getPayloadPosition (data), Frame.getSrcSADDR (data), time);
 							break;
 					}
 				}

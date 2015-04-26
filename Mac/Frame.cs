@@ -216,6 +216,18 @@ namespace Mac_Layer
 				SystemException.throwIt (SystemException.NOT_SUPPORTED);
 			return 0;
 		}
+		
+		public static uint getSrcSADDR(byte[] data) {
+			uint srcSaddr = (uint)(data[1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(data[1] & Radio.FCA_DST_MASK);
+			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR)
+				return data[9];
+			else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_SADDR)
+				return data[15];
+			else 
+				ArgumentException.throwIt (ArgumentException.TOO_BIG);
+			return 0;
+		}
 	}
 }
 

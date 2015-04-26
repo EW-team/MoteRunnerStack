@@ -28,6 +28,7 @@ namespace Mac_Layer
 		public const uint MAC_ASS_REQ = 0xE004;
 		public const uint MAC_ASS_RESP = 0xE005;
 		public const uint MAC_BEACON_RXED = 0xE006;
+		public const uint MAC_DATA_RXED = 0xE007;
 
 		//----------------------------------------------------------------------//
 		//-------------------------    RESTART HERE    -------------------------//
