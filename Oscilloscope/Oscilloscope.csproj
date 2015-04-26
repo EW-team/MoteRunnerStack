@@ -22,9 +22,9 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DMASTER -DIRIS --assembly=oscilloscope-4.1 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-4.1 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.1.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=oscilloscopes-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscopes-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-3.0.sba" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscope" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscopes" workingdir="${ProjectDir}" />
@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Oscilloscope.cs" />
+    <Compile Include="MasterOscilloscope.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
