@@ -60,6 +60,7 @@ namespace Mac_Layer
 							                         time + this.slotInterval);
 									break;
 								case 0x04: // data request handle - coordinator
+									//TODO		
 									break;
 							}
 							break;
@@ -74,24 +75,22 @@ namespace Mac_Layer
 							else
 								this.mac.rxHandler(Mac.MAC_DATA_RXED, null, 0, 
 						                   		Frame.getSrcSADDR (data), time);
-							
+								//TODO
 							break;
 					}
 				}
 				if (this.duringSuperframe) { // turn back to receive
-					
+					//TODO
 				}
 				else { // stop receive
-					
+					//TODO
 				}
 			}
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				Logger.appendString(csr.s2b("Rx Error"));
-				Logger.flush(Mote.INFO);
+				//TODO
 			}
 			else{
-				Logger.appendString(csr.s2b("Rx what else?"));
-				Logger.flush(Mote.INFO);
+				//TODO
 			}
 			return 0;
 		}
@@ -124,7 +123,7 @@ namespace Mac_Layer
 				}
 			}
 			else {
-
+				//TODO
 			}		
 			return 0;
 		}

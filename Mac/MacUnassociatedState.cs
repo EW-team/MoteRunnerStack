@@ -52,8 +52,6 @@ namespace Mac_Layer
 							uint pos = Frame.getPayloadPosition(data);
 							switch((uint)data[pos]){
 								case 0x02: // association response handle - not coordinator
-									Logger.appendString(csr.s2b("Received Association Response"));
-									Logger.flush(Mote.INFO);
 									switch((uint)data[pos+3]){
 										case 0x00: // association successful
 											this.mac.radio.stopRx ();
@@ -78,12 +76,12 @@ namespace Mac_Layer
 			}
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				this.trackBeacon ();
-				Logger.appendString(csr.s2b("Rx Error"));
-				Logger.flush(Mote.INFO);
+//				Logger.appendString(csr.s2b("Rx Error"));
+//				Logger.flush(Mote.INFO);
 			}
 			else{
-				Logger.appendString(csr.s2b("Rx what else?"));
-				Logger.flush(Mote.INFO);
+//				Logger.appendString(csr.s2b("Rx what else?"));
+//				Logger.flush(Mote.INFO);
 			}
 			return 0;
 		}

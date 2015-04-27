@@ -81,7 +81,7 @@ namespace Mac_Layer
 
 		// to define
 		public void disassociate( ) {
-			
+			//TODO
 		}
 
 		public void enable(bool onOff){
@@ -117,8 +117,6 @@ namespace Mac_Layer
 			uint headLen = (uint) header.Length;
 			uint dataLen = (uint) data.Length;
 			this.pdu = new byte[headLen+dataLen];
-			Logger.appendInt(data.Length);
-			Logger.flush(Mote.INFO);
 			Util.copyData(header,0,this.pdu,0,headLen);
 			Util.copyData(data,0,this.pdu,headLen,dataLen);
 		}
@@ -130,7 +128,7 @@ namespace Mac_Layer
 		}
 		
 		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
-
+			//TODO
 		}
 
 //		public void scan(int channel, uint mode) {

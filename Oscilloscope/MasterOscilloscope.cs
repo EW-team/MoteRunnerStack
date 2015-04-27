@@ -86,12 +86,6 @@ namespace Oscilloscope
 		}
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			Logger.appendString(csr.s2b("Master len: "));
-			Logger.appendUInt(len);
-			Logger.flush(Mote.INFO);
-			Logger.appendString(csr.s2b("Master data len: "));
-			Logger.appendInt(data.Length);
-			Logger.flush(Mote.INFO);
 			if(flag == Mac.MAC_DATA_RXED){
 				if(data == null)
 					header[ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
