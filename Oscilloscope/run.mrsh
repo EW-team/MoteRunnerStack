@@ -1,5 +1,5 @@
 
-set-var APP_PORT 126 
+set-var -e APP_PORT 126 
 
 socket-close -f socket
 source ./js_server/socket.js 
