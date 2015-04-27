@@ -121,31 +121,28 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static void setDataFrame(ref object frame, ref object data, uint panId, uint saddr, uint dsaddr, short seq) {
-#if DEBUG
-			Logger.appendString(csr.s2b("getDataFrame("));
-			Logger.appendUInt (panId);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendUInt (saddr);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendUInt (dsaddr);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendInt (seq);
-			Logger.appendString(csr.s2b(");"));
-			Logger.flush(Mote.INFO);
-#endif
-			frame = Util.alloca ((byte)(11 + ((byte[])data).Length), Util.BYTE_ARRAY);
-			Util.set16((byte[])frame,2, (uint)seq);
-			Util.set16((byte[])frame,0, ((Radio.FCF_DATA | Radio.FCF_ACKRQ)<<8)|Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR);
-//			((byte[])frame[0]) = Radio.FCF_DATA | Radio.FCF_ACKRQ; // data FCF with request of acknowledge
-//			((byte[])frame[1]) = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA with destination short address and source short address
-//			((byte[])frame[2]) = (byte) seq;
-			Util.set16(((byte[])frame),3, panId);
-			Util.set16(((byte[])frame), 5, dsaddr);
-			Util.set16(((byte[])frame), 7, panId);
-			Util.set16(((byte[])frame), 9, saddr);
-			Util.copyData(data, 0, frame, 11, (uint)((byte[])data).Length); // Insert data from upper layer into MAC frame
-		}
+//		public static void setDataFrame(ref object frame, ref object data, uint panId, uint saddr, uint dsaddr, short seq) {
+//#if DEBUG
+//			Logger.appendString(csr.s2b("getDataFrame("));
+//			Logger.appendUInt (panId);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendUInt (saddr);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendUInt (dsaddr);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendInt (seq);
+//			Logger.appendString(csr.s2b(");"));
+//			Logger.flush(Mote.INFO);
+//#endif
+//			frame = Util.alloca ((byte)(11 + ((byte[])data).Length), Util.BYTE_ARRAY);
+//			Util.set16((byte[])frame,2, (uint)seq);
+//			Util.set16((byte[])frame,0, ((Radio.FCF_DATA | Radio.FCF_ACKRQ)<<8)|Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR);
+//			Util.set16(((byte[])frame),3, panId);
+//			Util.set16(((byte[])frame), 5, dsaddr);
+//			Util.set16(((byte[])frame), 7, panId);
+//			Util.set16(((byte[])frame), 9, saddr);
+//			Util.copyData(data, 0, frame, 11, (uint)((byte[])data).Length); // Insert data from upper layer into MAC frame
+//		}
 		
 		public static byte[] getDataHeader(uint panId, uint saddr, uint dsaddr, short seq) {
 #if DEBUG
@@ -221,9 +218,9 @@ namespace Mac_Layer
 			uint srcSaddr = (uint)(data[1] & Radio.FCA_SRC_MASK);
 			uint dstSaddr = (uint)(data[1] & Radio.FCA_DST_MASK);
 			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR)
-				return data[9];
+				return Util.get16(data, 9);
 			else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_SADDR)
-				return data[15];
+				return Util.get16(data, 15);
 			else 
 				ArgumentException.throwIt (ArgumentException.TOO_BIG);
 			return 0;

@@ -5,6 +5,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oscilloscope", "Oscilloscop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac_Layer", "Mac\Mac_Layer.csproj", "{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{3C1D1F69-6C80-4A4E-A1D6-501BA265001E}"
+	ProjectSection(SolutionItems) = preProject
+		js_server\server.js = js_server\server.js
+		js_server\socket.js = js_server\socket.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +25,8 @@ Global
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC9D8D95-3E8F-4B0B-BD61-A324F7612FC7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Oscilloscope\Oscilloscope.csproj

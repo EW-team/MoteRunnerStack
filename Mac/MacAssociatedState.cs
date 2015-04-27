@@ -114,9 +114,10 @@ namespace Mac_Layer
 
 		internal void transmit(long time) {
 			this.mac.radio.stopRx();
-//			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,(byte[])this.mac.pdu,0,Frame.getLength ((byte[])this.mac.pdu),time+this.slotInterval);
-			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
-										this.mac.pdu,0,(uint)this.mac.pdu.Length,time+this.slotInterval);
+			uint len = (uint)this.mac.pdu.Length;
+			this.mac.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA, this.mac.pdu,0,len, time+this.slotInterval);
+//			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
+//										this.mac.pdu,0,len,time+this.slotInterval);
 		}
 		
 	}

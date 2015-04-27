@@ -42,14 +42,15 @@ namespace Oscilloscope
 		const uint ROFF_SADDR  	 = ROFF_TIME+4;
 		const uint ROFF_PAYLOAD  = ROFF_SADDR+2;
 		
-		// sensor data flag
-		const byte MSG_NO_DATA    = 0x00;
-		const byte MSG_DATA    = 0x01;
+		// Payload flags
+		const byte FLAG_NO_DATA  = (byte)0x00;
+		const byte FLAG_TEMP	 = (byte)0x01;	// Flag for temperature data
+		const byte FLAG_LIGHT	 = (byte)0x02;	// Flag for light data
 		
 		
 		static byte[] header;
 		
-		const uint headerLength = 17;
+		const uint headerLength = ROFF_SADDR+2;
 		
 		static Mac mac;
 		
@@ -85,14 +86,20 @@ namespace Oscilloscope
 		}
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+			Logger.appendString(csr.s2b("Master len: "));
+			Logger.appendUInt(len);
+			Logger.flush(Mote.INFO);
+			Logger.appendString(csr.s2b("Master data len: "));
+			Logger.appendInt(data.Length);
+			Logger.flush(Mote.INFO);
 			if(flag == Mac.MAC_DATA_RXED){
-				if(data.Length > len)
-					header[ROFF_MSG_TAG] = (byte)MSG_DATA;
+				if(data == null)
+					header[ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
 				else
-					header[ROFF_MSG_TAG] = (byte)MSG_NO_DATA;
+					header[ROFF_MSG_TAG] = data[0];
 				Util.set32 (header, ROFF_TIME, time);
-				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR
-				LIP.send (header, headerLength, data, len+3, (uint)data.Length-len);
+				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR				
+//				LIP.send (header, headerLength, data, 0, (uint)data.Length);
 			}
 			return 0;
 		}

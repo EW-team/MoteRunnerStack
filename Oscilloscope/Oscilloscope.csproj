@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Oscilloscope</RootNamespace>
     <AssemblyName>Oscilloscope</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,5 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="run.mrsh" />
+    <None Include="js_server\server.js" />
+    <None Include="js_server\socket.js" />
   </ItemGroup>
 </Project>

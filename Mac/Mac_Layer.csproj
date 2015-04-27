@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Mac_Layer</RootNamespace>
     <AssemblyName>Mac</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,8 +21,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DIRIS --assembly=mac-6.0 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacAssociatedState.cs MacUnassociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-6.0.sba mac-6.0.sdx mac-6.0.sxp" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc  -DIRIS --assembly=mac-8.0 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacAssociatedState.cs MacUnassociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-8.0.sba mac-8.0.sdx mac-8.0.sxp" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del mac" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>

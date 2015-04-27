@@ -14,9 +14,12 @@ namespace Oscilloscope
 		static Timer timer;
 
 
-		const uint PAYLOAD_SIZE = 5; // 3 bytes flag + 2 bytes data
+		const uint PAYLOAD_SIZE = 3; // 3 bytes flag + 2 bytes data
 		
 		internal static byte[]	rpdu = new byte[PAYLOAD_SIZE];	// The read PDU 
+		
+		internal static byte[] dummy = new byte[5];
+		
 		
 		static long READ_INTERVAL;	// Read ADC every (Secs)
 
@@ -27,8 +30,8 @@ namespace Oscilloscope
 		// See below
 
 		// Payload flags
-		internal static readonly byte[] FLAG_TEMP	 = csr.s2b("TMP");	// Flag for temperature data
-		internal static readonly byte[] FLAG_LIGHT	 = csr.s2b("LGT");	// Flag for light data
+		const byte FLAG_TEMP	 = (byte)0x01;	// Flag for temperature data
+		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
 	
 		// Sensors power pins
 		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
@@ -44,6 +47,10 @@ namespace Oscilloscope
 		static Oscilloscope ()
 		{
 			
+			dummy[0] = (byte)0x01;
+			dummy[2] = (byte)0x02;
+			dummy[4] = (byte)0x03;
+			
 			timer = new Timer();
 			mac = new Mac();
 			timer.setCallback (new TimerEvent(onTimeEvent));
@@ -52,24 +59,24 @@ namespace Oscilloscope
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
 			mac.setEventHandler (new DevCallback(onEvent));
-			//mac.associate(0x0234);
+			mac.associate(0x0234);
 		    	
-				// convert 2 seconds to the platform ticks
-            	READ_INTERVAL = Time.toTickSpan(Time.SECONDS, 2);
-		
-				//GPIO, power pins
-				pwrPins = new GPIO();
-				
-				pwrPins.open(); 
-				pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
-				
-				//ADC
-				adc = new ADC();
-				
-				
-				adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
-				
-				adc.setReadHandler(adcReadCallback);
+			// convert 2 seconds to the platform ticks
+        	READ_INTERVAL = Time.toTickSpan(Time.SECONDS, 2);
+	
+			//GPIO, power pins
+			pwrPins = new GPIO();
+			
+			pwrPins.open(); 
+			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			
+			//ADC
+			adc = new ADC();
+			
+			
+			adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			
+			adc.setReadHandler(adcReadCallback);
 		}
 		
 		static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {
@@ -79,30 +86,30 @@ namespace Oscilloscope
 				return 0;
 			}
 			
-			byte[] dataFlag;
+//			byte[] dataFlag;
 			// We alternate between powering the temperature and the light sensor
 			
 			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
-				dataFlag = FLAG_TEMP;
+				rpdu[0] = FLAG_TEMP;
 				// Powers ON light and OFF temperature sensor
 				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
 				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
 			}
 			else {	// Light read
 				
-				dataFlag = FLAG_LIGHT;
+				rpdu[0] = FLAG_LIGHT;
 				// Powers ON temperature and ON light sensor
 				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
 				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_CLR);		
 			}
 
 			// Sends data
-			uint flagLength = (uint)dataFlag.Length;
-			Util.copyData(dataFlag, 0, rpdu, 0, flagLength);		// Payload flag bytes, FLAG_TEMP || FLAG_LIGHT
-			Util.copyData(data, 0, rpdu, flagLength, 2);	// Payload data bytes
+//			uint flagLength = (uint)dataFlag.Length;
+//			Util.copyData(dataFlag, 0, rpdu, 0, flagLength);		// Payload flag bytes, FLAG_TEMP || FLAG_LIGHT
+			Util.copyData(data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
-			mac.transmit(0x0002, 1, rpdu);
-
+			mac.send(0x0002, 1, rpdu);
+//			mac.transmit(0x0002, 1, dummy);
 			// Schedule next read
 			adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
 			return 0;
@@ -113,7 +120,7 @@ namespace Oscilloscope
 		}
 		//On transmission blink green led
 		static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			LED.setState(IRIS.LED_GREEN, (byte) ~(flag & Device.FLAG_FAILED));
+			LED.setState(IRIS.LED_GREEN, (byte)(flag & Device.FLAG_FAILED));
 			return 0;
 		}
 		
@@ -121,15 +128,16 @@ namespace Oscilloscope
 			if(flag == Mac.MAC_TX_COMPLETE){
 //				LIP.
 			}
+			else {
+				
+			}
 			return 0;
 		}
 		
 		static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			switch(flag){
 				case Mac.MAC_ASSOCIATED:
-					byte[] pdu = new byte[4];
-					Util.set16 (pdu,0,111);
-					mac.transmit (0x0002, 1, pdu);
+					adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
 					break;
 				default:
 					return 0;

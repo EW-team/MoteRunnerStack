@@ -56,17 +56,25 @@ namespace Mac_Layer
 									this.mac.eventHandler(Mac.MAC_ASS_REQ,data,len,info,time);
 									byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId(), this);
 									this.mac.radio.stopRx ();
-									this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes), time + this.slotInterval);
+									this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes),
+							                         time + this.slotInterval);
 									break;
 								case 0x04: // data request handle - coordinator
 									break;
 							}
 							break;
 						case Radio.FCF_DATA:
-//							uint dataPos = Frame.getPayloadPosition (data);
-//							byte[] payload = (byte[])Util.alloca ((byte)(data.Length-dataPos+1), Util.BYTE_ARRAY);
-//							Util.copyData ((object)data, dataPos, (object)payload, 0, (uint)data.Length);
-							this.mac.rxHandler(Mac.MAC_DATA_RXED, data, Frame.getPayloadPosition (data), Frame.getSrcSADDR (data), time);
+							uint pos = Frame.getPayloadPosition(data);
+							if((len-pos) > 0) {
+								byte[] pdu = new byte[len - pos];
+								Util.copyData(data,len,pdu,0,len-pos);
+								this.mac.rxHandler(Mac.MAC_DATA_RXED, pdu, len-pos, 
+						                   		Frame.getSrcSADDR (data), time);
+							}
+							else
+								this.mac.rxHandler(Mac.MAC_DATA_RXED, null, 0, 
+						                   		Frame.getSrcSADDR (data), time);
+							
 							break;
 					}
 				}
