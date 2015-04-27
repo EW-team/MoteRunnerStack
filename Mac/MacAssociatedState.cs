@@ -9,7 +9,6 @@ namespace Mac_Layer
 		public MacAssociatedState (Mac mac,uint panId, uint saddr) : base(mac, panId)
 		{
 			this.coordinatorSADDR = saddr;
-			this.trackBeacon ();
 		}
 		
 //		public override void setNetwork(uint panId, uint saddr){

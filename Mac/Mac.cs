@@ -56,14 +56,11 @@ namespace Mac_Layer
 		public Mac () {
 			this.timer1 = new Timer();
 			this.radio = new Radio();
-//			this.timer1.setCallback(onTimerEvent);
-//			this.timer2 = new Timer();
-//			this.timer2.setParam(MAC_SLEEP);
-//			this.timer2.setCallback(onTimerEvent);
 		}
 
 		internal void onStateEvent(uint flag, uint param){
 			if(flag == MAC_ASSOCIATED){
+				this.timer1.cancelAlarm();
 				this.state = new MacAssociatedState(this, this.radio.getPanId (), param);
 				this.eventHandler(MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
@@ -71,18 +68,15 @@ namespace Mac_Layer
 
 		public void setChannel(uint channel) {
 			this.radio.setChannel((byte)channel);
-//			this.config.rChannel = channel;
 		}
 
 		public void associate(uint panId) {
 			this.state = new MacUnassociatedState(this, panId);
-//			this.state.setNetwork (pan, 0);
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
 			this.setChannel ((byte)channel);
 			this.state = new MacCoordinatorState(this, panId, saddr);
-//			this.state.setNetwork (panId, saddr);
 		}
 
 		// to define

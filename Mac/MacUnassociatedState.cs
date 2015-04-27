@@ -123,7 +123,8 @@ namespace Mac_Layer
 		public override void onTimerEvent(byte param, long time){
 			if (param == Mac.MAC_SLEEP) {
 				this.duringSuperframe = false;
-				this.mac.radio.stopRx ();
+				if(this.mac.radio.getState() == Radio.S_RXEN)
+					this.mac.radio.stopRx ();
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
 											(this.nSlot+1)*this.slotInterval);

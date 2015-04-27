@@ -99,7 +99,7 @@ namespace Oscilloscope
 					header[ROFF_MSG_TAG] = data[0];
 				Util.set32 (header, ROFF_TIME, time);
 				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR				
-//				LIP.send (header, headerLength, data, 0, (uint)data.Length);
+				LIP.send (header, headerLength, data, 0, (uint)data.Length);
 			}
 			return 0;
 		}

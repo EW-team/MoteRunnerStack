@@ -5,6 +5,8 @@ socket-close -f socket
 
 socket-bind -s ./js_server/socket.js socket
 
-mote-create -d iris 2
+mote-create -d iris 4
 a0 msetup-setup oscilloscope
 a1 msetup-setup oscilloscopes
+a2 msetup-setup oscilloscopes
+a3 msetup-setup oscilloscopes
