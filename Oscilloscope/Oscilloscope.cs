@@ -43,10 +43,11 @@ namespace Oscilloscope
 
 		static Oscilloscope ()
 		{
-			mac = new Mac();
-			mac.enable(true);
+			
 			timer = new Timer();
-			timer.setCallback (onTimeEvent);
+			mac = new Mac();
+			timer.setCallback (new TimerEvent(onTimeEvent));
+			mac.enable(true);
 			mac.setChannel (1);
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
@@ -107,23 +108,23 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		public static void onTimeEvent(byte param, long time) {
+		static void onTimeEvent(byte param, long time) {
 			
 		}
 		//On transmission blink green led
-		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			LED.setState(IRIS.LED_GREEN, (byte) ~(flag & Device.FLAG_FAILED));
 			return 0;
 		}
 		
-		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			if(flag == Mac.MAC_TX_COMPLETE){
 //				LIP.
 			}
 			return 0;
 		}
 		
-		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			switch(flag){
 				case Mac.MAC_ASSOCIATED:
 					byte[] pdu = new byte[4];
