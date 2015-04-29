@@ -21,38 +21,41 @@ namespace Mac_Layer
 			
 		}
 		
-		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public override int onRxEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {	
 				if (data != null) {
-					switch(Frame.getFrameType (data)) {
-						case Radio.FCF_BEACON: // look for pending data here
-							this.duringSuperframe = true;
-							this.mac.timer1.setParam (Mac.MAC_SLEEP);
-							this.mac.timer1.setAlarmTime(time+this.nSlot*this.slotInterval);
-							Frame.getBeaconInfo (data, this);
-							if (this.mac.pdu != null  && this.duringSuperframe) { // there's something to transmit
-								this.transmit(time);
-							}
-							break;
-						case Radio.FCF_CMD:
-							switch(Frame.getCMDType (data)){
-								case 0x04: // data request handle - coordinator
+					switch (Frame.getFrameType (data)) {
+					case Radio.FCF_BEACON: // look for pending data here
+						if (LED.getState ((byte)0) == 0)
+							LED.setState ((byte)0, (byte)1);
+						else
+							LED.setState ((byte)0, (byte)0);	
+						this.duringSuperframe = true;
+						this.mac.timer.setParam (Mac.MAC_SLEEP);
+						this.mac.timer.setAlarmTime (time + this.nSlot * this.slotInterval);
+						Frame.getBeaconInfo (data, this);
+						if (this.mac.pdu != null && this.duringSuperframe) { // there's something to transmit
+							this.transmit (time);
+						}
+						break;
+					case Radio.FCF_CMD:
+						switch (Frame.getCMDType (data)) {
+						case 0x04: // data request handle - coordinator
 									//TODO
-									break;
-							}
 							break;
-						case Radio.FCF_DATA:
+						}
+						break;
+					case Radio.FCF_DATA:
 							// handle fcf data
 							//TODO
-							break;
+						break;
 					}
 				}
-			}
-			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
-			}
-			else{
+			} else {
 				//TODO
 			}
 			return 0;
@@ -113,7 +116,8 @@ namespace Mac_Layer
 //		}
 
 		internal void transmit(long time) {
-			this.mac.radio.stopRx();
+			if (this.mac.radio.getState () == Radio.S_RXEN)
+				this.mac.radio.stopRx ();
 			uint len = (uint)this.mac.pdu.Length;
 			this.mac.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA, this.mac.pdu,0,len, time+this.slotInterval);
 //			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,

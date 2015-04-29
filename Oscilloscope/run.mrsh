@@ -1,16 +1,21 @@
 
-set-var -e APP_PORT 126 
+set-var -e APP_PORT 126
 
 socket-close -f socket
-source ./js_server/socket.js 
-socket-bind socket
+
+# Bind socket and dump messages on a log file
+# socket-bind -f log.txt -s ./js_server/socket.js socket 125
+
+socket-bind -s ./js_server/socket.js socket 126
+
+
 
 mote-create -d iris 4
-
 a0 msetup-setup oscilloscope
-a1 msetup-setup oscilloscopes
-a2 msetup-setup oscilloscopes
-a3 msetup-setup oscilloscopes
+# socket-bind a0 126
+a1 msetup-setup oscisensor
+a2 msetup-setup oscisensor
+# a3 msetup-setup oscilloscopes
 # a4 msetup-setup oscilloscopes
 # a5 msetup-setup oscilloscopes
 # a6 msetup-setup oscilloscopes

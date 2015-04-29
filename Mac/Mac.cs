@@ -29,6 +29,7 @@ namespace Mac_Layer
 		public const uint MAC_ASS_RESP = 0xE005;
 		public const uint MAC_BEACON_RXED = 0xE006;
 		public const uint MAC_DATA_RXED = 0xE007;
+		public const uint MAC_NOT_ASSOC = 0xE008;
 
 		//----------------------------------------------------------------------//
 		//-------------------------    RESTART HERE    -------------------------//
@@ -36,7 +37,7 @@ namespace Mac_Layer
 
 		// Instance Variables
 		internal Radio radio;
-		internal Timer timer1;
+		internal Timer timer;
 //		internal Timer timer2;
 		internal byte[] pdu;
 		internal byte[] header;
@@ -54,15 +55,16 @@ namespace Mac_Layer
 		internal MacState state;
 
 		public Mac () {
-			this.timer1 = new Timer();
+			this.timer = new Timer();
 			this.radio = new Radio();
 		}
 
-		internal void onStateEvent(uint flag, uint param){
-			if(flag == MAC_ASSOCIATED){
-				this.timer1.cancelAlarm();
-				this.state = new MacAssociatedState(this, this.radio.getPanId (), param);
-				this.eventHandler(MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
+		internal void onStateEvent (uint flag, uint param)
+		{
+			if (flag == MAC_ASSOCIATED) {
+				this.timer.cancelAlarm ();
+				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
+				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
 		}
 
@@ -70,13 +72,18 @@ namespace Mac_Layer
 			this.radio.setChannel((byte)channel);
 		}
 
-		public void associate(uint panId) {
-			this.state = new MacUnassociatedState(this, panId);
+		public void associate (int channel, uint panId)
+		{
+			this.radio.setChannel ((byte)channel);
+			this.radio.setPanId (panId, false);
+			this.state = new MacUnassociatedState (this, panId);
+			Logger.appendUInt ((uint)this.radio.getPanId ());
 		}
 
-		public void createPan(int channel, uint panId, uint saddr) {
-			this.setChannel ((byte)channel);
-			this.state = new MacCoordinatorState(this, panId, saddr);
+		public void createPan (int channel, uint panId, uint saddr)
+		{
+			this.radio.setChannel ((byte)channel);
+			this.state = new MacCoordinatorState (this, panId, saddr);
 		}
 
 		// to define
@@ -89,7 +96,7 @@ namespace Mac_Layer
 				this.radio.open(Radio.DID,null,0,0);
 			}
 			else {
-				this.timer1.cancelAlarm();
+				this.timer.cancelAlarm();
 				this.disassociate();
 				this.radio.close();
 			}
@@ -113,7 +120,6 @@ namespace Mac_Layer
 
 		public void send(uint dstSaddr, short seq, byte[] data) {
 			byte[] header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
-//			this.pdu = (byte[])Util.alloca((byte)(header.Length+data.Length),(byte)Util.BYTE_ARRAY);
 			uint headLen = (uint) header.Length;
 			uint dataLen = (uint) data.Length;
 			this.pdu = new byte[headLen+dataLen];

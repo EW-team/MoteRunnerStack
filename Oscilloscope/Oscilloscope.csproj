@@ -23,8 +23,8 @@
       <CustomCommands>
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-4.0 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-11.1" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.0.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG --system=iris --assembly=oscilloscopes-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-3.0.sba" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc --system=iris --assembly=oscilloscopes-4.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-x.x" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-4.0.sba" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscope" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscopes" workingdir="${ProjectDir}" />
       </CustomCommands>
@@ -57,17 +57,19 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Oscilloscope.cs" />
     <Compile Include="MasterOscilloscope.cs" />
+    <Compile Include="OscilloscopeSensor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="run.mrsh" />
+    <None Include="js_server\server.js" />
+    <None Include="js_server\socket.js" />
+    <None Include="log.txt" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mac\Mac_Layer.csproj">
       <Project>{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}</Project>
       <Name>Mac_Layer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="run.mrsh" />
-    <None Include="js_server\server.js" />
-    <None Include="js_server\socket.js" />
   </ItemGroup>
 </Project>

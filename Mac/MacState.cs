@@ -81,7 +81,7 @@ namespace Mac_Layer
 			this.mac.radio.setEventHandler(this.onRadioEvent);
 			this.mac.radio.setTxHandler(this.onTxEvent);
 			this.mac.radio.setRxHandler(this.onRxEvent);
-			this.mac.timer1.setCallback (this.onTimerEvent);
+			this.mac.timer.setCallback (this.onTimerEvent);
 			this.scanOrder = 10;
 			this.BO = 8;
 			this.SO = 5;

@@ -61,7 +61,7 @@ var socket = {
 		if (flagData == 0x00){
 			return sprintf("socket-onData: %s:%d --> No data available\n", srcMote, srcPort);
 		}
-		if (flagData == 0x01) {
+		else if (flagData == 0x01) {
 			var rThr = 10000*(1023 - sensorValue)/sensorValue;
 			println(rThr);
 			var logRThr = Math.log(rThr);
@@ -74,10 +74,20 @@ var socket = {
 			println(sensorValue);
 			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
 		}
+		else {
+			return sprintf("invalid data");
+		}
 	},
 
 	/** Called when this socket is closed. */
 	onClose: function(status) {
 		println("socket-onClose: called..");
+	},
+	
+	onOpen: function(status){
+		println("socket-onOpen: called..");
+		this.onData(this.recv(Time.Span()));
+		
 	}
+
 };
