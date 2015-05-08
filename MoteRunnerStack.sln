@@ -5,12 +5,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oscilloscope", "Oscilloscop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mac_Layer", "Mac\Mac_Layer.csproj", "{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendBeaconTest", "SendBeaconTest\SendBeaconTest.csproj", "{8E2E05C6-1D75-4579-87A8-43AD0BD017B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E2E05C6-1D75-4579-87A8-43AD0BD017B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E2E05C6-1D75-4579-87A8-43AD0BD017B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E2E05C6-1D75-4579-87A8-43AD0BD017B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E2E05C6-1D75-4579-87A8-43AD0BD017B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6C6DF71-EFD5-4DEC-83A5-EDB813F8E4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
