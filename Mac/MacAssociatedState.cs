@@ -9,7 +9,6 @@ namespace Mac_Layer
 		public MacAssociatedState (Mac mac,uint panId, uint saddr) : base(mac, panId)
 		{
 			this.coordinatorSADDR = saddr;
-			this.trackBeacon ();
 		}
 		
 //		public override void setNetwork(uint panId, uint saddr){
@@ -39,22 +38,22 @@ namespace Mac_Layer
 						case Radio.FCF_CMD:
 							switch(Frame.getCMDType (data)){
 								case 0x04: // data request handle - coordinator
+									//TODO
 									break;
 							}
 							break;
 						case Radio.FCF_DATA:
 							// handle fcf data
+							//TODO
 							break;
 					}
 				}
 			}
 			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				Logger.appendString(csr.s2b("Rx Error"));
-				Logger.flush(Mote.INFO);
+				//TODO
 			}
 			else{
-				Logger.appendString(csr.s2b("Rx what else?"));
-				Logger.flush(Mote.INFO);
+				//TODO
 			}
 			return 0;
 		}
@@ -69,7 +68,7 @@ namespace Mac_Layer
 						break;
 					case Radio.FCF_CMD:
 						if (data [17] == 0x04) { // data request - not coordinator
-
+							//TODO
 						}
 						break;
 				}
@@ -80,10 +79,11 @@ namespace Mac_Layer
 				}
 				else { // pdu = null || this.slotCounter >= nSlot
 					// impostare il risparmio energetico
+					//TODO
 				}
 			}
 			else {
-
+				//TODO
 			}
 			return 0;
 		}
@@ -114,9 +114,10 @@ namespace Mac_Layer
 
 		internal void transmit(long time) {
 			this.mac.radio.stopRx();
-//			this.mac.radio.transmit(Radio.ASAP | Radio.TXMODE_CCA,(byte[])this.mac.pdu,0,Frame.getLength ((byte[])this.mac.pdu),time+this.slotInterval);
-			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
-										this.mac.pdu,0,(uint)this.mac.pdu.Length,time+this.slotInterval);
+			uint len = (uint)this.mac.pdu.Length;
+			this.mac.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA, this.mac.pdu,0,len, time+this.slotInterval);
+//			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
+//										this.mac.pdu,0,len,time+this.slotInterval);
 		}
 		
 	}

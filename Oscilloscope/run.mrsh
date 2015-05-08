@@ -1,3 +1,21 @@
-mote-create 2
+
+set-var -e APP_PORT 126 
+
+socket-close -f socket
+source ./js_server/socket.js 
+socket-bind socket
+
+mote-create -d iris 4
+
 a0 msetup-setup oscilloscope
 a1 msetup-setup oscilloscopes
+a2 msetup-setup oscilloscopes
+a3 msetup-setup oscilloscopes
+# a4 msetup-setup oscilloscopes
+# a5 msetup-setup oscilloscopes
+# a6 msetup-setup oscilloscopes
+# a7 msetup-setup oscilloscopes
+# a8 msetup-setup oscilloscopes
+# a9 msetup-setup oscilloscopes
+# a10 msetup-setup oscilloscopes
+# a11 msetup-setup oscilloscopes

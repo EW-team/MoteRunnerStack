@@ -46,13 +46,34 @@ var socket = {
 	* @returns a String to be loged to a file or stdout by caller
 	*/
 	onData: function(blob) {
-		var srcId = blob.src.getUniqueid();
-       	var srcPort = blob.srcport;
-       	var dstPort = blob.dstport;
+		var srcMote = blob.mote;
+		var srceui64 = srcmote.getUniqueid();
+       	var srcPort = blob.getSrcPort();
+       	var len = data.length;
       	var data = blob.data;
 
       	//Unpack a binary string to an array
 		var arr = Formatter.unpack("u2xL3dUL", data);
+		var flagData = arr[0];
+		var time = arr[1];
+		var srcAddr = arr[2];
+		var sensorValue = arr[3];
+		if (flagData == 0x00){
+			return sprintf("socket-onData: %s:%d --> No data available\n", srcMote, srcPort);
+		}
+		if (flagData == 0x01) {
+			var rThr = 10000*(1023 - sensorValue)/sensorValue;
+			println(rThr);
+			var logRThr = Math.log(rThr);
+			println(logRThr);
+			sensorValue = 1/(0.001010024 + 0.000242127*logRThr + 0.000000146*(logRThr^3));
+			println(sensorValue);
+			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
+		}
+		else if (flagData == 0x02){
+			println(sensorValue);
+			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
+		}
 	},
 
 	/** Called when this socket is closed. */

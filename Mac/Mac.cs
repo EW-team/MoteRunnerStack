@@ -56,14 +56,11 @@ namespace Mac_Layer
 		public Mac () {
 			this.timer1 = new Timer();
 			this.radio = new Radio();
-//			this.timer1.setCallback(onTimerEvent);
-//			this.timer2 = new Timer();
-//			this.timer2.setParam(MAC_SLEEP);
-//			this.timer2.setCallback(onTimerEvent);
 		}
 
 		internal void onStateEvent(uint flag, uint param){
 			if(flag == MAC_ASSOCIATED){
+				this.timer1.cancelAlarm();
 				this.state = new MacAssociatedState(this, this.radio.getPanId (), param);
 				this.eventHandler(MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
@@ -71,23 +68,20 @@ namespace Mac_Layer
 
 		public void setChannel(uint channel) {
 			this.radio.setChannel((byte)channel);
-//			this.config.rChannel = channel;
 		}
 
 		public void associate(uint panId) {
 			this.state = new MacUnassociatedState(this, panId);
-//			this.state.setNetwork (pan, 0);
 		}
 
 		public void createPan(int channel, uint panId, uint saddr) {
 			this.setChannel ((byte)channel);
 			this.state = new MacCoordinatorState(this, panId, saddr);
-//			this.state.setNetwork (panId, saddr);
 		}
 
 		// to define
 		public void disassociate( ) {
-			
+			//TODO
 		}
 
 		public void enable(bool onOff){
@@ -117,9 +111,14 @@ namespace Mac_Layer
 			this.eventHandler = callback;
 		}
 
-		public void transmit(uint dstSaddr, short seq, byte[] data) {
-			this.pdu = data;
-			this.header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
+		public void send(uint dstSaddr, short seq, byte[] data) {
+			byte[] header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
+//			this.pdu = (byte[])Util.alloca((byte)(header.Length+data.Length),(byte)Util.BYTE_ARRAY);
+			uint headLen = (uint) header.Length;
+			uint dataLen = (uint) data.Length;
+			this.pdu = new byte[headLen+dataLen];
+			Util.copyData(header,0,this.pdu,0,headLen);
+			Util.copyData(data,0,this.pdu,headLen,dataLen);
 		}
 		
 		// static methods
@@ -129,7 +128,7 @@ namespace Mac_Layer
 		}
 		
 		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
-
+			//TODO
 		}
 
 //		public void scan(int channel, uint mode) {
@@ -248,7 +247,7 @@ namespace Mac_Layer
 //									Logger.flush (Mote.INFO);
 //									byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
 ////									this.radio.stopRx ();
-//									this.radio.transmit (config.txMode, assRes, 0, Frame.getLength (assRes), time + this.config.slotInterval);
+//									this.radio.send (config.txMode, assRes, 0, Frame.getLength (assRes), time + this.config.slotInterval);
 //									break;
 //								case 0x04: // data request handle - coordinator
 //									break;
