@@ -12,10 +12,11 @@ namespace Mac_Layer
 		public uint coordinatorSADDR;
 		public uint panId;
 	
-		public MacUnassociatedState (Mac mac, uint panId) : base(mac)
+		public MacUnassociatedState (Mac mac, uint id) : base(mac)
 		{
 			this.mac.radio.setPanId(panId, false);
-			this.panId = panId;
+			this.mac.radio.setPanId (id);
+			this.panId = id;
 			this.trackBeacon();
 		}
 		
