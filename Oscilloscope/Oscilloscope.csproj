@@ -21,19 +21,14 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-<<<<<<< HEAD
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-5.0 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-5.0.sba" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscopes-4.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-x.x" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-4.0.sba" workingdir="${ProjectDir}" />
-=======
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG -DCFG_iris --assembly=oscilloscope-4.0 MasterOscilloscope.cs -r:mac-x.x -r:logger-x.x -r:iris-system-11.1" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscope-4.0.sba" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc -DDEBUG --system=iris --assembly=oscilloscopes-3.0 Oscilloscope.cs -r:mac-x.x -r:logger-x.x" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add oscilloscopes-3.0.sba" workingdir="${ProjectDir}" />
->>>>>>> 785a42d28b4a74fdaeb1ec6f33fded7b11ea5d8f
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscope" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del oscilloscopes" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="find . -type f -name oscilloscope-\* -exec rm {} \;" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="find . -type f -name oscilloscopes-\* -exec rm {} \;" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -74,11 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="run.mrsh" />
-<<<<<<< HEAD
-    <None Include="Oscilloscope.js" />
-=======
     <None Include="js_server\server.js" />
     <None Include="js_server\socket.js" />
->>>>>>> 785a42d28b4a74fdaeb1ec6f33fded7b11ea5d8f
   </ItemGroup>
 </Project>

@@ -77,7 +77,8 @@ namespace Oscilloscope
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
 			mac.setEventHandler (new DevCallback(onEvent));
-			mac.createPan(1, 0x0234, 0x0002);
+			mac.setChannel (1);
+			mac.createPan(0x0234, 0x0002);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
@@ -92,13 +93,10 @@ namespace Oscilloscope
 				else
 					header[ROFF_MSG_TAG] = data[0];
 				Util.set32 (header, ROFF_TIME, time);
-<<<<<<< HEAD
-				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR
-				LIP.send (header, headerLength, data, len+3, (uint)data.Length-len);
-=======
+
 				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR				
 				LIP.send (header, headerLength, data, 0, (uint)data.Length);
->>>>>>> 785a42d28b4a74fdaeb1ec6f33fded7b11ea5d8f
+
 			}
 			return 0;
 		}

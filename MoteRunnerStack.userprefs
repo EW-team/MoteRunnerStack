@@ -1,20 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="SendBeaconTest/MyClass.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/Frame.cs">
     <Files>
-<<<<<<< HEAD
-      <File FileName="SendBeaconTest/MyClass.cs" Line="65" Column="32" />
-      <File FileName="Mac/Mac.cs" Line="1" Column="1" />
-      <File FileName="Mac/Frame.cs" Line="12" Column="67" />
-=======
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="61" Column="40" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="102" Column="7" />
-      <File FileName="Mac/Mac.cs" Line="120" Column="19" />
-      <File FileName="Oscilloscope/run.mrsh" Line="11" Column="1" />
-      <File FileName="Mac/MacCoordinatorState.cs" Line="68" Column="16" />
-      <File FileName="Mac/Frame.cs" Line="183" Column="4" />
-      <File FileName="Mac/MacAssociatedState.cs" Line="120" Column="21" />
->>>>>>> 785a42d28b4a74fdaeb1ec6f33fded7b11ea5d8f
+      <File FileName="Mac/Frame.cs" Line="34" Column="49" />
+      <File FileName="Mac/MacCoordinatorState.cs" Line="142" Column="45" />
+      <File FileName="Mac/MacUnassociatedState.cs" Line="30" Column="4" />
+      <File FileName="Mac/Mac.cs" Line="58" Column="29" />
+      <File FileName="Oscilloscope/Oscilloscope.cs" Line="64" Column="1" />
+      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="80" Column="23" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

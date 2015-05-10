@@ -42,7 +42,6 @@ namespace Mac_Layer
 							Frame.getBeaconInfo (data, this);
 							this.mac.eventHandler(Mac.MAC_BEACON_RXED, data, len, info, time);
 							this.mac.radio.stopRx();
-//							this.mac.radio.setPanId (this.panId, false);
 							byte[] assRequest = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
 													this.coordinatorSADDR, this);
 							this.mac.radio.transmit(Radio.ASAP | Radio.RXMODE_NORMAL,assRequest,0,
@@ -123,6 +122,7 @@ namespace Mac_Layer
 				this.duringSuperframe = false;
 				if(this.mac.radio.getState() == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
+				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
 											(this.nSlot+1)*this.slotInterval);
