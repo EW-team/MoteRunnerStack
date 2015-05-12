@@ -35,7 +35,8 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
-					switch (Frame.getFrameType (data)) {
+					uint pos = Frame.getPayloadPosition (data);
+					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON:
 						if (LED.getState ((byte)2) == 0)
 							LED.setState ((byte)2, (byte)1);
@@ -43,32 +44,31 @@ namespace Mac_Layer
 							LED.setState ((byte)2, (byte)0);
 						this.duringSuperframe = true;
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
-						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
 						Frame.getBeaconInfo (data, this);
+						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
 						this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
 						this.mac.radio.stopRx ();
 						byte[] assRequest = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
 													this.coordinatorSADDR, this);
 						this.mac.radio.transmit (Radio.ASAP | Radio.RXMODE_NORMAL, assRequest, 0,
-													Frame.getLength (assRequest), time + this.slotInterval);
+													(uint)assRequest.Length, time + this.slotInterval);
 						break;
 					case Radio.FCF_CMD:
-						uint pos = Frame.getPayloadPosition (data);
 						switch ((uint)data [pos]) {
-						case 0x02: // association response handle - not coordinator
-							switch ((uint)data [pos + 3]) {
-							case 0x00: // association successful
-								this.mac.radio.stopRx ();
-								this.mac.radio.setShortAddr (Util.get16 (data, pos + 1)); // The SAddr have to be setted when radio is not on!
-								this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
-								break;
-							case 0x01: // association failed
-											//TODO
+							case ASS_RES: // association response handle - not coordinator
+								switch ((uint)data [pos + 3]) {
+								case ASS_SUCC: // association successful
+									this.mac.radio.stopRx ();
+									this.mac.radio.setShortAddr (Util.get16 (data, pos + 1)); // The SAddr have to be setted when radio is not on!
+									this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
+									break;
+								case ASS_FAIL: // association failed
+														//TODO
+									break;
+								}
 								break;
 							}
 							break;
-						}
-						break;
 					case Radio.FCF_DATA:
 							// handle fcf data
 						break;
@@ -87,28 +87,28 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public override int onTxEvent(uint flags, byte[] data, uint len, uint info, long time){
-			if(this.duringSuperframe)
+		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
+			if (this.duringSuperframe)
 				this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
+			uint pos = Frame.getPayloadPosition (data);
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-				switch (data [0] & 0x07) {
-					case Radio.FCF_CMD:
-						if (data [17] == 0x01) { // association request - not coordinator
-							this.mac.txHandler(Mac.MAC_ASS_REQ, data, len, info, time);
-							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
-						} else if (data [17] == 0x04) { // data request - not coordinator
+				switch (data [0] & FRAME_TYPE_MASK) {
+				case Radio.FCF_CMD:
+					if (data [pos] == ASS_REQ) { // association request - not coordinator
+						this.mac.txHandler (Mac.MAC_ASS_REQ, data, len, info, time);
+						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+					} else if (data [pos] == DATA_REQ) { // data request - not coordinator
 
-						}
-						break;
-					case Radio.FCF_ACK:
-						break;
+					}
+					break;
+				case Radio.FCF_ACK:
+					break;
 				}
-			}						
-			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				
-			}
-			else {
+			} else {
 
 			}
 			return 0;

@@ -21,38 +21,38 @@ namespace Mac_Layer
 			
 		}
 		
-		public override int onRxEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public override int onRxEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {	
 				if (data != null) {
-					switch(Frame.getFrameType (data)) {
-						case Radio.FCF_BEACON: // look for pending data here
-							this.duringSuperframe = true;
-							this.mac.timer1.setParam (Mac.MAC_SLEEP);
-							this.mac.timer1.setAlarmTime(time+this.nSlot*this.slotInterval);
-							Frame.getBeaconInfo (data, this);
-							if (this.mac.pdu != null  && this.duringSuperframe) { // there's something to transmit
-								this.transmit(time);
-							}
-							break;
-						case Radio.FCF_CMD:
-							switch(Frame.getCMDType (data)){
-								case 0x04: // data request handle - coordinator
+					uint pos = Frame.getPayloadPosition (data);
+					switch (data [0] & FRAME_TYPE_MASK) {
+					case Radio.FCF_BEACON: // look for pending data here
+						this.duringSuperframe = true;
+						this.mac.timer1.setParam (Mac.MAC_SLEEP);
+						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
+						Frame.getBeaconInfo (data, this);
+						if (this.mac.pdu != null && this.duringSuperframe) { // there's something to transmit
+							this.transmit (time);
+						}
+						break;
+					case Radio.FCF_CMD:
+						switch ((uint)data[pos]) {
+						case DATA_REQ: // data request handle - coordinator
 									//TODO
-									break;
-							}
 							break;
-						case Radio.FCF_DATA:
+						}
+						break;
+					case Radio.FCF_DATA:
 							// handle fcf data
 							//TODO
-							break;
+						break;
 					}
 				}
-			}
-			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
-			}
-			else{
+			} else {
 				//TODO
 			}
 			return 0;
@@ -61,13 +61,13 @@ namespace Mac_Layer
 		public override int onTxEvent(uint flags, byte[] data, uint len, uint info, long time){
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-				switch (data [0] & 0x07) {
+				switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_DATA:
 						this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 						this.mac.pdu = null;
 						break;
 					case Radio.FCF_CMD:
-						if (data [17] == 0x04) { // data request - not coordinator
+						if (data [17] == DATA_REQ) { // data request - not coordinator
 							//TODO
 						}
 						break;

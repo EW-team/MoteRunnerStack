@@ -84,7 +84,7 @@ namespace Mac_Layer
 			Util.set16(cmd, 5, saddr);
 			Util.set16(cmd, 7, Radio.SADDR_BROADCAST);
 			Mote.getParam(Mote.EUI64, cmd, 9);
-			cmd[17] = (byte) 0x01;
+			cmd[17] = (byte) MacState.ASS_REQ;
 			cmd[18] = (byte)(1 << 7 | 1 << 6 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0);
 			return cmd;
 		}
@@ -104,13 +104,13 @@ namespace Mac_Layer
 			Util.copyData((object)req, 9, (object)cmd, 5, 8);
 			Util.set16(cmd,13,panId);
             Mote.getParam(Mote.EUI64, cmd, 15);
-			cmd[23] = 0x02;
+			cmd[23] = (byte)MacState.ASS_RES;
 			if (state.associationPermitted) {
 				Util.set16(cmd,24,state.getNextAddr ());
-				cmd[26] = (byte)0x00;
+				cmd[26] = (byte)MacState.ASS_SUCC;
 			}
 			else{
-				cmd[26] = (byte)0x01;
+				cmd[26] = (byte)MacState.ASS_FAIL;
 			}
 			return cmd;
 		}
@@ -166,14 +166,6 @@ namespace Mac_Layer
 			Util.set16(header, 7, panId);
 			Util.set16(header, 9, saddr);
 			return header;
-		}
-
-		public static uint getLength(byte[] frame) {
-			return (uint)frame.Length;
-		}
-
-		public static uint getFrameType(byte[] frame) {
-			return (uint)frame [0] & 0x07;
 		}
 
 		public static uint getCMDType(byte[] cmd) {

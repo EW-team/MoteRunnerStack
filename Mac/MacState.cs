@@ -4,6 +4,23 @@ namespace Mac_Layer
 {
 	internal abstract class MacState
 	{
+		
+		internal const uint FRAME_TYPE_MASK = 0x07;
+		
+		// Beacon Positions
+		internal const uint FRAME_POS = 0;
+		internal const uint ASS_POS = 1;
+		internal const uint GTS_POS = 2;
+		
+		// CMD Commands
+		internal const uint ASS_REQ = 0x01;
+		internal const uint ASS_RES = 0x02;
+		internal const uint DATA_REQ = 0x04;
+		
+		// CMD Response
+		internal const uint ASS_SUCC = 0x00;
+		internal const uint ASS_FAIL = 0x01;
+		
 		internal Mac mac;
 //		internal MacConfig config;
 		internal bool duringSuperframe;
