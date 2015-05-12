@@ -72,5 +72,7 @@
     <None Include="js_server\server.js" />
     <None Include="js_server\socket.js" />
     <None Include="Prun.mrsh" />
+    <None Include="js_server\test.js" />
+    <None Include="socket.js" />
   </ItemGroup>
 </Project>

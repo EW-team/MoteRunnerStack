@@ -46,12 +46,13 @@ var osciSocket = {
 	* @returns a String to be loged to a file or stdout by caller
 	*/
 	onData: function(blob) {
-		var srcMote = blob.mote;
-		var srceui64 = srcmote.getUniqueid();
+		// var srcMote = blob.mote;
+		// var srceui64 = srcmote.getUniqueid();
        	var srcPort = blob.getSrcPort();
+       	var data = blob.data;
        	var len = data.length;
-      	var data = blob.data;
-
+      	
+		
       	//Unpack a binary string to an array
 		var arr = Formatter.unpack("u2xL3dUL", data);
 		var flagData = arr[0];
@@ -61,7 +62,7 @@ var osciSocket = {
 		if (flagData == 0x00){
 			return sprintf("socket-onData: %s:%d --> No data available\n", srcMote, srcPort);
 		}
-		if (flagData == 0x01) {
+		else if (flagData == 0x01) {
 			var rThr = 10000*(1023 - sensorValue)/sensorValue;
 			println(rThr);
 			var logRThr = Math.log(rThr);
@@ -74,6 +75,7 @@ var osciSocket = {
 			println(sensorValue);
 			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
 		}
+		return sprintf("---------------------------");
 	},
 
 	/** Called when this socket is closed. */

@@ -57,7 +57,7 @@ namespace Oscilloscope
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
-		//    Assembly.setDataHandler(onLipData);
+			Assembly.setDataHandler (onLipData);
 		    // Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
@@ -79,8 +79,6 @@ namespace Oscilloscope
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
 			mac.createPan(0x0234, 0x0002);
-			
-		
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
@@ -89,18 +87,18 @@ namespace Oscilloscope
 		}
 		
 		
-		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
-			if(flag == Mac.MAC_DATA_RXED){
-				if(data == null)
-					header[ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
+		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
+		{
+			if (flag == Mac.MAC_DATA_RXED) {
+				if (data == null)
+					header [ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
 				else
-					header[ROFF_MSG_TAG] = data[0];
+					header [ROFF_MSG_TAG] = data [0];
 				Util.set32 (header, ROFF_TIME, time);
 
 				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
-			
+				
 				LIP.send (header, headerLength, data, 0, (uint)data.Length);
-
 			}
 			return 0;
 		}
@@ -122,15 +120,30 @@ namespace Oscilloscope
 			}
 		}
 		
-		static int onSysInfo (int type, int info) {
-		    if( type==Assembly.SYSEV_DELETED ) {
-				try { LIP.close(MR_APP_PORT); } catch {}
-		    }
-		    if( type==Assembly.SYSEV_ISUP ) {
+		static int onSysInfo (int type, int info)
+		{
+			if (type == Assembly.SYSEV_DELETED) {
+				try {
+					LIP.close (MR_APP_PORT);
+				} catch {
+				}
+			}
+			if (type == Assembly.SYSEV_ISUP) {
 				// Initialize device from last persistent state
-		    }
-		    return 0;
+			}
+			return 0;
 		}
+		
+		static int onLipData (uint info, byte[] buf, uint len)
+		{
+			uint cmdoff = LIP.getPortOff () + 1;
+			if (cmdoff >= len)
+				return 0;
+			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
+			Util.copyData (buf, 0, header, 0, headerLength);
+			return (int) headerLength+2;
+		}
+		
 	}
 }
 
