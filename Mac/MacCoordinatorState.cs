@@ -51,47 +51,48 @@ namespace Mac_Layer
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
 					switch (Frame.getFrameType (data)) {
-						case Radio.FCF_BEACON: // there's another coordinator in this pan
-							break;
-						case Radio.FCF_CMD:
-							switch (Frame.getCMDType (data)) {
-							case 0x01: // association request handle - coordinator
-								this.mac.eventHandler (Mac.MAC_ASS_REQ, data, len, info, time);
-								byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
-								this.mac.radio.stopRx ();
-								this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes),
+					case Radio.FCF_BEACON: // there's another coordinator in this pan
+						break;
+					case Radio.FCF_CMD:
+						switch (Frame.getCMDType (data)) {
+						case 0x01: // association request handle - coordinator
+							if (LED.getState ((byte)2) == 0)
+								LED.setState ((byte)2, (byte)1);
+							else
+								LED.setState ((byte)2, (byte)0);	
+							this.mac.eventHandler (Mac.MAC_ASS_REQ, data, len, info, time);
+							byte[] assRes = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
+							this.mac.radio.stopRx ();
+							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, assRes, 0, Frame.getLength (assRes),
 								                           time + this.slotInterval);
-								break;
-							case 0x04: // data request handle - coordinator
-										//TODO		
-								break;
-							}
 							break;
-						case Radio.FCF_DATA:
-							uint pos = Frame.getPayloadPosition (data);
-							if ((len - pos) > 0) {
-								byte[] pdu = new byte[len - pos];
-								Util.copyData (data, len, pdu, 0, len - pos);
-								this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
+						case 0x04: // data request handle - coordinator
+										//TODO		
+							break;
+						}
+						break;
+					case Radio.FCF_DATA:
+						uint pos = Frame.getPayloadPosition (data);
+						if ((len - pos) > 0) {
+							byte[] pdu = new byte[len - pos];
+							Util.copyData (data, len, pdu, 0, len - pos);
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
 								                    Frame.getSrcSADDR (data), time);
-							} else
-								this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
+						} else
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
 								                    Frame.getSrcSADDR (data), time);
 									//TODO
-							break;
+						break;
 					}
 				}
 				if (this.duringSuperframe) { // turn back to receive
 					//TODO
-				}
-				else { // stop receive
+				} else { // stop receive
 					//TODO
 				}
-			}
-			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
-			}
-			else{
+			} else {
 				//TODO
 			}
 			return 0;

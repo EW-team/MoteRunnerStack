@@ -58,11 +58,16 @@ namespace Mac_Layer
 			this.radio = new Radio();
 		}
 
-		internal void onStateEvent(uint flag, uint param){
-			if(flag == MAC_ASSOCIATED){
-				this.timer1.cancelAlarm();
-				this.state = new MacAssociatedState(this, this.radio.getPanId (), param);
-				this.eventHandler(MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
+		internal void onStateEvent (uint flag, uint param)
+		{
+			if (flag == MAC_ASSOCIATED) {
+				if (LED.getState ((byte)2) == 0)
+					LED.setState ((byte)2, (byte)1);
+				else
+					LED.setState ((byte)2, (byte)0);	
+				this.timer1.cancelAlarm ();
+				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
+				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
 		}
 
@@ -74,8 +79,7 @@ namespace Mac_Layer
 			this.state = new MacUnassociatedState(this, panId);
 		}
 
-		public void createPan(int channel, uint panId, uint saddr) {
-			this.setChannel ((byte)channel);
+		public void createPan(uint panId, uint saddr) {
 			this.state = new MacCoordinatorState(this, panId, saddr);
 		}
 

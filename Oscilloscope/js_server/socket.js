@@ -13,7 +13,7 @@
 *
 */
 
-var socket = {
+var osciSocket = {
 	/**                                                   
 	* Evaluate arguments for a 'socket-send' and act accordingly. 
 	* @param dstport  Destination port specified by user  
@@ -79,5 +79,10 @@ var socket = {
 	/** Called when this socket is closed. */
 	onClose: function(status) {
 		println("socket-onClose: called..");
+	},
+	
+	onBind: function(status) {
+		println("socket-onBind:: called..");
+
 	}
 };

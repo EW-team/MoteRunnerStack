@@ -1,11 +1,11 @@
 
 set-var -e APP_PORT 126 
 
-socket-close -f socket
+socket-close -f osciSocket
 source ./js_server/socket.js 
-socket-bind socket
+socket-bind osciSocket
 
-mote-create -diris 4
+mote-create -d iris 4
 
 a0 msetup-setup oscilloscope
 a1 msetup-setup oscilloscopes

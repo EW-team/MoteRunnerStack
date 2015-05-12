@@ -47,7 +47,7 @@ namespace Mac_Layer
 		}
 
 		public static void getBeaconInfo(byte[] beacon, MacUnassociatedState state){
-			state.coordinatorSADDR = Util.get16(beacon, 7);
+			state.coordinatorSADDR = Util.get16(beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);

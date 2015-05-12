@@ -59,36 +59,37 @@ namespace Oscilloscope
 //			// Register a method for network message directed to this assembly.
 		//    Assembly.setDataHandler(onLipData);
 		    // Handle system events
-		    Assembly.setSystemInfoCallback(new SystemInfo(onSysInfo));
+			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
-	    	LIP.open(MR_APP_PORT);
+			LIP.open (MR_APP_PORT);
 	    	
 			header = new byte[headerLength];
 #if CFG_dust
 		    DN.setIpv6AllRoutersMulticast(header, 0);
 #else
-			Util.set32(header, 0, (192<<24)|(168<<16)|(0<<8)|(1<<0));		
+			Util.set32 (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
 #endif
-			Util.set16(header, ROFF_UDP_PORT, UDP_SRV_PORT);
-			header[ROFF_MR_PORT] = MR_APP_PORT;
+			Util.set16 (header, ROFF_UDP_PORT, UDP_SRV_PORT);
+			header [ROFF_MR_PORT] = MR_APP_PORT;
 			
-			mac = new Mac();
-			mac.enable(true);
-			mac.setRxHandler (new DevCallback(onRxEvent));
-			mac.setTxHandler (new DevCallback(onTxEvent));
-			mac.setEventHandler (new DevCallback(onEvent));
-			mac.createPan(1, 0x0234, 0x0002);
+			mac = new Mac ();
+			mac.enable (true);
+			mac.setRxHandler (new DevCallback (onRxEvent));
+			mac.setTxHandler (new DevCallback (onTxEvent));
+			mac.setEventHandler (new DevCallback (onEvent));
+			mac.setChannel (1);
+			mac.createPan(0x0234, 0x0002);
 			
 		
 		}
 		
-		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
 			
 			return 0;
 		}
 		
 		
-		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
 			if(flag == Mac.MAC_DATA_RXED){
 				if(data == null)
 					header[ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
@@ -96,7 +97,7 @@ namespace Oscilloscope
 					header[ROFF_MSG_TAG] = data[0];
 				Util.set32 (header, ROFF_TIME, time);
 
-				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR	
+				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
 			
 				LIP.send (header, headerLength, data, 0, (uint)data.Length);
 
@@ -104,7 +105,7 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		public static int onEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
 			
 			return 0;
 		}

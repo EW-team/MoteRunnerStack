@@ -17,9 +17,6 @@ namespace Oscilloscope
 		
 		internal static byte[]	rpdu = new byte[PAYLOAD_SIZE];	// The read PDU 
 		
-		internal static byte[] dummy = new byte[5];
-		
-		
 		static long READ_INTERVAL;	// Read ADC every (Secs)
 
 		static readonly uint MDA100_ADC_CHANNEL_MASK = 0x02;	// Bit associated with the shared ADC
@@ -42,12 +39,7 @@ namespace Oscilloscope
 		static GPIO pwrPins;
 
 		static Oscilloscope ()
-		{
-			
-			dummy[0] = (byte)0x01;
-			dummy[2] = (byte)0x02;
-			dummy[4] = (byte)0x03;
-			
+		{		
 			timer = new Timer();
 			mac = new Mac();
 			timer.setCallback (new TimerEvent(onTimeEvent));
