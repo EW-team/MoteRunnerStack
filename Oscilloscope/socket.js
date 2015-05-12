@@ -50,11 +50,11 @@ var osciSocket = {
        	var data = blob.data;
        	var len = data.length
 
-		print(len);
-		print('.....')
+		println(len);
+		println('.....')
       	//Unpack a binary string to an array
 		// var arr = Formatter.unpack("u2xL3dUL", data);
-		var arr = Formatter.unpack("2uL4bL2uL2xL", data);
+		var arr = Formatter.unpack("uL4bL2uL2xL", data);
 		// var arr = Formatter.unpack("SLUL4xLuL", data);
 
 		
