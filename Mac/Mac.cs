@@ -74,7 +74,8 @@ namespace Mac_Layer
 			this.state = new MacUnassociatedState(this, panId);
 		}
 
-		public void createPan(uint panId, uint saddr) {
+		public void createPan(int channel, uint panId, uint saddr) {
+			this.setChannel ((byte)channel);
 			this.state = new MacCoordinatorState(this, panId, saddr);
 		}
 

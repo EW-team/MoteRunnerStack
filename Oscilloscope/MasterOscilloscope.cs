@@ -57,7 +57,7 @@ namespace Oscilloscope
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
-//		    Assembly.setDataHandler(onLipData);
+		//    Assembly.setDataHandler(onLipData);
 		    // Handle system events
 		    Assembly.setSystemInfoCallback(new SystemInfo(onSysInfo));
 			// Open specific fixed LIP port
@@ -77,14 +77,16 @@ namespace Oscilloscope
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
 			mac.setEventHandler (new DevCallback(onEvent));
-			mac.setChannel (1);
-			mac.createPan(0x0234, 0x0002);
+			mac.createPan(1, 0x0234, 0x0002);
+			
+		
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			
 			return 0;
 		}
+		
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			if(flag == Mac.MAC_DATA_RXED){
@@ -94,7 +96,8 @@ namespace Oscilloscope
 					header[ROFF_MSG_TAG] = data[0];
 				Util.set32 (header, ROFF_TIME, time);
 
-				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR				
+				Util.set16 (header, ROFF_SADDR, info); // 0 if XADDR	
+			
 				LIP.send (header, headerLength, data, 0, (uint)data.Length);
 
 			}

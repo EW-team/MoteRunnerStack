@@ -152,6 +152,10 @@ namespace Mac_Layer
 		
 		// protected methods
 		private void sendBeacon() {
+			if (LED.getState((byte)0) == 0)
+				LED.setState((byte)0, (byte)1);
+					else
+				LED.setState((byte)0, (byte)0);
 			this.duringSuperframe = true;
 			byte[] beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
 			this.mac.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+this.slotInterval);

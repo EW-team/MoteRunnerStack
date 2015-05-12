@@ -75,7 +75,7 @@ namespace Oscilloscope
 			adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 			
 
-			adc.setReadHandler(new DevCallback(adcReadCallback));
+			adc.setReadHandler(adcReadCallback);
 		}
 		
 		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {
@@ -110,6 +110,7 @@ namespace Oscilloscope
 			mac.send(0x0002, 1, rpdu);
 //			mac.transmit(0x0002, 1, dummy);
 			// Schedule next read
+			
 			adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
 			return 0;
 		}
@@ -120,7 +121,7 @@ namespace Oscilloscope
 		
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			LED.setState(IRIS.LED_GREEN, (byte)(flag & Device.FLAG_FAILED));
+			LED.setState(IRIS.LED_GREEN, (byte) ~(flag & Device.FLAG_FAILED));
 			return 0;
 		}
 		

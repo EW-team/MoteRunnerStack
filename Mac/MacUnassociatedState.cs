@@ -13,10 +13,10 @@ namespace Mac_Layer
 		public uint panId;
 	
 		public MacUnassociatedState (Mac mac, uint id) : base(mac)
-		{
-			this.mac.radio.setPanId(panId, false);
-			this.mac.radio.setPanId (id);
+		{	
 			this.panId = id;
+			this.mac.radio.setPanId(this.panId, false);
+			//this.mac.radio.setPanId (id);
 			this.trackBeacon();
 		}
 		
@@ -43,6 +43,7 @@ namespace Mac_Layer
 							Frame.getBeaconInfo (data, this);
 							this.mac.eventHandler(Mac.MAC_BEACON_RXED, data, len, info, time);
 							this.mac.radio.stopRx();
+							this.mac.radio.setPanId(this.panId, false);
 							byte[] assRequest = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
 													this.coordinatorSADDR, this);
 							this.mac.radio.transmit(Radio.ASAP | Radio.RXMODE_NORMAL,assRequest,0,
@@ -135,6 +136,10 @@ namespace Mac_Layer
 		
 		// protected methods
 		internal void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
+			if (LED.getState((byte)0) == 0)
+				LED.setState((byte)0, (byte)1);
+					else
+				LED.setState((byte)0, (byte)0);
 			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, 0);
 		}
 	}

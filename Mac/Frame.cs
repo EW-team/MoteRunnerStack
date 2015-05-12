@@ -8,7 +8,7 @@ namespace Mac_Layer
 	internal class Frame
 	{
 
-		const byte beaconFCF = Radio.FCF_BEACON | Radio.FCF_NSPID;  // FCF header: data-frame & no-SRCPAN
+		const byte beaconFCF = Radio.FCF_BEACON;  // FCF header: data-frame & no-SRCPAN
 		const byte beaconFCA = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
 		const byte cmdFCF = Radio.FCF_CMD | Radio.FCF_ACKRQ; // FCF header: CMD + Acq request
 
@@ -30,27 +30,27 @@ namespace Mac_Layer
 			beacon[1] = beaconFCA;
 			beacon[2] = (byte)state.beaconSequence;
 			state.beaconSequence += 1;
-			Util.set16(beacon,3, panId);
+			Util.set16(beacon,3, Radio.PAN_BROADCAST);
 			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
-//			Util.set16(beacon, 7, panId);
-			Util.set16(beacon, 7, saddr);
-			beacon[9] = (byte)(state.BO << 4 | state.SO);
+			Util.set16(beacon, 7, panId);
+			Util.set16(beacon, 9, saddr);
+			beacon[11] = (byte)(state.BO << 4 | state.SO);
 			if (state.associationPermitted)
-	        	beacon[10] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
+	        	beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
 			else
-				beacon[10] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
+				beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
 			if (state.gtsEnabled)
-          		beacon[11] = (byte)(state.gtsSlots<<5| 1);
+          		beacon[13] = (byte)(state.gtsSlots<<5| 1);
 			else
-				beacon[11] = (byte)(state.gtsSlots<<5| 0);
+				beacon[13] = (byte)(state.gtsSlots<<5| 0);
 			return beacon;
 		}
 
 		public static void getBeaconInfo(byte[] beacon, MacUnassociatedState state){
 			state.coordinatorSADDR = Util.get16(beacon, 7);
-			state.BO = (uint)(beacon [9] & 0xF0) >> 4;
-			state.SO = (uint)beacon [9] & 0x0F;
-//			state.panId = Util.get16 (beacon, 7);
+			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
+			state.SO = (uint)beacon [11] & 0x0F;
+			state.panId = Util.get16 (beacon, 7);
 #if DEBUG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));
 			Logger.appendUInt (state.coordinatorSADDR);
