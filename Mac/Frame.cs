@@ -16,7 +16,8 @@ namespace Mac_Layer
 		{
 		}
 
-		public static byte[] getBeaconFrame(uint panId, uint saddr, MacCoordinatorState state) {
+		public static byte[] getBeaconFrame (uint panId, uint saddr, MacCoordinatorState state)
+		{
 #if DEBUG
 //			Logger.appendString(csr.s2b("getBeaconFrame("));
 //			Logger.appendUInt (panId);
@@ -25,32 +26,51 @@ namespace Mac_Layer
 //			Logger.appendString(csr.s2b(");"));
 //			Logger.flush(Mote.INFO);
 #endif
-			byte[] beacon = new byte[14];
-			beacon[0] = beaconFCF;
-			beacon[1] = beaconFCA;
-			beacon[2] = (byte)state.beaconSequence;
+			byte[] beacon = new byte[11];
+			beacon [0] = beaconFCF;
+			beacon [1] = beaconFCA;
+			beacon [2] = (byte)state.beaconSequence;
 			state.beaconSequence += 1;
-			Util.set16(beacon,3, Radio.PAN_BROADCAST);
-			Util.set16(beacon, 5, Radio.SADDR_BROADCAST);
-			Util.set16(beacon, 7, panId);
-			Util.set16(beacon, 9, saddr);
-			beacon[11] = (byte)(state.BO << 4 | state.SO);
-			if (state.associationPermitted)
-	        	beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
-			else
-				beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
-			if (state.gtsEnabled)
-          		beacon[13] = (byte)(state.gtsSlots<<5| 1);
-			else
-				beacon[13] = (byte)(state.gtsSlots<<5| 0);
+			Util.set16 (beacon, 3, Radio.PAN_BROADCAST);
+			Util.set16 (beacon, 5, Radio.SADDR_BROADCAST);
+			Util.set16 (beacon, 7, panId);
+			Util.set16 (beacon, 9, saddr);
+			
 			return beacon;
 		}
+		
+		public static byte[] getBeaconFrame (uint panId, uint saddr, uint dstSaddr, MacCoordinatorState state)
+		{
+#if DEBUG
+//			Logger.appendString(csr.s2b("getBeaconFrame("));
+//			Logger.appendUInt (panId);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendUInt (saddr);
+//			Logger.appendString(csr.s2b(");"));
+//			Logger.flush(Mote.INFO);
+#endif
+			byte[] beacon = new byte[13];
+			beacon [0] = beaconFCF;
+			beacon [1] = beaconFCA;
+			beacon [2] = (byte)state.beaconSequence;
+			state.beaconSequence += 1;
+			Util.set16 (beacon, 3, Radio.PAN_BROADCAST);
+			Util.set16 (beacon, 5, Radio.SADDR_BROADCAST);
+			Util.set16 (beacon, 7, panId);
+			Util.set16 (beacon, 9, saddr);
+			Util.set16 (beacon, 11, dstSaddr);
+			return beacon;
+		}
+		
 
-		public static void getBeaconInfo(byte[] beacon, MacUnassociatedState state){
-			state.coordinatorSADDR = Util.get16(beacon, 9);
+		public static void getBeaconInfo (byte[] beacon, MacUnassociatedState state)
+		{
+			state.coordinatorSADDR = Util.get16 (beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
+			if (beacon.Length > 11 && Util.get16 (beacon, 11) == state.saddr)
+				state.dataPending = true;
 #if DEBUG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));
 			Logger.appendUInt (state.coordinatorSADDR);
@@ -115,12 +135,31 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static byte[] getCMDDataFrame(uint panId, uint saddr) {
-			byte[] cmd = new byte[10];
-
+		public static byte[] getCMDDataFrame (uint panId, uint saddr, MacUnassociatedState state)
+		{
+			byte[] cmd;
+			if (state.saddr != 0) {
+				cmd = new byte[10];
+				cmd [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
+				Util.set16 (cmd, 9, state.saddr);
+				cmd [11] = (byte)MacState.DATA_REQ;
+			} else {
+				cmd = new byte[18];
+				cmd [1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_SADDR;
+				Mote.getParam (Mote.EUI64, cmd, 9);
+				cmd [17] = (byte)MacState.DATA_REQ;
+			}
+			cmd [0] = Radio.FCF_CMD | Radio.FCF_ACKRQ;
+			cmd [2] = (byte)Util.rand8 ();
+			Util.set16 (cmd, 3, panId);
+			Util.set16 (cmd, 5, saddr);
+			if (state.coordinatorSADDR != 0) // it's associated
+				Util.set16 (cmd, 7, panId);
+			else
+				Util.set16 (cmd, 7, Radio.PAN_BROADCAST);
 			return cmd;
 		}
-
+		
 //		public static void setDataFrame(ref object frame, ref object data, uint panId, uint saddr, uint dsaddr, short seq) {
 //#if DEBUG
 //			Logger.appendString(csr.s2b("getDataFrame("));
@@ -144,7 +183,8 @@ namespace Mac_Layer
 //			Util.copyData(data, 0, frame, 11, (uint)((byte[])data).Length); // Insert data from upper layer into MAC frame
 //		}
 		
-		public static byte[] getDataHeader(uint panId, uint saddr, uint dsaddr, short seq) {
+		public static byte[] getDataHeader (uint panId, uint saddr, uint dsaddr, short seq)
+		{
 #if DEBUG
 			Logger.appendString(csr.s2b("getDataHaeder("));
 			Logger.appendUInt (panId);
@@ -158,15 +198,39 @@ namespace Mac_Layer
 			Logger.flush(Mote.INFO);
 #endif
 			byte[] header = new byte[11];
-			header[0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
-			header[1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
-			header[2] = (byte) seq;
-			Util.set16(header,3, panId);
-			Util.set16(header, 5, dsaddr);
-			Util.set16(header, 7, panId);
-			Util.set16(header, 9, saddr);
+			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
+			header [1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			header [2] = (byte)seq;
+			Util.set16 (header, 3, panId);
+			Util.set16 (header, 5, dsaddr);
+			Util.set16 (header, 7, panId);
+			Util.set16 (header, 9, saddr);
 			return header;
 		}
+		
+		public static byte[] getDataHeader (uint panId, byte[] saddr, byte[] dsaddr, short seq)
+		{
+#if DEBUG
+			Logger.appendString(csr.s2b("getDataHaeder("));
+			Logger.appendUInt (panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendInt (seq);
+			Logger.appendString(csr.s2b(");"));
+			Logger.flush(Mote.INFO);
+#endif
+			uint dlen = (uint)dsaddr.Length;
+			uint slen = (uint)saddr.Length;
+			byte[] header = new byte[7 + slen + dlen];
+			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
+			header [1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			header [2] = (byte)seq;
+			Util.set16 (header, 3, panId);
+			Util.copyData (dsaddr, 0, header, 5, dlen);
+			Util.set16 (header, 5+dlen, panId);
+			Util.copyData (saddr, 0, header, 7+dlen, slen);
+			return header;
+		}
+		
 
 		public static uint getCMDType(byte[] cmd) {
 			uint srcSaddr = (uint)(cmd[1] & Radio.FCA_SRC_MASK);
@@ -206,13 +270,25 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public static uint getSrcSADDR(byte[] data) {
-			uint srcSaddr = (uint)(data[1] & Radio.FCA_SRC_MASK);
-			uint dstSaddr = (uint)(data[1] & Radio.FCA_DST_MASK);
+		public static uint getSrcSADDR (byte[] data)
+		{
+			uint srcSaddr = (uint)(data [1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(data [1] & Radio.FCA_DST_MASK);
 			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR)
-				return Util.get16(data, 9);
+				return Util.get16 (data, 9);
 			else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_SADDR)
-				return Util.get16(data, 15);
+				return Util.get16 (data, 15);
+			else 
+				ArgumentException.throwIt (ArgumentException.TOO_BIG);
+			return 0;
+		
+		}
+		
+		public static uint getDestSAddr(byte[] data){
+			uint srcSaddr = (uint)(data [1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(data [1] & Radio.FCA_DST_MASK);
+			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR || dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+				return Util.get16 (data, 5);
 			else 
 				ArgumentException.throwIt (ArgumentException.TOO_BIG);
 			return 0;

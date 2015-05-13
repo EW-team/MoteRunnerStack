@@ -17,7 +17,7 @@ namespace Oscilloscope
 		
 		internal static byte[]	rpdu = new byte[PAYLOAD_SIZE];	// The read PDU 
 		
-		static long READ_INTERVAL;	// Read ADC every (Secs)
+		static long readInterval;	// Read ADC every (Secs)
 
 		static readonly uint MDA100_ADC_CHANNEL_MASK = 0x02;	// Bit associated with the shared ADC
 		// channel (channel 1 is shared between
@@ -52,7 +52,7 @@ namespace Oscilloscope
 			mac.associate(0x0234);
 
 			// convert 2 seconds to the platform ticks
-        	READ_INTERVAL = Time.toTickSpan(Time.SECONDS, 2);
+        	readInterval = Time.toTickSpan(Time.SECONDS, 2);
 	
 			//GPIO, power pins
 			pwrPins = new GPIO();
@@ -62,11 +62,6 @@ namespace Oscilloscope
 			
 			//ADC
 			adc = new ADC();
-			
-			
-			adc.open(/* chmap */ MDA100_ADC_CHANNEL_MASK,/* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
-			
-
 			adc.setReadHandler(adcReadCallback);
 		}
 		
@@ -80,30 +75,25 @@ namespace Oscilloscope
 //			byte[] dataFlag;
 			// We alternate between powering the temperature and the light sensor
 			
-			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
-				rpdu[0] = FLAG_TEMP;
-				// Powers ON light and OFF temperature sensor
-				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
-				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
-			}
-			else {	// Light read
-				
-				rpdu[0] = FLAG_LIGHT;
-				// Powers ON temperature and ON light sensor
-				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
-				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_CLR);		
-			}
+//			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
+//				rpdu[0] = FLAG_TEMP;
+//				// Powers ON light and OFF temperature sensor
+//				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
+//				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
+//			}
+//			else {	// Light read
+//				
+//				rpdu[0] = FLAG_LIGHT;
+//				// Powers ON temperature and ON light sensor
+//				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
+//				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_CLR);		
+//			}
 
-			// Sends data
-//			uint flagLength = (uint)dataFlag.Length;
-//			Util.copyData(dataFlag, 0, rpdu, 0, flagLength);		// Payload flag bytes, FLAG_TEMP || FLAG_LIGHT
 			Util.copyData(data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
 			mac.send(0x0002, 1, rpdu);
-//			mac.transmit(0x0002, 1, dummy);
 			// Schedule next read
-			
-			adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
+			adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 			return 0;
 		}
 		
@@ -117,11 +107,28 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			if(flag == Mac.MAC_TX_COMPLETE){
-//				LIP.
-			}
-			else {
+		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
+		{
+			if (flag == Mac.MAC_DATA_RXED) {
+				readInterval = Time.toTickSpan (Time.MILLISECS, Util.get32 (data, 2));
+				if (data [0] == FLAG_TEMP) {
+					rpdu [0] = FLAG_TEMP;
+					// Powers ON light and OFF temperature sensor
+					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
+					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
+				} else {
+					rpdu [0] = FLAG_LIGHT;
+					// Powers ON temperature and ON light sensor
+					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
+					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
+				}
+				if ((short)data [1] = 1) {
+					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+				} else {
+					adc.setState (CDev.S_OFF);
+					adc.close ();
+				}
+			} else {
 				
 			}
 			return 0;

@@ -52,10 +52,10 @@ namespace Mac_Layer
 		public long slotInterval; // Superframe duration = 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
 		private uint _SO; // superframe order
 		public uint SO {
-			get{
+			get {
 				return this._SO;
 			}
-			set{
+			set {
 				if (value < 15 && value >= 0 && value < this._BO) {
 					this._SO = value;
 					this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
@@ -70,6 +70,9 @@ namespace Mac_Layer
 				}
 			}
 		}
+		
+		public bool dataPending = false;
+		public uint saddr = 0x0000;
 		
 		// Scan parameters
 		public long aScanInterval;

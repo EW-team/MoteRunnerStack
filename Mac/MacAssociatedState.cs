@@ -33,22 +33,33 @@ namespace Mac_Layer
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
 						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
 						Frame.getBeaconInfo (data, this);
-						if (this.mac.pdu != null && this.duringSuperframe) { // there's something to transmit
-							this.transmit (time);
+						if (this.dataPending) { // receive data
+							//request for data and return
+							
+							return 0;
 						}
 						break;
 					case Radio.FCF_CMD:
-						switch ((uint)data[pos]) {
-						case DATA_REQ: // data request handle - coordinator
-									//TODO
+						switch ((uint)data [pos]) {
+						case DATA_REQ: // data request handle - coordinator - it could never happen in this point
+										//TODO: replace with coherent cases
 							break;
 						}
 						break;
 					case Radio.FCF_DATA:
-							// handle fcf data
-							//TODO
+						if ((len - pos) > 0) {
+							byte[] pdu = new byte[len - pos];
+							Util.copyData (data, len, pdu, 0, len - pos);
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
+								                    Frame.getSrcSADDR (data), time);
+						} else
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
+								                    Frame.getSrcSADDR (data), time);
 						break;
 					}
+				}
+				if (this.mac.pdu != null && this.duringSuperframe) { // there's something to transmit
+					this.transmit (time);
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
@@ -112,14 +123,19 @@ namespace Mac_Layer
 //			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.aScanInterval);
 //		}
 
-		internal void transmit(long time) {
-			this.mac.radio.stopRx();
+		internal void transmit (long time)
+		{
+			this.mac.radio.stopRx ();
 			uint len = (uint)this.mac.pdu.Length;
-			this.mac.radio.transmit(Radio.ASAP|Radio.TXMODE_CCA, this.mac.pdu,0,len, time+this.slotInterval);
+			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, len, time + this.slotInterval);
 //			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
 //										this.mac.pdu,0,len,time+this.slotInterval);
 		}
 		
+		
+		internal void requestData(){
+			
+		}
 	}
 }
 

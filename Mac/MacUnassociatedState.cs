@@ -15,8 +15,9 @@ namespace Mac_Layer
 		public MacUnassociatedState (Mac mac, uint id) : base(mac)
 		{	
 			this.panId = id;
-			this.mac.radio.setPanId(this.panId, false);
-			this.trackBeacon();
+			this.saddr = this.mac.radio.getShortAddr ();
+			this.mac.radio.setPanId (this.panId, false);
+			this.trackBeacon ();
 		}
 		
 //		public override void setNetwork(uint panId, uint saddr){
@@ -70,7 +71,15 @@ namespace Mac_Layer
 							}
 							break;
 					case Radio.FCF_DATA:
-							// handle fcf data
+						if ((len - pos) > 0) {
+							byte[] pdu = new byte[len - pos];
+							Util.copyData (data, len, pdu, 0, len - pos);
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
+								                    Frame.getSrcSADDR (data), time);
+						} else
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
+								                    Frame.getSrcSADDR (data), time);
+									//TODO
 						break;
 					}
 				} else {
