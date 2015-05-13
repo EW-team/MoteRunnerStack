@@ -26,7 +26,7 @@ namespace Mac_Layer
 //			Logger.appendString(csr.s2b(");"));
 //			Logger.flush(Mote.INFO);
 #endif
-			byte[] beacon = new byte[11];
+			byte[] beacon = new byte[14];
 			beacon [0] = beaconFCF;
 			beacon [1] = beaconFCA;
 			beacon [2] = (byte)state.beaconSequence;
@@ -35,7 +35,15 @@ namespace Mac_Layer
 			Util.set16 (beacon, 5, Radio.SADDR_BROADCAST);
 			Util.set16 (beacon, 7, panId);
 			Util.set16 (beacon, 9, saddr);
-			
+			beacon [11] = (byte)(state.BO << 4 | state.SO);
+			if (state.associationPermitted)
+	        	beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
+			else
+				beacon[12] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
+			if (state.gtsEnabled)
+          		beacon[13] = (byte)(state.gtsSlots<<5| 1);
+			else
+				beacon[13] = (byte)(state.gtsSlots<<5| 0);
 			return beacon;
 		}
 		
@@ -49,7 +57,7 @@ namespace Mac_Layer
 //			Logger.appendString(csr.s2b(");"));
 //			Logger.flush(Mote.INFO);
 #endif
-			byte[] beacon = new byte[13];
+			byte[] beacon = new byte[16];
 			beacon [0] = beaconFCF;
 			beacon [1] = beaconFCA;
 			beacon [2] = (byte)state.beaconSequence;
@@ -58,7 +66,16 @@ namespace Mac_Layer
 			Util.set16 (beacon, 5, Radio.SADDR_BROADCAST);
 			Util.set16 (beacon, 7, panId);
 			Util.set16 (beacon, 9, saddr);
-			Util.set16 (beacon, 11, dstSaddr);
+			Util.set16 (beacon, 14, dstSaddr);
+			beacon [11] = (byte)(state.BO << 4 | state.SO);
+			if (state.associationPermitted)
+				beacon [12] = (byte)(state.nSlot << 3 | 1 << 1 | 1);
+			else
+				beacon [12] = (byte)(state.nSlot << 3 | 1 << 1 | 0);
+			if (state.gtsEnabled)
+				beacon [13] = (byte)(state.gtsSlots << 5 | 1);
+			else
+				beacon [13] = (byte)(state.gtsSlots << 5 | 0);
 			return beacon;
 		}
 		

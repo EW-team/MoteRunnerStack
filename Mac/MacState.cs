@@ -41,10 +41,10 @@ namespace Mac_Layer
 					this._BO = value;
 					this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
 				} else if (value > 15) {
-					this._BO = 8;
+					this._BO = this._SO+1;
 					ArgumentException.throwIt (ArgumentException.TOO_BIG);
 				} else {
-					this._BO = 8;
+					this._BO = this._SO + 1;
 					ArgumentException.throwIt (ArgumentException.TOO_SMALL);
 				}
 			}

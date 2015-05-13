@@ -140,7 +140,7 @@ namespace Oscilloscope
 		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			switch(flag){
 				case Mac.MAC_ASSOCIATED:
-					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
+//					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 					break;
 				default:
 					return 0;
