@@ -41,24 +41,26 @@ namespace Mac_Layer
 		internal byte[] pdu;
 		internal byte[] header;
 		public object[] buffer;
+		private uint _bufCount = 0;
 		public uint bufCount {
 			get {
 				return this.bufCount;
 			}
 			set {
-				if (value == this.bufTransm)
-					this.bufTransm += 1;
-				this.bufCount = value;
+				if (value == this._bufTransm)
+					this._bufCount += 1;
+				this._bufCount = value % (uint)buffer.Length;
 			}
 		}
+		private uint _bufTransm = 0;
 		public uint bufTransm {
 			get {
-				return this.bufTransm;
+				return this._bufTransm;
 			}
 			set {
-				this.buffer [this.bufTransm] = null;
-				this.bufTransm = value % (uint)buffer.Length;
-				this.pdu = (byte[])this.buffer [this.bufTransm];
+				this.buffer [this._bufTransm] = null;
+				this._bufTransm = value % (uint)buffer.Length;
+				this.pdu = (byte[])this.buffer [this._bufTransm];
 			}
 		}
 
@@ -78,8 +80,9 @@ namespace Mac_Layer
 		{
 			this.timer1 = new Timer ();
 			this.radio = new Radio ();
+			this.pdu = null;
 //			buffer = (object[])Util.alloca (8, Util.OBJECT_ARRAY);
-			buffer = new object[8];
+			this.buffer = new object[8];
 		}
 
 		internal void onStateEvent (uint flag, uint param)
@@ -144,8 +147,7 @@ namespace Mac_Layer
 			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
 			uint len = (uint)(header.Length + data.Length);
 			if (len <= 127) {
-				this.bufCount = (this.bufCount + 1) % 8;
-//				buffer [bufCount] = Util.alloca ((byte)len, Util.BYTE_ARRAY);
+				this.bufCount = (this.bufCount + 1) % (uint)buffer.Length;
 				buffer [this.bufCount] = new byte[len];
 				Util.copyData (header, 0, this.buffer [bufCount], 0, (uint)header.Length);
 				Util.copyData (data, 0, this.buffer [bufCount], (uint)header.Length, (uint)data.Length);

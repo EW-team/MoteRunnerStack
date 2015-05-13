@@ -69,9 +69,15 @@ namespace Mac_Layer
 								                           time + this.slotInterval);
 							break;
 						case DATA_REQ: // data request handle - coordinator
-							this.mac.radio.stopRx ();
-							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
+							if (LED.getState ((byte)2) == 1)
+								LED.setState ((byte)2, (byte)0);
+							else
+								LED.setState ((byte)2, (byte)1);
+							if (this.mac.pdu != null) {
+								this.mac.radio.stopRx ();
+								this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
 							                        	   time + this.slotInterval);
+							}
 							break;
 						}
 						break;
@@ -111,7 +117,7 @@ namespace Mac_Layer
 					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
-					this.mac.bufTransm = this.mac.bufTransm+1;
+					this.mac.bufTransm = this.mac.bufTransm + 1;
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:
@@ -131,6 +137,10 @@ namespace Mac_Layer
 					break;
 				case Radio.FCF_DATA: // data transmission error
 					if (this.duringSuperframe) {
+						if (LED.getState ((byte)2) == 1)
+							LED.setState ((byte)2, (byte)0);
+						else
+							LED.setState ((byte)2, (byte)1);
 						this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
 							                        	   time + this.slotInterval);
 					}

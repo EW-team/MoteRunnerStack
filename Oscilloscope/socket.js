@@ -24,16 +24,16 @@ var osciSocket = {
 	send: function(dstport, dstmote, argv) {
 		println("socket-send: called..");
 		// argv format: cmd:on/off:flag:
-		// var arr = argv.split(':');
-		// var cmd = arr[0]; // 1 byte
-		// var on = arr[1]; // 1 byte
-		// var flag = arr[2]; // 1 byte
-		// var time = arr[3]; // 4 byte
-		
-		// argv = Util.Formatter.pack('1u1u1u2U', arr);
+		var cmd = argv[0]; // 1 byte
+		var on = argv[1]; // 1 byte
+		var flag = argv[2]; // 1 byte
+		var time = argv[3]; // 4 byte
+		// var msg = 0101010300;
+		println(parseInt(cmd))
+		var msg = Util.Formatter.transcode('(1u)(1u)(1u)(4u)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time));
 		println('...');
-		println(argv);
-		return argv;
+		println(msg);
+		return msg;
 	},
 
 	/**                                                   

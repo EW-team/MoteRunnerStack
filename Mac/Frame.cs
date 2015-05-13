@@ -86,7 +86,7 @@ namespace Mac_Layer
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
-			if (beacon.Length > 11 && Util.get16 (beacon, 11) == state.saddr)
+			if (beacon.Length > 14 && Util.get16 (beacon, 14) == state.saddr)
 				state.dataPending = true;
 #if DEBUG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));

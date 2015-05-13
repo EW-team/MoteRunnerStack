@@ -100,6 +100,15 @@ namespace Oscilloscope
 				
 				LIP.send (header, headerLength, data, 1, (uint)data.Length);
 			}
+			if (LED.getState ((byte)2) == 1)
+				LED.setState ((byte)2, (byte)0);
+			else
+				LED.setState ((byte)2, (byte)1);
+			byte[] cmd = new byte[6];
+			cmd [0] = FLAG_TEMP;
+			cmd [1] = (byte)1;
+			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
+			mac.send (0xFFFF, Util.rand8 (), cmd);
 			return 0;
 		}
 		
@@ -136,10 +145,18 @@ namespace Oscilloscope
 		
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
+			if (LED.getState ((byte)2) == 1)
+				LED.setState ((byte)2, (byte)0);
+			else
+				LED.setState ((byte)2, (byte)1);
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
 			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
+				if (LED.getState ((byte)2) == 1)
+					LED.setState ((byte)2, (byte)0);
+				else
+					LED.setState ((byte)2, (byte)1);
 				byte[] cmd = new byte[6];
 				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
 					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura

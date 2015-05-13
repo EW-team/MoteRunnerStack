@@ -35,7 +35,7 @@ namespace Mac_Layer
 						Frame.getBeaconInfo (data, this);
 						if (this.dataPending) { // receive data
 							//request for data and return
-							
+							this.requestData (time);
 							return 0;
 						}
 						break;
@@ -69,31 +69,33 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public override int onTxEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				switch (data [0] & FRAME_TYPE_MASK) {
-					case Radio.FCF_DATA:
-						this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
-						this.mac.bufTransm = this.mac.bufTransm + 1;
-						break;
-					case Radio.FCF_CMD:
-						if (data [17] == DATA_REQ) { // data request - not coordinator
-							//TODO
-						}
-						break;
+				case Radio.FCF_DATA:
+					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
+					this.mac.bufTransm = this.mac.bufTransm + 1;
+					break;
+				case Radio.FCF_CMD:
+					if (data [17] == DATA_REQ) { // data request - not coordinator
+						if (LED.getState ((byte)2) == 1)
+							LED.setState ((byte)2, (byte)0);
+						else
+							LED.setState ((byte)2, (byte)1);
+						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+					}
+					break;
 				}
-			}						
-			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				if (this.mac.pdu != null && this.duringSuperframe) {
 					this.transmit (time);
-				}
-				else { // pdu = null || this.slotCounter >= nSlot
+				} else { // pdu = null || this.slotCounter >= nSlot
 					// impostare il risparmio energetico
 					//TODO
 				}
-			}
-			else {
+			} else {
 				//TODO
 			}
 			return 0;
@@ -133,8 +135,15 @@ namespace Mac_Layer
 		}
 		
 		
-		internal void requestData(){
-			
+		internal void requestData (long time)
+		{
+			this.mac.radio.stopRx ();
+			if (LED.getState ((byte)2) == 1)
+				LED.setState ((byte)2, (byte)0);
+			else
+				LED.setState ((byte)2, (byte)1);
+			byte[] cmd = Frame.getCMDDataFrame (this.panId, this.saddr, this);
+			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, cmd, 0, (uint)cmd.Length, time + this.slotInterval);
 		}
 	}
 }
