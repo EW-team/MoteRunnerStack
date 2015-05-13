@@ -139,9 +139,23 @@ namespace Oscilloscope
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
-			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
+			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica cambio letture, tempo e attivazione/disattivazione
+				byte[] cmd = new byte[6];
+				if ((short)buf [cmdoff + 1] == 1) {
+					if ((short)buf [cmdoff + 2] == 1)
+						cmd [0] = FLAG_TEMP;
+					else
+						cmd [0] = FLAG_LIGHT;
+					cmd [1] = (byte)1;
+				} else
+					cmd [1] = (byte)0;
+				Util.copyData (buf, cmdoff + 3, cmd, 2, 4);
+				mac.send (0xFFFF, Util.rand8 (), cmd);
+			}
+			
+			Util.set32 (header, ROFF_, TIME, Time.currentTicks ());
 			Util.copyData (buf, 0, header, 0, headerLength);
-			return (int) headerLength+2;
+			return (int)headerLength + 2;
 		}
 		
 	}
