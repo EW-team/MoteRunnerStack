@@ -72,7 +72,6 @@ namespace Mac_Layer
 							this.mac.radio.stopRx ();
 							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
 							                        	   time + this.slotInterval);
-							return 0;
 							break;
 						}
 						break;

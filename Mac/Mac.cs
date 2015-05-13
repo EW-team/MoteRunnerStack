@@ -154,18 +154,6 @@ namespace Mac_Layer
 			
 		}
 		
-		private void sendData (byte[] data, uint saddr, short seq)
-		{
-			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), saddr, seq);
-			uint len = (uint)(header.Length + data.Length);
-			if (len <= 127) {
-				buffer [bufCount] = Util.alloca ((byte)len, Util.BYTE_ARRAY);
-				Util.copyData (header, 0, (byte[])buffer [bufCount], 0, (uint)header.Length);
-				Util.copyData (data, 0, (byte[])buffer [bufCount], (uint)header.Length, (uint)data.Length);
-				bufCount = (bufCount + 1) % 8;
-			}
-		}
-		
 		// static methods
 		public static int onMockEvent(uint flags, byte[] data, uint len, uint info, long time){
 			
