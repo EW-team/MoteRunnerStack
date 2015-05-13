@@ -153,7 +153,7 @@ namespace Oscilloscope
 				mac.send (0xFFFF, Util.rand8 (), cmd);
 			}
 			
-			Util.set32 (header, ROFF_, TIME, Time.currentTicks ());
+			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
 			Util.copyData (buf, 0, header, 0, headerLength);
 			return (int)headerLength + 2;
 		}

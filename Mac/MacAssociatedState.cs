@@ -75,7 +75,7 @@ namespace Mac_Layer
 				switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_DATA:
 						this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
-						this.mac.pdu = null;
+						this.mac.bufTransm = this.mac.bufTransm + 1;
 						break;
 					case Radio.FCF_CMD:
 						if (data [17] == DATA_REQ) { // data request - not coordinator

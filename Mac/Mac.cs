@@ -40,6 +40,27 @@ namespace Mac_Layer
 //		internal Timer timer2;
 		internal byte[] pdu;
 		internal byte[] header;
+		public object[] buffer;
+		public uint bufCount {
+			get {
+				return this.bufCount;
+			}
+			set {
+				if (value == this.bufTransm)
+					this.bufTransm += 1;
+				this.bufCount = value;
+			}
+		}
+		public uint bufTransm {
+			get {
+				return this.bufTransm;
+			}
+			set {
+				this.buffer [this.bufTransm] = null;
+				this.bufTransm = value % (uint)buffer.Length;
+				this.pdu = (byte[])this.buffer [this.bufTransm];
+			}
+		}
 
 //		// Internal logic parameters
 //		private bool scanContinue = false;
@@ -53,9 +74,12 @@ namespace Mac_Layer
 		// Configuration
 		internal MacState state;
 
-		public Mac () {
-			this.timer1 = new Timer();
-			this.radio = new Radio();
+		public Mac ()
+		{
+			this.timer1 = new Timer ();
+			this.radio = new Radio ();
+			buffer = (object[])Util.alloca (8, Util.OBJECT_ARRAY);
+			
 		}
 
 		internal void onStateEvent (uint flag, uint param)
@@ -115,14 +139,31 @@ namespace Mac_Layer
 			this.eventHandler = callback;
 		}
 
-		public void send(uint dstSaddr, short seq, byte[] data) {
-			byte[] header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
-//			this.pdu = (byte[])Util.alloca((byte)(header.Length+data.Length),(byte)Util.BYTE_ARRAY);
-			uint headLen = (uint) header.Length;
-			uint dataLen = (uint) data.Length;
-			this.pdu = new byte[headLen+dataLen];
-			Util.copyData(header,0,this.pdu,0,headLen);
-			Util.copyData(data,0,this.pdu,headLen,dataLen);
+		public void send (uint dstSaddr, short seq, byte[] data)
+		{
+			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
+			uint len = (uint)(header.Length + data.Length);
+			if (len <= 127) {
+				bufCount = (bufCount + 1) % 8;
+				buffer [bufCount] = Util.alloca ((byte)len, Util.BYTE_ARRAY);
+				Util.copyData (header, 0, (byte[])buffer [bufCount], 0, (uint)header.Length);
+				Util.copyData (data, 0, (byte[])buffer [bufCount], (uint)header.Length, (uint)data.Length);
+				if (this.pdu == null)
+					this.pdu = (byte[])buffer [bufTransm];
+			}
+			
+		}
+		
+		private void sendData (byte[] data, uint saddr, short seq)
+		{
+			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), saddr, seq);
+			uint len = (uint)(header.Length + data.Length);
+			if (len <= 127) {
+				buffer [bufCount] = Util.alloca ((byte)len, Util.BYTE_ARRAY);
+				Util.copyData (header, 0, (byte[])buffer [bufCount], 0, (uint)header.Length);
+				Util.copyData (data, 0, (byte[])buffer [bufCount], (uint)header.Length, (uint)data.Length);
+				bufCount = (bufCount + 1) % 8;
+			}
 		}
 		
 		// static methods

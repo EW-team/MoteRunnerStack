@@ -103,7 +103,10 @@ namespace Oscilloscope
 		
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			LED.setState(IRIS.LED_GREEN, (byte) ~(flag & Device.FLAG_FAILED));
+			if (LED.getState (IRIS.LED_GREEN) == 0)
+				LED.setState (IRIS.LED_GREEN, (byte)1);
+			else
+				LED.setState (IRIS.LED_GREEN, (byte)0);
 			return 0;
 		}
 		
@@ -113,19 +116,19 @@ namespace Oscilloscope
 				readInterval = Time.toTickSpan (Time.MILLISECS, Util.get32 (data, 2));
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
-					// Powers ON light and OFF temperature sensor
-					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
-					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
-				} else {
-					rpdu [0] = FLAG_LIGHT;
 					// Powers ON temperature and ON light sensor
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
+				} else {
+					rpdu [0] = FLAG_LIGHT;
+					// Powers ON light and OFF temperature sensor
+					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
+					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
 				}
-				if ((short)data [1] = 1) {
+				if ((short)data [1] == 1) {
 					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 				} else {
-					adc.setState (CDev.S_OFF);
+//					adc.setState (CDev.S_OFF);
 					adc.close ();
 				}
 			} else {
@@ -137,7 +140,7 @@ namespace Oscilloscope
 		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			switch(flag){
 				case Mac.MAC_ASSOCIATED:
-					adc.read(Device.TIMED, 1, Time.currentTicks() + READ_INTERVAL);
+					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 					break;
 				default:
 					return 0;
