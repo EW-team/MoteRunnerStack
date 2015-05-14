@@ -117,7 +117,8 @@ namespace Mac_Layer
 					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
-					this.mac.bufTransm = this.mac.bufTransm + 1;
+//					this.mac.bufTransm = this.mac.bufTransm + 1;
+					this.mac.pdu = null;
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:

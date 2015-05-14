@@ -78,7 +78,13 @@ namespace Oscilloscope
 			mac.setTxHandler (new DevCallback (onTxEvent));
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
-			mac.createPan(0x0234, 0x0002);
+			mac.createPan (0x0234, 0x0002);
+			
+			byte[] cmd = new byte[7];
+			cmd [0] = FLAG_TEMP;
+			cmd [1] = (byte)1;
+			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
+			mac.send (0x0100, Util.rand8 (), cmd);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
@@ -100,15 +106,8 @@ namespace Oscilloscope
 				
 				LIP.send (header, headerLength, data, 1, (uint)data.Length);
 			}
-			if (LED.getState ((byte)2) == 1)
-				LED.setState ((byte)2, (byte)0);
-			else
-				LED.setState ((byte)2, (byte)1);
-			byte[] cmd = new byte[6];
-			cmd [0] = FLAG_TEMP;
-			cmd [1] = (byte)1;
-			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
-			mac.send (0xFFFF, Util.rand8 (), cmd);
+			blink (2);
+			
 			return 0;
 		}
 		
@@ -117,16 +116,12 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		internal static void blink()
+		internal static void blink(uint led)
 		{
-			uint num = LED.getNumLEDs();
-			for(uint i = 0; i<2*num; i++)
-			{
-				if(LED.getState ((byte)(i%num)) == 0)
-					LED.setState ((byte)(i%num),(byte)1);
-				else
-					LED.setState ((byte)(i%num),(byte)0);
-			}
+			if(LED.getState ((byte)led) == 0)
+				LED.setState ((byte)led,(byte)1);
+			else
+				LED.setState ((byte)led,(byte)0);
 		}
 		
 		static int onSysInfo (int type, int info)
@@ -145,18 +140,12 @@ namespace Oscilloscope
 		
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
-			if (LED.getState ((byte)2) == 1)
-				LED.setState ((byte)2, (byte)0);
-			else
-				LED.setState ((byte)2, (byte)1);
+			blink (2);
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
 			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
-				if (LED.getState ((byte)2) == 1)
-					LED.setState ((byte)2, (byte)0);
-				else
-					LED.setState ((byte)2, (byte)1);
+				blink (2);
 				byte[] cmd = new byte[6];
 				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
 					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura
@@ -167,7 +156,7 @@ namespace Oscilloscope
 				} else
 					cmd [1] = (byte)0;
 				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
-				mac.send (0xFFFF, Util.rand8 (), cmd);
+				mac.send (0x0100, Util.rand8 (), cmd);
 			}
 			
 			Util.set32 (header, ROFF_TIME, Time.currentTicks ());

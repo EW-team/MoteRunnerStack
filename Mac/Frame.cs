@@ -86,9 +86,12 @@ namespace Mac_Layer
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
-			if (beacon.Length > 14 && Util.get16 (beacon, 14) == state.saddr)
-				state.dataPending = true;
-#if DEBUG
+			if (beacon.Length > 13) {
+				uint pendingAddr = Util.get16 (beacon, 14);
+				if(pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST)
+					state.dataPending = true;	
+			}
+#if DEBUG || DBG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));
 			Logger.appendUInt (state.coordinatorSADDR);
 			Logger.appendString(csr.s2b(", "));
@@ -100,6 +103,12 @@ namespace Mac_Layer
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendString(csr.s2b("panId"));
 			Logger.appendUInt (state.panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendString(csr.s2b("dataPending"));
+			if(state.dataPending)
+				Logger.appendUInt(1);
+			else
+				Logger.appendUInt(0);
 			Logger.flush(Mote.INFO);
 #endif
 		}
@@ -156,7 +165,7 @@ namespace Mac_Layer
 		{
 			byte[] cmd;
 			if (state.saddr != 0) {
-				cmd = new byte[10];
+				cmd = new byte[12];
 				cmd [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
 				Util.set16 (cmd, 9, state.saddr);
 				cmd [11] = (byte)MacState.DATA_REQ;
@@ -226,7 +235,7 @@ namespace Mac_Layer
 		}
 		
 		public static byte[] getDataHeader (uint panId, byte[] saddr, byte[] dsaddr, short seq)
-		{
+		{ // settare correttamente FCA in base alla dimensione degli indirizzi
 #if DEBUG
 			Logger.appendString(csr.s2b("getDataHaeder("));
 			Logger.appendUInt (panId);

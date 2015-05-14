@@ -1,9 +1,9 @@
 
 set-var -e APP_PORT 126 
 
-socket-close -f osciSocket
-source ./js_server/socket.js 
-socket-bind osciSocket
+# socket-close -f osciSocket
+# source ./js_server/socket.js 
+# socket-bind osciSocket
 
 mote-create -d iris 3
 

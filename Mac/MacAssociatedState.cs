@@ -6,7 +6,7 @@ namespace Mac_Layer
 	internal class MacAssociatedState : MacUnassociatedState
 	{
 		
-		public MacAssociatedState (Mac mac,uint panId, uint saddr) : base(mac, panId)
+		public MacAssociatedState (Mac mac, uint panId, uint saddr) : base(mac, panId)
 		{
 			this.coordinatorSADDR = saddr;
 		}
@@ -47,6 +47,7 @@ namespace Mac_Layer
 						}
 						break;
 					case Radio.FCF_DATA:
+						this.dataPending = false;
 						if ((len - pos) > 0) {
 							byte[] pdu = new byte[len - pos];
 							Util.copyData (data, len, pdu, 0, len - pos);
@@ -76,7 +77,8 @@ namespace Mac_Layer
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_DATA:
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
-					this.mac.bufTransm = this.mac.bufTransm + 1;
+//					this.mac.bufTransm = this.mac.bufTransm + 1;
+					this.mac.pdu = null;
 					break;
 				case Radio.FCF_CMD:
 					if (data [17] == DATA_REQ) { // data request - not coordinator
@@ -84,7 +86,7 @@ namespace Mac_Layer
 							LED.setState ((byte)2, (byte)0);
 						else
 							LED.setState ((byte)2, (byte)1);
-						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
+						this.mac.radio.startRx (Radio.RX4EVER | Radio.RXMODE_PROMISCUOUS, 0, 0);
 					}
 					break;
 				}
@@ -142,7 +144,7 @@ namespace Mac_Layer
 				LED.setState ((byte)2, (byte)0);
 			else
 				LED.setState ((byte)2, (byte)1);
-			byte[] cmd = Frame.getCMDDataFrame (this.panId, this.saddr, this);
+			byte[] cmd = Frame.getCMDDataFrame (this.panId, this.coordinatorSADDR, this);
 			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, cmd, 0, (uint)cmd.Length, time + this.slotInterval);
 		}
 	}

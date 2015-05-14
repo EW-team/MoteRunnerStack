@@ -22,7 +22,6 @@ namespace Mac_Layer
 		internal const uint ASS_FAIL = 0x01;
 		
 		internal Mac mac;
-//		internal MacConfig config;
 		internal bool duringSuperframe;
 		
 		// Beacon & Superframe Parameters

@@ -38,31 +38,61 @@ namespace Mac_Layer
 		internal Radio radio;
 		internal Timer timer1;
 //		internal Timer timer2;
-		internal byte[] pdu;
-		internal byte[] header;
-		public object[] buffer;
-		private uint _bufCount = 0;
-		public uint bufCount {
-			get {
-				return this.bufCount;
-			}
-			set {
-				if (value == this._bufTransm)
-					this._bufCount += 1;
-				this._bufCount = value % (uint)buffer.Length;
-			}
-		}
-		private uint _bufTransm = 0;
-		public uint bufTransm {
-			get {
-				return this._bufTransm;
-			}
-			set {
-				this.buffer [this._bufTransm] = null;
-				this._bufTransm = value % (uint)buffer.Length;
-				this.pdu = (byte[])this.buffer [this._bufTransm];
-			}
-		}
+		
+		public byte[] pdu;
+//		private byte[] _pdu;
+//		public byte[] pdu {
+//			get {
+//				return this._pdu;
+//			}
+//			set {
+//				if (value == null && this.buffer [this._bufTransm] != null)
+//					this._pdu = (byte[])this.buffer [this._bufTransm];
+//				else if (value != null)
+//					this._pdu = value;
+//				else
+//					this._pdu = null;
+//			}
+//		}
+//		internal byte[] header;
+//		
+//		public uint bufferLength = 8;
+//		public object[] buffer;
+//		
+//		private uint _bufCount = 0;
+//		public uint bufCount {
+//			get {
+//				return this.bufCount;
+//			}
+//			set {
+//#if DEBUGGINO
+//			Logger.appendString(csr.s2b("Buffer status: "));
+//			Logger.appendUInt (this._bufTransm);
+//			Logger.appendString(csr.s2b(" -> "));
+//			Logger.appendUInt (this._bufCount);
+//#endif
+//				if (value == this._bufTransm)
+//					this._bufTransm += 1;
+//				this._bufCount = value % bufferLength;
+//			}
+//		}
+//		
+//		private uint _bufTransm = 0;
+//		public uint bufTransm {
+//			get {
+//				return this._bufTransm;
+//			}
+//			set {
+//#if DEBUGGINO
+//			Logger.appendString(csr.s2b("Buffer status: "));
+//			Logger.appendUInt (this._bufTransm);
+//			Logger.appendString(csr.s2b(" -> "));
+//			Logger.appendUInt (this._bufCount);
+//#endif
+//				if (this._bufTransm != this._bufCount)
+//					this._bufTransm = value % bufferLength;
+//			}
+//		}
 
 //		// Internal logic parameters
 //		private bool scanContinue = false;
@@ -82,7 +112,7 @@ namespace Mac_Layer
 			this.radio = new Radio ();
 			this.pdu = null;
 //			buffer = (object[])Util.alloca (8, Util.OBJECT_ARRAY);
-			this.buffer = new object[8];
+//			this.buffer = new object[8];
 		}
 
 		internal void onStateEvent (uint flag, uint param)
@@ -144,15 +174,25 @@ namespace Mac_Layer
 
 		public void send (uint dstSaddr, short seq, byte[] data)
 		{
+#if DBG
+			Logger.appendString(csr.s2b("send("));
+			Logger.appendUInt (dstSaddr);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt ((uint)seq);
+			Logger.appendString(csr.s2b(")"));
+			Logger.flush(Mote.INFO);
+#endif
 			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
 			uint len = (uint)(header.Length + data.Length);
+
 			if (len <= 127) {
-				this.bufCount = (this.bufCount + 1) % (uint)buffer.Length;
-				buffer [this.bufCount] = new byte[len];
-				Util.copyData (header, 0, this.buffer [bufCount], 0, (uint)header.Length);
-				Util.copyData (data, 0, this.buffer [bufCount], (uint)header.Length, (uint)data.Length);
-				if (this.pdu == null)
-					this.pdu = (byte[])this.buffer [bufTransm];
+				this.pdu = new byte[len];
+				Util.copyData (header, 0, this.pdu, 0, (uint)header.Length);
+				Util.copyData (data, 0, this.pdu, (uint)header.Length, (uint)data.Length);
+//				this.bufCount += 1;
+//				buffer [this.bufCount] = packet;
+//				if (this.pdu == null)
+//					this.pdu = packet;
 			}
 			
 		}
