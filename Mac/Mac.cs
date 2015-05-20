@@ -20,6 +20,7 @@ namespace Mac_Layer
 		internal const byte MAC_WAKEUP = (byte)0x10;
 		internal const byte MAC_SLEEP = (byte)0x11;
 		internal const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
+		internal const byte MAC_SLOT = (byte)0x13;
 
 		// MAC Flags codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
@@ -38,6 +39,8 @@ namespace Mac_Layer
 		internal Radio radio;
 		internal Timer timer1;
 //		internal Timer timer2;
+		
+	
 		
 		public byte[] pdu;
 //		private byte[] _pdu;
@@ -136,15 +139,26 @@ namespace Mac_Layer
 			this.state = new MacUnassociatedState(this, panId);
 		}
 
-		public void createPan(uint panId, uint saddr) {
-			this.state = new MacCoordinatorState(this, panId, saddr);
+		public void createPan(uint panId, uint saddr, uint bo, uint so, uint scanO) {
+			this.state = new MacCoordinatorState(this, panId, saddr, bo,so,scanO);
 		}
 
 		// to define
-		public void disassociate( ) {
+		public void disassociate ()
+		{
 			//TODO
 		}
-
+		
+		public void config (uint BO, uint SO, uint scanO)
+		{
+			if (this.state != null) {
+				this.state.BO = BO;			
+				this.state.SO = SO;
+				this.state.scanOrder = scanO;
+			}
+		}
+		
+		
 		public void enable(bool onOff){
 			if (onOff) {
 				this.radio.open(Radio.DID,null,0,0);

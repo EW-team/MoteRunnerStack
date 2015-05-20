@@ -30,9 +30,9 @@ namespace Mac_Layer
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // look for pending data here
 						this.duringSuperframe = true;
+						Frame.getBeaconInfo (data, this);
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
 						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
-						Frame.getBeaconInfo (data, this);
 						if (this.dataPending) { // receive data
 							//request for data and return
 							this.requestData (time);
@@ -86,7 +86,7 @@ namespace Mac_Layer
 							LED.setState ((byte)2, (byte)0);
 						else
 							LED.setState ((byte)2, (byte)1);
-						this.mac.radio.startRx (Radio.RX4EVER | Radio.RXMODE_PROMISCUOUS, 0, 0);
+						this.mac.radio.startRx (Radio.ASAP|Radio.RX4EVER, 0, 0);
 					}
 					break;
 				}

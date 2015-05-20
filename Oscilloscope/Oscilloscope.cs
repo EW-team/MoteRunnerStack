@@ -34,23 +34,25 @@ namespace Oscilloscope
 		internal static readonly byte LIGHT_PWR_PIN   = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
 
 		// To read sensor values
-		static ADC adc ;
+		static ADC adc;
 		// To power on the sensors
 		static GPIO pwrPins;
 
 		static Oscilloscope ()
 		{		
-			timer = new Timer();
-			mac = new Mac();
-			timer.setCallback (new TimerEvent(onTimeEvent));
-			mac.enable(true);
+			timer = new Timer ();
+			mac = new Mac ();
+			timer.setCallback (new TimerEvent (onTimeEvent));
+			mac.enable (true);
 
 			mac.setChannel (1);
-			mac.setRxHandler (new DevCallback(onRxEvent));
-			mac.setTxHandler (new DevCallback(onTxEvent));
-			mac.setEventHandler (new DevCallback(onEvent));
-			mac.associate(0x0234);
-
+			mac.setRxHandler (new DevCallback (onRxEvent));
+			mac.setTxHandler (new DevCallback (onTxEvent));
+			mac.setEventHandler (new DevCallback (onEvent));
+			mac.associate (0x0234);
+			mac.config (8, 7, 10);
+			
+			
 			// convert 2 seconds to the platform ticks
         	readInterval = Time.toTickSpan(Time.SECONDS, 2);
 	

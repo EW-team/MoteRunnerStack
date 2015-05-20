@@ -1,9 +1,13 @@
 using com.ibm.saguaro.system;
+using com.ibm.saguaro.logger;
 
 namespace Mac_Layer
 {
 	internal abstract class MacState
 	{
+		
+		internal uint state;
+		
 		
 		internal const uint FRAME_TYPE_MASK = 0x07;
 		
@@ -29,18 +33,22 @@ namespace Mac_Layer
 		public uint beaconSequence = 0; // sequence of beacon
 		public uint gtsSlots = 0;
 		public bool gtsEnabled = false;
+		
+		private uint _BO = 8;  // beacon order
 		public long beaconInterval; // Beacon Interval = 60sym * nSlot * 2^BO / 20kbps [s] = 3 * nSlot * 2^BO [ms]
-		private uint _BO;  // beacon order
 		public uint BO {
-			get{
+			get {
 				return this._BO;
 			}
-			set{
+			set {
+				Logger.appendString (csr.s2b ("set BO"));
+				Logger.appendUInt (value);
+				Logger.flush (Mote.INFO);
 				if (value < 15 && value > 0) {
 					this._BO = value;
 					this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
 				} else if (value > 15) {
-					this._BO = this._SO+1;
+					this._BO = this._SO + 1;
 					ArgumentException.throwIt (ArgumentException.TOO_BIG);
 				} else {
 					this._BO = this._SO + 1;
@@ -48,16 +56,21 @@ namespace Mac_Layer
 				}
 			}
 		}
+		
+		private uint _SO = 7; // superframe order
 		public long slotInterval; // Superframe duration = 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
-		private uint _SO; // superframe order
 		public uint SO {
 			get {
 				return this._SO;
 			}
 			set {
+				Logger.appendString (csr.s2b ("set SO"));
+				Logger.appendUInt (value);
+				Logger.flush (Mote.INFO);
 				if (value < 15 && value >= 0 && value < this._BO) {
 					this._SO = value;
 					this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
+					this.interSlotInterval = this.slotInterval >> 1;
 				} else if (value == 15 && value < this._BO) {// no beacon
 
 				} else if (value > 15 || value > this._BO) {
@@ -69,13 +82,19 @@ namespace Mac_Layer
 				}
 			}
 		}
+		public long interSlotInterval;
+		internal short slotCount = 0;
+		
+		internal bool ackReq = false;
+		internal byte[] resp;
+		internal bool acked = false;
 		
 		public bool dataPending = false;
 		public uint saddr = 0x0000;
 		
 		// Scan parameters
+		private uint _scanOrder = 10;
 		public long aScanInterval;
-		private uint _scanOrder;
 		public uint scanOrder {
 			get {
 				return this._scanOrder;
@@ -83,7 +102,7 @@ namespace Mac_Layer
 			set {
 				if (value < 15 && value > 0) {
 					this._scanOrder = value;
-					this.aScanInterval = Time.toTickSpan (Time.MILLISECS, 3 * (nSlot + 1) * (2 ^ scanOrder + 1));
+					this.aScanInterval = Time.toTickSpan (Time.MILLISECS, 3 * (nSlot + 1) * (2 ^ this._scanOrder + 1));
 				} else if (value > 15) {
 					this._scanOrder = 5;
 					ArgumentException.throwIt (ArgumentException.TOO_BIG);
@@ -97,13 +116,13 @@ namespace Mac_Layer
 		public MacState (Mac mac)
 		{
 			this.mac = mac;
-			this.mac.radio.setEventHandler(this.onRadioEvent);
-			this.mac.radio.setTxHandler(this.onTxEvent);
-			this.mac.radio.setRxHandler(this.onRxEvent);
+			this.mac.radio.setEventHandler (this.onRadioEvent);
+			this.mac.radio.setTxHandler (this.onTxEvent);
+			this.mac.radio.setRxHandler (this.onRxEvent);
 			this.mac.timer1.setCallback (this.onTimerEvent);
-			this.scanOrder = 10;
-			this.BO = 8;
-			this.SO = 5;
+			this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
+			this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
+			this.aScanInterval = Time.toTickSpan (Time.MILLISECS, 3 * (nSlot + 1) * (2 ^ this._scanOrder + 1));
 		}
 		
 		public abstract void dispose(); // destroy this instance

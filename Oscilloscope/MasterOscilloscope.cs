@@ -16,6 +16,7 @@ namespace Oscilloscope
 	
 	public class MasterOscilloscope
 	{
+		
 #if CFG_dust
 		const uint IPADDR_LEN = 16;
 		const byte ALARM_PIN  = 21;
@@ -73,13 +74,15 @@ namespace Oscilloscope
 			header [ROFF_MR_PORT] = MR_APP_PORT;
 			
 			mac = new Mac ();
+//			mac.config (8, 7, 10);
 			mac.enable (true);
+			
 			mac.setRxHandler (new DevCallback (onRxEvent));
 			mac.setTxHandler (new DevCallback (onTxEvent));
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
-			mac.createPan (0x0234, 0x0002);
-			
+			mac.createPan(0x0234, 0x0002, 8, 7, 10);
+
 			byte[] cmd = new byte[7];
 			cmd [0] = FLAG_TEMP;
 			cmd [1] = (byte)1;
@@ -104,7 +107,7 @@ namespace Oscilloscope
 
 				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
 				
-				LIP.send (header, headerLength, data, 1, (uint)data.Length);
+//				LIP.send (header, headerLength, data, 1, (uint)data.Length);
 			}
 			blink (2);
 			
