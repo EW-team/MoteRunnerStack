@@ -44,7 +44,7 @@ namespace Mac_Layer
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON:
 						this.mac.timer1.cancelAlarm ();
-						blink (2);
+//						blink (2);
 						this.duringSuperframe = true;
 						Frame.getBeaconInfo (data, this);
 						this.mac.timer1.setParam (Mac.MAC_SLOT);
@@ -92,7 +92,7 @@ namespace Mac_Layer
 					}
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-//				this.trackBeacon (time);
+				blink (1);
 //				Logger.appendString(csr.s2b("Rx Error"));
 //				Logger.flush(Mote.INFO);
 			} else {
@@ -112,6 +112,7 @@ namespace Mac_Layer
 					if (data [pos] == ASS_REQ) { // association request - not coordinator
 						this.mac.txHandler (Mac.MAC_ASS_REQ, data, len, info, time);
 						this.state = S_ASS_REQ;
+						this.resp = null;
 					} else if (data [pos] == DATA_REQ) { // data request - not coordinator
 						this.state = S_DATA_REQ;
 					}
@@ -127,7 +128,9 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-		public override int onRadioEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public override int onRadioEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
+			blink (0);
 			//TODO
 			return 0;
 		}
@@ -138,9 +141,10 @@ namespace Mac_Layer
 			case Mac.MAC_SLEEP:
 //				blink (2);
 				this.duringSuperframe = false;
+				this.mac.radio.stopRx ();
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
-				this.mac.timer1.setAlarmTime (time + this.beaconInterval - (this.nSlot+1) * this.slotInterval);
+				this.mac.timer1.setAlarmTime (time + this.beaconInterval - (this.nSlot + 1) * this.slotInterval);
 				break;
 			case Mac.MAC_WAKEUP:
 //				blink (1);
@@ -158,9 +162,11 @@ namespace Mac_Layer
 				}
 				if (this.resp == null) {
 					blink (1);
-					this.mac.radio.startRx (Radio.ASAP | Radio.RXMODE_NORMAL, time, time + this.slotInterval);
+					if (this.mac.radio.getState () == Radio.S_RXEN)
+						this.mac.radio.startRx (Radio.RX4EVER, time, time + this.slotInterval);
 				} else {
-					this.mac.radio.transmit (Radio.TIMED | Radio.TXMODE_CCA, this.resp,
+					this.mac.radio.stopRx ();
+					this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.resp,
 			                         0, (uint)this.resp.Length, time + this.slotInterval);
 				}
 				break;

@@ -6,7 +6,7 @@ namespace Mac_Layer
 	internal abstract class MacState
 	{
 		
-		internal uint state;
+		internal uint state = 0;
 		
 		
 		internal const uint FRAME_TYPE_MASK = 0x07;
@@ -41,9 +41,6 @@ namespace Mac_Layer
 				return this._BO;
 			}
 			set {
-				Logger.appendString (csr.s2b ("set BO"));
-				Logger.appendUInt (value);
-				Logger.flush (Mote.INFO);
 				if (value < 15 && value > 0) {
 					this._BO = value;
 					this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
@@ -64,9 +61,6 @@ namespace Mac_Layer
 				return this._SO;
 			}
 			set {
-				Logger.appendString (csr.s2b ("set SO"));
-				Logger.appendUInt (value);
-				Logger.flush (Mote.INFO);
 				if (value < 15 && value >= 0 && value < this._BO) {
 					this._SO = value;
 					this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
@@ -123,6 +117,7 @@ namespace Mac_Layer
 			this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
 			this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
 			this.aScanInterval = Time.toTickSpan (Time.MILLISECS, 3 * (nSlot + 1) * (2 ^ this._scanOrder + 1));
+			this.resp = null;
 		}
 		
 		public abstract void dispose(); // destroy this instance

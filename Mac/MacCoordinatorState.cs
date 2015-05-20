@@ -56,6 +56,7 @@ namespace Mac_Layer
 		
 		public override int onRxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
+			
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
@@ -107,6 +108,7 @@ namespace Mac_Layer
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
+				blink (0);
 			} else {
 				//TODO
 			}
@@ -115,6 +117,7 @@ namespace Mac_Layer
 		
 		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
+			
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				uint pos = Frame.getPayloadPosition (data);
@@ -134,6 +137,7 @@ namespace Mac_Layer
 					break;
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+				blink (1);
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_BEACON: // beacon transmission error
 					this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
@@ -163,6 +167,7 @@ namespace Mac_Layer
 			case Mac.MAC_SLEEP:
 //				blink (2);
 				this.duringSuperframe = false;
+				this.mac.radio.stopRx ();
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval - this.nSlot * this.slotInterval);
@@ -183,8 +188,12 @@ namespace Mac_Layer
 				}
 				if (this.resp == null) {
 //					blink (1);
-					this.mac.radio.startRx (Radio.TIMED | Radio.RXMODE_NORMAL, time, time + this.slotInterval);
+//					this.mac.radio.startRx (Radio.EXACT | Radio.RXMODE_NORMAL, time+this.interSlotInterval, time + this.slotInterval);
+					int s = this.mac.radio.getState ();
+					if (s != Radio.S_RXEN)
+						this.mac.radio.startRx (Radio.RX4EVER, 0, 0);
 				} else {
+					this.mac.radio.stopRx ();
 					this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.resp,
 			                         0, (uint)this.resp.Length, time + this.slotInterval);
 				}
@@ -212,7 +221,7 @@ namespace Mac_Layer
 				LED.setState ((byte)led, (byte)1);
 			else
 				LED.setState ((byte)led, (byte)0);
-		}
+			}
 	}
 }
 
