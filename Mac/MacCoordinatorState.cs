@@ -183,7 +183,7 @@ namespace Mac_Layer
 				}
 				if (this.resp == null) {
 //					blink (1);
-					this.mac.radio.startRx (Radio.ASAP | Radio.RXMODE_NORMAL, time, time + this.slotInterval);
+					this.mac.radio.startRx (Radio.TIMED | Radio.RXMODE_NORMAL, time, time + this.slotInterval);
 				} else {
 					this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.resp,
 			                         0, (uint)this.resp.Length, time + this.slotInterval);

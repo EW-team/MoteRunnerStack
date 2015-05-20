@@ -92,7 +92,7 @@ namespace Mac_Layer
 					}
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				this.trackBeacon (time);
+//				this.trackBeacon (time);
 //				Logger.appendString(csr.s2b("Rx Error"));
 //				Logger.flush(Mote.INFO);
 			} else {
@@ -120,7 +120,7 @@ namespace Mac_Layer
 					break;
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				
+				blink (1);
 			} else {
 
 			}
@@ -136,21 +136,21 @@ namespace Mac_Layer
 		{
 			switch (param) {
 			case Mac.MAC_SLEEP:
-				blink (2);
+//				blink (2);
 				this.duringSuperframe = false;
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval - (this.nSlot+1) * this.slotInterval);
 				break;
 			case Mac.MAC_WAKEUP:
-				blink (1);
+//				blink (1);
 				this.trackBeacon (time);
 //				this.slotCount = 2;
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.aScanInterval + this.slotInterval);
 				break;
 			case Mac.MAC_SLOT:
-				blink (0);
+//				blink (0);
 				this.mac.timer1.setAlarmTime (time + this.slotInterval + this.interSlotInterval);
 				this.slotCount += 1;
 				if (this.slotCount == this.nSlot) {
@@ -160,7 +160,7 @@ namespace Mac_Layer
 					blink (1);
 					this.mac.radio.startRx (Radio.ASAP | Radio.RXMODE_NORMAL, time, time + this.slotInterval);
 				} else {
-					this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.resp,
+					this.mac.radio.transmit (Radio.TIMED | Radio.TXMODE_CCA, this.resp,
 			                         0, (uint)this.resp.Length, time + this.slotInterval);
 				}
 				break;
