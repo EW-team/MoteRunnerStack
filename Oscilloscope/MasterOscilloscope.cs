@@ -104,7 +104,7 @@ namespace Oscilloscope
 
 				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
 				
-				LIP.send (header, headerLength, data, 1, (uint)data.Length);
+//				LIP.send (header, headerLength, data, 1, (uint)data.Length);
 			}
 			blink (2);
 			

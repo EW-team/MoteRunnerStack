@@ -131,7 +131,8 @@ namespace Mac_Layer
 
 		internal void transmit (long time)
 		{
-			this.mac.radio.stopRx ();
+			if(this.mac.radio.getState() == Radio.S_RXEN)
+				this.mac.radio.stopRx ();
 			uint len = (uint)this.mac.pdu.Length;
 			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, len, time + this.slotInterval);
 //			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,

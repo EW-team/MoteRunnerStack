@@ -122,7 +122,7 @@ namespace Oscilloscope
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED) {
-				long interval = Util.get32be (data, 2);
+				long interval = Util.get32 (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 				
 				
