@@ -80,7 +80,7 @@ namespace Oscilloscope
 			mac.setChannel (1);
 			mac.createPan (0x0234, 0x0002);
 			
-			byte[] cmd = new byte[7];
+			byte[] cmd = new byte[6];
 			cmd [0] = FLAG_TEMP;
 			cmd [1] = (byte)1;
 			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura

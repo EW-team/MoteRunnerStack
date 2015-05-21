@@ -11,7 +11,8 @@ namespace Oscilloscope
 
 		static Mac mac;
 		static Timer timer;
-
+		
+		static Timer fake;
 
 		const uint PAYLOAD_SIZE = 3; // 3 bytes flag + 2 bytes data
 		
@@ -26,8 +27,8 @@ namespace Oscilloscope
 		// See below
 
 		// Payload flags
-		const byte FLAG_TEMP	 = (byte)0x01;	// Flag for temperature data
-		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
+		const byte FLAG_TEMP	= (byte)0x01;	// Flag for temperature data
+		const byte FLAG_LIGHT 	= (byte)0x02;	// Flag for light data
 	
 		// Sensors power pins
 		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
@@ -41,6 +42,8 @@ namespace Oscilloscope
 		static Oscilloscope ()
 		{		
 			timer = new Timer();
+			fake = new Timer();
+			fake.setCallback (new TimerEvent(onFakeTimerEvent));
 			mac = new Mac();
 			timer.setCallback (new TimerEvent(onTimeEvent));
 			mac.enable(true);
@@ -101,6 +104,12 @@ namespace Oscilloscope
 			
 		}
 		
+		static void onFakeTimerEvent(byte param, long time){
+			Util.set16 (rpdu,1,Util.rand16 ());
+			mac.send(0x0002, 1, rpdu);
+			fake.setAlarmBySpan (readInterval);
+		}
+		
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			if (LED.getState (IRIS.LED_GREEN) == 0)
@@ -113,10 +122,16 @@ namespace Oscilloscope
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED) {
-				readInterval = Time.toTickSpan (Time.MILLISECS, Util.get32 (data, 2));
+				long interval = Util.get32be (data, 2);
+				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 				
-				Logger.appendString(csr.s2b("readInterval = "));
-				Logger.appendLong(readInterval);
+				
+				Logger.appendString(csr.s2b("data = "));
+				for(uint i = 0; i < len; i++)
+					Logger.appendHexByte (data[i]);
+				
+				Logger.appendString(csr.s2b(", readInterval = "));
+				Logger.appendLong(interval);
 				
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
@@ -133,12 +148,15 @@ namespace Oscilloscope
 					
 					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
 				}
-				if ((short)data [1] == 1) {
-					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+				if ((uint)data [1] == 1) {
+//					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+					// Simulation
+					fake.setAlarmBySpan (readInterval);
 					Logger.appendString(csr.s2b(", START"));
 				} else {
 //					adc.setState (CDev.S_OFF);
-					adc.close ();
+//					adc.close ();
+					fake.cancelAlarm ();
 					Logger.appendString(csr.s2b(", STOP"));
 				}
 				

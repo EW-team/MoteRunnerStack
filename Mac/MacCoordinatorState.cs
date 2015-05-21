@@ -83,8 +83,13 @@ namespace Mac_Layer
 						break;
 					case Radio.FCF_DATA:
 						if ((len - pos) > 0) {
+							Logger.appendString(csr.s2b("Pos - Len: "));
+							Logger.appendUInt (pos);
+							Logger.appendString(csr.s2b(" - "));
+							Logger.appendUInt (len);
+							Logger.flush (Mote.INFO);
 							byte[] pdu = new byte[len - pos];
-							Util.copyData (data, len, pdu, 0, len - pos);
+							Util.copyData (data, pos, pdu, 0, len - pos);
 							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
 								                    Frame.getSrcSADDR (data), time);
 						} else
