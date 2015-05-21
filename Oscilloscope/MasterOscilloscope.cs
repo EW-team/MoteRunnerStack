@@ -57,7 +57,7 @@ namespace Oscilloscope
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
-			Assembly.setDataHandler (onLipData);
+			Assembly.setDataHandler (new DataHandler(onLipData));
 		    // Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
