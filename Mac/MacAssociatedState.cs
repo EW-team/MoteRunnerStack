@@ -30,7 +30,7 @@ namespace Mac_Layer
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // look for pending data here
 						this.duringSuperframe = true;
-						Frame.getBeaconInfo (data, this);
+						Frame.getBeaconInfo (data, len, this);
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
 						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
 						if (this.dataPending) { // receive data

@@ -80,13 +80,13 @@ namespace Mac_Layer
 		}
 		
 
-		public static void getBeaconInfo (byte[] beacon, MacUnassociatedState state)
+		public static void getBeaconInfo (byte[] beacon, uint len, MacUnassociatedState state)
 		{
 			state.coordinatorSADDR = Util.get16 (beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
-			if (beacon.Length > 13) {
+			if (len > 15) {
 				uint pendingAddr = Util.get16 (beacon, 14);
 				if(pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST)
 					state.dataPending = true;	

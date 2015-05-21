@@ -45,7 +45,7 @@ namespace Mac_Layer
 							LED.setState ((byte)2, (byte)0);
 						this.duringSuperframe = true;
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
-						Frame.getBeaconInfo (data, this);
+						Frame.getBeaconInfo (data, len, this);
 						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
 						this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
 						this.mac.radio.stopRx ();
