@@ -75,7 +75,7 @@ namespace Mac_Layer
 								LED.setState ((byte)2, (byte)1);
 							if (this.mac.pdu != null) {
 								this.mac.radio.stopRx ();
-								this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
+								this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, (uint)this.mac.pdu.Length,
 							                        	   time + this.slotInterval);
 							}
 							break;
@@ -117,7 +117,6 @@ namespace Mac_Layer
 					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
-//					this.mac.bufTransm = this.mac.bufTransm + 1;
 					this.mac.pdu = null;
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
@@ -162,11 +161,13 @@ namespace Mac_Layer
 			if (param == Mac.MAC_SLEEP) {
 				this.duringSuperframe = false;
 				this.mac.radio.stopRx ();
+				LED.setState ((byte)0, (byte)0);
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval-this.nSlot*this.slotInterval);
 			}
 			else if (param == Mac.MAC_WAKEUP) {
+				LED.setState ((byte)0, (byte)1);
 				this.sendBeacon();
 				this.mac.timer1.setParam (Mac.MAC_SLEEP);
 				this.mac.timer1.setAlarmBySpan (this.nSlot*this.slotInterval);

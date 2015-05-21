@@ -30,9 +30,9 @@ namespace Mac_Layer
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // look for pending data here
 						this.duringSuperframe = true;
+						Frame.getBeaconInfo (data, this);
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
 						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
-						Frame.getBeaconInfo (data, this);
 						if (this.dataPending) { // receive data
 							//request for data and return
 							this.requestData (time);
@@ -72,21 +72,18 @@ namespace Mac_Layer
 		
 		public override int onTxEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
+			
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
+				uint pos = Frame.getPayloadPosition(data);
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_DATA:
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
-//					this.mac.bufTransm = this.mac.bufTransm + 1;
 					this.mac.pdu = null;
 					break;
 				case Radio.FCF_CMD:
-					if (data [17] == DATA_REQ) { // data request - not coordinator
-						if (LED.getState ((byte)2) == 1)
-							LED.setState ((byte)2, (byte)0);
-						else
-							LED.setState ((byte)2, (byte)1);
-						this.mac.radio.startRx (Radio.RX4EVER | Radio.RXMODE_PROMISCUOUS, 0, 0);
+					if ((uint)data [pos] == DATA_REQ) { // data request - not coordinator
+						this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 					}
 					break;
 				}
@@ -140,10 +137,10 @@ namespace Mac_Layer
 		internal void requestData (long time)
 		{
 			this.mac.radio.stopRx ();
-			if (LED.getState ((byte)2) == 1)
-				LED.setState ((byte)2, (byte)0);
-			else
-				LED.setState ((byte)2, (byte)1);
+//			if (LED.getState ((byte)2) == 1)
+//				LED.setState ((byte)2, (byte)0);
+//			else
+//				LED.setState ((byte)2, (byte)1);
 			byte[] cmd = Frame.getCMDDataFrame (this.panId, this.coordinatorSADDR, this);
 			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, cmd, 0, (uint)cmd.Length, time + this.slotInterval);
 		}

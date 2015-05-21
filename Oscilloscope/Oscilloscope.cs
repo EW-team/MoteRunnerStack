@@ -62,7 +62,7 @@ namespace Oscilloscope
 			
 			//ADC
 			adc = new ADC();
-			adc.setReadHandler(adcReadCallback);
+			adc.setReadHandler(new DevCallback(adcReadCallback));
 		}
 		
 		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {

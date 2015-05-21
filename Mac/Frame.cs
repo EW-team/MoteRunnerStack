@@ -90,6 +90,8 @@ namespace Mac_Layer
 				uint pendingAddr = Util.get16 (beacon, 14);
 				if(pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST)
 					state.dataPending = true;	
+			else
+				state.dataPending = false;
 			}
 #if DEBUG || DBG
 			Logger.appendString(csr.s2b("coordinatorSADDR"));

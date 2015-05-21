@@ -133,12 +133,14 @@ namespace Mac_Layer
 				this.duringSuperframe = false;
 				if(this.mac.radio.getState() == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
+				LED.setState ((byte)0, (byte)0);
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
 											(this.nSlot+1)*this.slotInterval);
 			}
 			else if (param == Mac.MAC_WAKEUP) {
+				LED.setState ((byte)0, (byte)1);
 				this.trackBeacon ();
 			}
 		}
