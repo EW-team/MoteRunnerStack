@@ -142,7 +142,8 @@ namespace Mac_Layer
 		
 		internal void requestData (long time)
 		{
-			this.mac.radio.stopRx ();
+			if(this.mac.radio.getState() == Radio.S_RXEN)
+				this.mac.radio.stopRx ();
 //			if (LED.getState ((byte)2) == 1)
 //				LED.setState ((byte)2, (byte)0);
 //			else
