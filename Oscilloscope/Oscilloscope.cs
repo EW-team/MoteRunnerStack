@@ -114,23 +114,36 @@ namespace Oscilloscope
 		{
 			if (flag == Mac.MAC_DATA_RXED) {
 				readInterval = Time.toTickSpan (Time.MILLISECS, Util.get32 (data, 2));
+				
+				Logger.appendString(csr.s2b("readInterval = "));
+				Logger.appendLong(readInterval);
+				
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
 					// Powers ON temperature and ON light sensor
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
+					
+					Logger.appendString(csr.s2b(", FLAG_TEMP"));
 				} else {
 					rpdu [0] = FLAG_LIGHT;
 					// Powers ON light and OFF temperature sensor
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
+					
+					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
 				}
 				if ((short)data [1] == 1) {
 					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+					Logger.appendString(csr.s2b(", START"));
 				} else {
 //					adc.setState (CDev.S_OFF);
 					adc.close ();
+					Logger.appendString(csr.s2b(", STOP"));
 				}
+				
+				Logger.flush (Mote.INFO);
+				
 			} else {
 				
 			}
