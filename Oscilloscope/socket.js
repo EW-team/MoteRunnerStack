@@ -13,6 +13,9 @@
 *
 */
 
+var FLAG_TEMP = 0x01;
+var FLAG_LIGHT = 0x02;
+
 var osciSocket = {
 	/**                                                   
 	* Evaluate arguments for a 'socket-send' and act accordingly. 
@@ -30,7 +33,7 @@ var osciSocket = {
 		var time = argv[3]; // 4 byte
 		// var msg = 0101010300;
 		println(parseInt(cmd))
-		var msg = Util.Formatter.transcode('(1u)(1u)(1u)(4u)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time));
+		var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time));
 		println('...');
 		println(msg);
 		return msg;
@@ -59,12 +62,10 @@ var osciSocket = {
        	var srcPort = blob.getSrcPort();
        	var data = blob.data;
        	var len = data.length
-
-		println(len);
 		println('.....')
       	//Unpack a binary string to an array
 		// var arr = Formatter.unpack("u2xL3dUL", data);
-		var arr = Formatter.unpack("uL4bL2uL2xL", data);
+		var arr = Formatter.unpack("uL4bL2xL2uL", data);
 		// var arr = Formatter.unpack("SLUL4xLuL", data);
 
 		
@@ -72,26 +73,18 @@ var osciSocket = {
 		var time = arr[1];
 		var srcAddr = arr[2];
 		var sensorValue = arr[3];
-		println(arr);
-		println(flagData);
-		println(time);
-		println(srcAddr);
-		println(sensorValue);
 		if (flagData == 0x00){
-			return sprintf("socket-onData: %s:%d --> No data available\n", srcMote, srcPort);
+			return sprintf("socket-onData: %s:%d --> No data available\n", srcAddr, srcPort);
 		}
-		else if (flagData == 0x01) {
+		else if (flagData == FLAG_TEMP) {
 			var rThr = 10000*(1023 - sensorValue)/sensorValue;
-			println(rThr);
+			// println(rThr);
 			var logRThr = Math.log(rThr);
-			println(logRThr);
 			sensorValue = 1/(0.001010024 + 0.000242127*logRThr + 0.000000146*(logRThr^3));
-			println(sensorValue);
-			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
+			return sprintf("%d - temp data: %d from %s\n", time, sensorValue, srcAddr);
 		}
-		else if (flagData == 0x02){
-			println(sensorValue);
-			return sprintf("socket-onData: %s:%d --> received %s:%d from %s\n", srcMote, srcPort, sensorValue, srcAddr);
+		else if (flagData == FLAG_LIGHT){
+			return sprintf("%d - light data: %d from %s\n", time, sensorValue, srcAddr);
 		}
 		else
 			return sprintf("---------------------------");

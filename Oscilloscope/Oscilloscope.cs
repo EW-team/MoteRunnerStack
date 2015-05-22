@@ -10,7 +10,6 @@ namespace Oscilloscope
 	{
 
 		static Mac mac;
-		static Timer timer;
 		
 		static Timer fake;
 
@@ -41,11 +40,9 @@ namespace Oscilloscope
 
 		static Oscilloscope ()
 		{		
-			timer = new Timer();
 			fake = new Timer();
 			fake.setCallback (new TimerEvent(onFakeTimerEvent));
 			mac = new Mac();
-			timer.setCallback (new TimerEvent(onTimeEvent));
 			mac.enable(true);
 
 			mac.setChannel (1);
@@ -100,14 +97,13 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		static void onTimeEvent(byte param, long time) {
-			
-		}
-		
 		static void onFakeTimerEvent(byte param, long time){
 			Util.set16 (rpdu,1,Util.rand16 ());
 			mac.send(0x0002, 1, rpdu);
-			fake.setAlarmBySpan (readInterval);
+//			Logger.appendString(csr.s2b("Fake data sent"));
+//			Logger.flush (Mote.INFO);
+			fake.cancelAlarm ();
+			fake.setAlarmTime (Time.currentTicks () + readInterval);
 		}
 		
 		//On transmission blink green led
@@ -126,12 +122,12 @@ namespace Oscilloscope
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 				
 				
-				Logger.appendString(csr.s2b("data = "));
-				for(uint i = 0; i < len; i++)
-					Logger.appendHexByte (data[i]);
-				
-				Logger.appendString(csr.s2b(", readInterval = "));
-				Logger.appendLong(interval);
+//				Logger.appendString(csr.s2b("data = "));
+//				for(uint i = 0; i < len; i++)
+//					Logger.appendHexByte (data[i]);
+//				
+//				Logger.appendString(csr.s2b(", readInterval = "));
+//				Logger.appendLong(interval);
 				
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
@@ -139,28 +135,28 @@ namespace Oscilloscope
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
 					
-					Logger.appendString(csr.s2b(", FLAG_TEMP"));
+//					Logger.appendString(csr.s2b(", FLAG_TEMP"));
 				} else {
 					rpdu [0] = FLAG_LIGHT;
 					// Powers ON light and OFF temperature sensor
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
 					
-					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
+//					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
 				}
 				if ((uint)data [1] == 1) {
 //					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 					// Simulation
 					fake.setAlarmBySpan (readInterval);
-					Logger.appendString(csr.s2b(", START"));
+//					Logger.appendString(csr.s2b(", START"));
 				} else {
 //					adc.setState (CDev.S_OFF);
 //					adc.close ();
 					fake.cancelAlarm ();
-					Logger.appendString(csr.s2b(", STOP"));
+//					Logger.appendString(csr.s2b(", STOP"));
 				}
 				
-				Logger.flush (Mote.INFO);
+//				Logger.flush (Mote.INFO);
 				
 			} else {
 				

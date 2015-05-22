@@ -1,21 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/MasterOscilloscope.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/MacAssociatedState.cs">
     <Files>
-      <File FileName="Mac/MacCoordinatorState.cs" Line="166" Column="47" />
-      <File FileName="Mac/Mac.cs" Line="153" Column="26" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="91" Column="4" />
-      <File FileName="Mac/Frame.cs" Line="133" Column="38" />
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="112" Column="13" />
-      <File FileName="Mac/MacCoordinatorState.cs" Line="159" Column="54" />
-      <File FileName="Mac/Mac.cs" Line="153" Column="26" />
-      <File FileName="Mac/MacState.cs" Line="102" Column="1" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="91" Column="4" />
-      <File FileName="Mac/Frame.cs" Line="133" Column="38" />
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="112" Column="13" />
-      <File FileName="Mac/MacCoordinatorState.cs" Line="159" Column="54" />
-      <File FileName="Mac/Mac.cs" Line="153" Column="26" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="91" Column="4" />
+      <File FileName="Mac/MacAssociatedState.cs" Line="148" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -49,11 +49,6 @@ namespace Mac_Layer
 					case Radio.FCF_DATA:
 						this.dataPending = false;
 						if ((len - pos) > 0) {
-							Logger.appendString(csr.s2b("Pos - Len: "));
-							Logger.appendUInt (pos);
-							Logger.appendString(csr.s2b(" - "));
-							Logger.appendUInt (len);
-							Logger.flush (Mote.INFO);
 							byte[] pdu = new byte[len - pos];
 							Util.copyData (data, pos, pdu, 0, len - pos);
 							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
@@ -131,14 +126,12 @@ namespace Mac_Layer
 
 		internal void transmit (long time)
 		{
-			if (this.mac.timer1.getAlarmTime () - time > this.slotInterval) {
+			if (this.mac.timer1.getAlarmTime () - time >= this.slotInterval) {
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
 				LED.setState ((byte)1, (byte)1);
 				uint len = (uint)this.mac.pdu.Length;
 				this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, len, time + this.slotInterval);
-				//			this.mac.radio.transmit (Radio.ASAP|Radio.TXMODE_CCA,this.mac.header,(uint)this.mac.header.Length,
-				//										this.mac.pdu,0,len,time+this.slotInterval);
 			}
 			LED.setState ((byte)1, (byte)0);
 		}
@@ -146,7 +139,7 @@ namespace Mac_Layer
 		
 		internal void requestData (long time)
 		{
-			if (this.duringSuperframe && this.mac.timer1.getAlarmTime () - time > this.slotInterval) {
+			if (this.duringSuperframe && this.mac.timer1.getAlarmTime () - time >= this.slotInterval) {
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
 				LED.setState ((byte)1, (byte)1);

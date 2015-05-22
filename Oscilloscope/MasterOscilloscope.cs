@@ -80,11 +80,11 @@ namespace Oscilloscope
 			mac.setChannel (1);
 			mac.createPan (0x0234, 0x0002);
 			
-			byte[] cmd = new byte[6];
-			cmd [0] = FLAG_TEMP;
-			cmd [1] = (byte)1;
-			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
-			mac.send (0x0100, Util.rand8 (), cmd);
+//			byte[] cmd = new byte[6];
+//			cmd [0] = FLAG_TEMP;
+//			cmd [1] = (byte)1;
+//			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
+//			mac.send (0x0100, Util.rand8 (), cmd);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
@@ -104,7 +104,7 @@ namespace Oscilloscope
 
 				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
 				
-//				LIP.send (header, headerLength, data, 1, (uint)data.Length);
+				LIP.send (header, headerLength, data, 1, (uint)data.Length-1);
 			}
 			blink (2);
 			
@@ -140,13 +140,20 @@ namespace Oscilloscope
 		
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
-			blink (2);
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
 			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
-				blink (2);
 				byte[] cmd = new byte[6];
+				
+				Logger.appendString(csr.s2b("Master; data = "));
+				for(uint i = 0; i < len; i++)
+					Logger.appendHexByte (buf[i]);
+					
+				long interval = Util.get32 (buf,cmdoff + 3);
+				Logger.appendString(csr.s2b(", readInterval = "));
+				Logger.appendLong(interval);
+				
 				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
 					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura
 						cmd [0] = FLAG_TEMP;
@@ -157,6 +164,7 @@ namespace Oscilloscope
 					cmd [1] = (byte)0;
 				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
 				mac.send (0x0100, Util.rand8 (), cmd);
+				Logger.flush (Mote.INFO);
 			}
 			
 			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
