@@ -7,6 +7,8 @@ namespace Mac_Layer
 		
 		internal const uint FRAME_TYPE_MASK = 0x07;
 		
+		internal bool _lock = false;
+		
 		// Beacon Positions
 		internal const uint FRAME_POS = 0;
 		internal const uint ASS_POS = 1;
