@@ -32,13 +32,14 @@ namespace Oscilloscope
 #endif
 		// Fixed MR port for this application.
 		const byte MR_APP_PORT   =  126;
+		internal static byte port;
 		// Fixed service receiver port
 		const uint UDP_SRV_PORT  =  2123;
 		// Payload const positions
 		const uint ROFF_UDP_PORT = IPADDR_LEN;
-		const uint ROFF_MR_PORT  = ROFF_UDP_PORT+2;
-		const uint ROFF_MSG_TAG  = ROFF_UDP_PORT+3;
-		const uint ROFF_TIME     = ROFF_UDP_PORT+4;
+		const uint ROFF_MR_PORT  = ROFF_UDP_PORT+1; // was +2 
+		const uint ROFF_MSG_TAG  = ROFF_UDP_PORT+2; // was +3 
+		const uint ROFF_TIME     = ROFF_UDP_PORT+7; // was +4
 		const uint ROFF_SADDR  	 = ROFF_TIME+4;
 		const uint ROFF_PAYLOAD  = ROFF_SADDR+2;
 		
@@ -61,16 +62,16 @@ namespace Oscilloscope
 		    // Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
-			LIP.open (MR_APP_PORT);
+			LIP.open (MR_APP_PORT); 
 	    	
 			header = new byte[headerLength];
 #if CFG_dust
 		    DN.setIpv6AllRoutersMulticast(header, 0);
 #else
-			Util.set32 (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
+			Util.set32le (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
 #endif
-			Util.set16 (header, ROFF_UDP_PORT, UDP_SRV_PORT);
-			header [ROFF_MR_PORT] = MR_APP_PORT;
+			Util.set16le (header, ROFF_UDP_PORT, UDP_SRV_PORT);
+			header [ROFF_MR_PORT] =  MR_APP_PORT; // was MR_APP_PORT
 			
 			mac = new Mac ();
 			mac.enable (true);
@@ -100,13 +101,15 @@ namespace Oscilloscope
 					header [ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
 				else
 					header [ROFF_MSG_TAG] = data [0];
-				Util.set32 (header, ROFF_TIME, time);
+				Util.set32le (header, ROFF_TIME, time);
 
-				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
+				Util.set16le (header, ROFF_SADDR, saddr); // 0 if XADDR	
 				
+				//port = Assembly.getActiveAsmId();
+				blink (1);
 				LIP.send (header, headerLength, data, 1, (uint)data.Length-1);
 			}
-			blink (2);
+			
 			
 			return 0;
 		}
@@ -128,7 +131,7 @@ namespace Oscilloscope
 		{
 			if (type == Assembly.SYSEV_DELETED) {
 				try {
-					LIP.close (MR_APP_PORT);
+					LIP.close (MR_APP_PORT); 
 				} catch {
 				}
 			}
@@ -137,7 +140,7 @@ namespace Oscilloscope
 			}
 			return 0;
 		}
-		
+		// Called by soclkesend
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
 			uint cmdoff = LIP.getPortOff () + 1;
@@ -167,7 +170,7 @@ namespace Oscilloscope
 				Logger.flush (Mote.INFO);
 			}
 			
-			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
+			Util.set32le (header, ROFF_TIME, Time.currentTicks ());
 			Util.copyData (buf, 0, header, 0, headerLength);
 			return (int)headerLength + 2;
 		}

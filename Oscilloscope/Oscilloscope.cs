@@ -11,7 +11,7 @@ namespace Oscilloscope
 
 		static Mac mac;
 		
-		static Timer fake;
+		//static Timer fake;
 
 		const uint PAYLOAD_SIZE = 3; // 3 bytes flag + 2 bytes data
 		
@@ -32,7 +32,9 @@ namespace Oscilloscope
 		// Sensors power pins
 		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
 		internal static readonly byte LIGHT_PWR_PIN   = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
-
+		
+		internal static Timer tblink = new Timer();//blinks yellow led
+		
 		// To read sensor values
 		static ADC adc ;
 		// To power on the sensors
@@ -40,11 +42,15 @@ namespace Oscilloscope
 
 		static Oscilloscope ()
 		{		
-			fake = new Timer();
-			fake.setCallback (new TimerEvent(onFakeTimerEvent));
+//			fake = new Timer();
+//			fake.setCallback (new TimerEvent(onFakeTimerEvent));
 			mac = new Mac();
 			mac.enable(true);
-
+			
+			tblink.setCallback(blinkLed);
+			LED.setState(IRIS.LED_YELLOW, (byte)1);
+			tblink.setAlarmBySpan(Time.toTickSpan(Time.MILLISECS, 500));
+			
 			mac.setChannel (1);
 			mac.setRxHandler (new DevCallback(onRxEvent));
 			mac.setTxHandler (new DevCallback(onTxEvent));
@@ -56,14 +62,15 @@ namespace Oscilloscope
 	
 			//GPIO, power pins
 			pwrPins = new GPIO();
-			
-			pwrPins.open(); 
-			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
-			
+		
 			//ADC
 			adc = new ADC();
 			adc.setReadHandler(new DevCallback(adcReadCallback));
-		}
+			adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+		
+			pwrPins.open(); 
+			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			}
 		
 		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {
 			if ( len != 2 || ((flags & Device.FLAG_FAILED) != 0) ) {
@@ -72,22 +79,22 @@ namespace Oscilloscope
 				return 0;
 			}
 			
-//			byte[] dataFlag;
+			// byte[] dataFlag;
 			// We alternate between powering the temperature and the light sensor
 			
-//			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
-//				rpdu[0] = FLAG_TEMP;
-//				// Powers ON light and OFF temperature sensor
-//				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
-//				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
-//			}
-//			else {	// Light read
-//				
-//				rpdu[0] = FLAG_LIGHT;
-//				// Powers ON temperature and ON light sensor
-//				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
-//				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_CLR);		
-//			}
+			if (pwrPins.doPin(GPIO.CTRL_READ,TEMP_PWR_PIN) != 0) {	// Temperature sensor is ON -> temperature read
+				rpdu[0] = FLAG_TEMP;
+				// Powers ON light and OFF temperature sensor
+				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_SET);
+				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_CLR);
+			}
+			else {	// Light read
+				
+				rpdu[0] = FLAG_LIGHT;
+				// Powers ON temperature and ON light sensor
+				pwrPins.configureOutput(TEMP_PWR_PIN,GPIO.OUT_SET);
+				pwrPins.configureOutput(LIGHT_PWR_PIN,GPIO.OUT_CLR);		
+			}
 
 			Util.copyData(data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
@@ -97,14 +104,17 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		static void onFakeTimerEvent(byte param, long time){
-			Util.set16 (rpdu,1,Util.rand16 ());
-			mac.send(0x0002, 1, rpdu);
+//		static void onFakeTimerEvent(byte param, long time){
+//			byte[] test = new byte[1];
+//			test[0] = 0Xf0;
+//			Util.set16 (rpdu,1,Util.rand8());
+//			Util.copyData(test, 0, rpdu, 1, 1);
+//			mac.send(0x0002, 1, rpdu);
 //			Logger.appendString(csr.s2b("Fake data sent"));
 //			Logger.flush (Mote.INFO);
-			fake.cancelAlarm ();
-			fake.setAlarmTime (Time.currentTicks () + readInterval);
-		}
+//			fake.cancelAlarm ();
+//			fake.setAlarmTime (Time.currentTicks () + readInterval);
+//		}
 		
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
@@ -135,28 +145,30 @@ namespace Oscilloscope
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
 					
-//					Logger.appendString(csr.s2b(", FLAG_TEMP"));
+					//Logger.appendString(csr.s2b(", FLAG_TEMP"));
 				} else {
 					rpdu [0] = FLAG_LIGHT;
 					// Powers ON light and OFF temperature sensor
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
 					
-//					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
+					//Logger.appendString(csr.s2b(", FLAG_LIGHT"));
 				}
 				if ((uint)data [1] == 1) {
-//					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+						
+			        //adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 					// Simulation
-					fake.setAlarmBySpan (readInterval);
-//					Logger.appendString(csr.s2b(", START"));
+				    //fake.setAlarmBySpan (readInterval);
+					//Logger.appendString(csr.s2b(", START"));
 				} else {
-//					adc.setState (CDev.S_OFF);
-//					adc.close ();
-					fake.cancelAlarm ();
-//					Logger.appendString(csr.s2b(", STOP"));
+				    adc.setState (CDev.S_OFF);
+					adc.close ();
+					//fake.cancelAlarm ();
+					//Logger.appendString(csr.s2b(", STOP"));
 				}
 				
-//				Logger.flush (Mote.INFO);
+			 //Logger.flush (Mote.INFO);
 				
 			} else {
 				
@@ -167,12 +179,17 @@ namespace Oscilloscope
 		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
 			switch(flag){
 				case Mac.MAC_ASSOCIATED:
-//					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
+					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 					break;
 				default:
 					return 0;
 			}
 			return 0;
+		}
+		
+		private static void blinkLed(byte param, long time) {
+		LED.setState(IRIS.LED_YELLOW, (byte)(-LED.getState(IRIS.LED_YELLOW)+1));
+			tblink.setAlarmBySpan(Time.toTickSpan(Time.MILLISECS, 500));
 		}
 		
 //		public static int onScan(uint flag, byte[] data, int chn, uint len, long time) {

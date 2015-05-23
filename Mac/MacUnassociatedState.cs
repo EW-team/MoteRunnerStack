@@ -39,10 +39,10 @@ namespace Mac_Layer
 					uint pos = Frame.getPayloadPosition (data);
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON:
-						if (LED.getState ((byte)2) == 0)
-							LED.setState ((byte)2, (byte)1);
-						else
-							LED.setState ((byte)2, (byte)0);
+//						if (LED.getState ((byte)2) == 0)
+//							LED.setState ((byte)2, (byte)1);
+//						else
+//							LED.setState ((byte)2, (byte)0);
 						this.duringSuperframe = true;
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
 						Frame.getBeaconInfo (data, len, this);
@@ -62,6 +62,7 @@ namespace Mac_Layer
 									this.mac.radio.stopRx ();
 									this.mac.radio.setShortAddr (Util.get16 (data, pos + 1)); // The SAddr have to be setted when radio is not on!
 									this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
+									LED.setState ((byte)1, (byte)1);
 									break;
 								case ASS_FAIL: // association failed
 														//TODO
@@ -133,14 +134,14 @@ namespace Mac_Layer
 				this.duringSuperframe = false;
 				if(this.mac.radio.getState() == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
-				LED.setState ((byte)0, (byte)0);
+			//	LED.setState ((byte)0, (byte)0);
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
 											(this.nSlot+1)*this.slotInterval);
 			}
 			else if (param == Mac.MAC_WAKEUP) {
-				LED.setState ((byte)0, (byte)1);
+			//	LED.setState ((byte)0, (byte)1);
 				this.trackBeacon ();
 			}
 		}

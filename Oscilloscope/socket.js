@@ -78,10 +78,11 @@ var osciSocket = {
 		}
 		else if (flagData == FLAG_TEMP) {
 			var rThr = 10000*(1023 - sensorValue)/sensorValue;
-			// println(rThr);
+			//println(sensorValue);
 			var logRThr = Math.log(rThr);
 			sensorValue = 1/(0.001010024 + 0.000242127*logRThr + 0.000000146*(logRThr^3));
-			return sprintf("%d - temp data: %d from %s\n", time, sensorValue, srcAddr);
+			var t = osciSocket.convert_millis_2_str(time)
+			return sprintf("%s - temp data: %d from %s\n", t, sensorValue, srcAddr);
 		}
 		else if (flagData == FLAG_LIGHT){
 			return sprintf("%d - light data: %d from %s\n", time, sensorValue, srcAddr);
@@ -99,4 +100,13 @@ var osciSocket = {
 		println("socket-onBind:: called..");
 
 	}
-};
+}
+
+// Convert a binary milliseconds to human readable time
+osciSocket.convert_millis_2_str = function (millis) {
+    return sprintf("%02d:%02d:%02d.%03d",
+		   (millis/(60*60*1000))%24,
+		   (millis/(   60*1000))%60,
+		   (millis/       1000 )%60,
+		   millis%1000);
+}
