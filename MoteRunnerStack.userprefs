@@ -1,8 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mac/MacAssociatedState.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/Oscilloscope.cs">
     <Files>
-      <File FileName="Mac/MacAssociatedState.cs" Line="148" Column="5" />
+      <File FileName="Oscilloscope/Oscilloscope.cs" Line="106" Column="24" />
+      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="167" Column="28" />
+      <File FileName="Oscilloscope/socket.js" Line="87" Column="57" />
+      <File FileName="Oscilloscope/prun.mrsh" Line="16" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

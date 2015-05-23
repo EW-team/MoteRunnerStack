@@ -31,9 +31,10 @@ var osciSocket = {
 		var on = argv[1]; // 1 byte
 		var flag = argv[2]; // 1 byte
 		var time = argv[3]; // 4 byte
+		var saddr = argv[4];
 		// var msg = 0101010300;
 		println(parseInt(cmd))
-		var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time));
+		var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)(2uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time), parseInt(saddr));
 		println('...');
 		println(msg);
 		return msg;
@@ -77,6 +78,8 @@ var osciSocket = {
 			return sprintf("socket-onData: %s:%d --> No data available\n", srcAddr, srcPort);
 		}
 		else if (flagData == FLAG_TEMP) {
+			if (sensorValue > 1023)
+				sensorValue = 1023;
 			var rThr = 10000*(1023 - sensorValue)/sensorValue;
 			// println(rThr);
 			var logRThr = Math.log(rThr);
