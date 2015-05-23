@@ -49,12 +49,14 @@ namespace Oscilloscope
 			//GPIO, power pins
 			pwrPins = new GPIO();
 			
-			pwrPins.open(); 
-			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
-			
 			//ADC
 			adc = new ADC();
 			adc.setReadHandler(new DevCallback(adcReadCallback));
+			adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			
+			pwrPins.open(); 
+			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			
 #endif
 			mac = new Mac();
 			mac.enable(true);
@@ -83,6 +85,8 @@ namespace Oscilloscope
 				// Can't read sensors
 				LED.setState(IRIS.LED_RED,(byte)1);
 				return 0;
+			} else {
+				LED.setState(IRIS.LED_RED,(byte)0);
 			}
 
 			Util.copyData(data, 0, rpdu, 1, 2);	// Payload data bytes
@@ -142,6 +146,10 @@ namespace Oscilloscope
 					fake.setAlarmBySpan (readInterval);
 #else
 					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			
+					pwrPins.open(); 
+					pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET); 
+					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
 					// Simulation
 #endif					
 //					Logger.appendString(csr.s2b(", START"));

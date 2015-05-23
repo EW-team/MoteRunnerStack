@@ -1,23 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/Oscilloscope.cs">
     <Files>
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="106" Column="24" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="167" Column="28" />
-      <File FileName="Oscilloscope/socket.js" Line="87" Column="57" />
-      <File FileName="Oscilloscope/prun.mrsh" Line="16" Column="35" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/MasterOscilloscope.cs">
-    <Files>
-      <File FileName="Mac/MacCoordinatorState.cs" Line="26" Column="23" />
-      <File FileName="Mac/MacAssociatedState.cs" Line="131" Column="31" />
-      <File FileName="Mac/MacState.cs" Line="18" Column="39" />
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="152" Column="19" />
-      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="103" Column="39" />
-      <File FileName="Oscilloscope/socket.js" Line="52" Column="4" />
-      <File FileName="../moterunner/examples/adc-adxl335/app.cs" Line="166" Column="17" />
->>>>>>> 5c8effdf0d3e14b4a7c6d77c8a181c8ff47ccc4c
+      <File FileName="Mac/MacCoordinatorState.cs" Line="57" Column="13" />
+      <File FileName="Mac/MacAssociatedState.cs" Line="90" Column="44" />
+      <File FileName="Oscilloscope/Oscilloscope.cs" Line="145" Column="68" />
+      <File FileName="Oscilloscope/MasterOscilloscope.cs" Line="55" Column="3" />
+      <File FileName="Oscilloscope/socket.js" Line="51" Column="10" />
+      <File FileName="Mac/MacUnassociatedState.cs" Line="119" Column="44" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
