@@ -129,11 +129,11 @@ namespace Mac_Layer
 			if (this.mac.timer1.getAlarmTime () - time >= this.slotInterval) {
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
-				LED.setState ((byte)1, (byte)1);
+				//LED.setState ((byte)1, (byte)1);
 				uint len = (uint)this.mac.pdu.Length;
 				this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, len, time + this.slotInterval);
 			}
-			LED.setState ((byte)1, (byte)0);
+			//LED.setState ((byte)1, (byte)0);
 		}
 		
 		
@@ -142,11 +142,11 @@ namespace Mac_Layer
 			if (this.duringSuperframe && this.mac.timer1.getAlarmTime () - time >= this.slotInterval) {
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
-				LED.setState ((byte)1, (byte)1);
+				//LED.setState ((byte)1, (byte)1);
 				byte[] cmd = Frame.getCMDDataFrame (this.panId, this.coordinatorSADDR, this);
 				this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, cmd, 0, (uint)cmd.Length, time + this.slotInterval);
 			}
-			LED.setState ((byte)1, (byte)0);
+		//	LED.setState ((byte)1, (byte)0);
 		}
 	}
 }

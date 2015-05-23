@@ -69,10 +69,10 @@ namespace Mac_Layer
 								                           time + this.slotInterval);
 							break;
 						case DATA_REQ: // data request handle - coordinator
-							if (LED.getState ((byte)2) == 1)
-								LED.setState ((byte)2, (byte)0);
-							else
-								LED.setState ((byte)2, (byte)1);
+//							if (LED.getState ((byte)2) == 1)
+//								LED.setState ((byte)2, (byte)0);
+//							else
+//								LED.setState ((byte)2, (byte)1);
 							if (this.mac.pdu != null) {
 								this.mac.radio.stopRx ();
 								this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.mac.pdu, 0, (uint)this.mac.pdu.Length,
@@ -137,10 +137,10 @@ namespace Mac_Layer
 					break;
 				case Radio.FCF_DATA: // data transmission error
 					if (this.duringSuperframe) {
-						if (LED.getState ((byte)2) == 1)
-							LED.setState ((byte)2, (byte)0);
-						else
-							LED.setState ((byte)2, (byte)1);
+//						if (LED.getState ((byte)2) == 1)
+//							LED.setState ((byte)2, (byte)0);
+//						else
+//							LED.setState ((byte)2, (byte)1);
 						this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.mac.pdu, 0, (uint)this.mac.pdu.Length, 
 							                        	   time + this.slotInterval);
 					}
@@ -161,13 +161,13 @@ namespace Mac_Layer
 			if (param == Mac.MAC_SLEEP) {
 				this.duringSuperframe = false;
 				this.mac.radio.stopRx ();
-				LED.setState ((byte)0, (byte)0);
+				//LED.setState ((byte)0, (byte)0);
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.setAlarmTime (time + this.beaconInterval-this.nSlot*this.slotInterval);
 			}
 			else if (param == Mac.MAC_WAKEUP) {
-				LED.setState ((byte)0, (byte)1);
+				//LED.setState ((byte)0, (byte)1);
 				this.sendBeacon();
 				this.mac.timer1.setParam (Mac.MAC_SLEEP);
 				this.mac.timer1.setAlarmBySpan (this.nSlot*this.slotInterval);

@@ -1,15 +1,19 @@
 
 set-var -e APP_PORT 126 
 
-# socket-close -f osciSocket
-# source ./js_server/socket.js 
-# socket-bind osciSocket
+socket-close -f osciSocket
+source socket.js
+socket-bind osciSocket
 
 mote-create -d iris 3
+
+
 
 a0 msetup-setup oscilloscope
 a1 msetup-setup oscilloscopes
 a2 msetup-setup oscilloscopes
+
+socket-send osciSocket 126 1 1 1 500
 # a3 msetup-setup oscilloscopes
 # a4 msetup-setup oscilloscopes
 # a5 msetup-setup oscilloscopes
