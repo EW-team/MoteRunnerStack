@@ -85,9 +85,11 @@ namespace Mac_Layer
 			state.panId = Util.get16 (beacon, 7);
 			if (len > 15) {
 				uint pendingAddr = Util.get16 (beacon, 14);
-				if (pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST)
+				if (pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST) {
 					state.dataPending = true;
-				else
+					Logger.appendString (csr.s2b ("DATA PENDING IN FRAME"));
+					Logger.appendUInt (state.coordinatorSADDR);
+				} else
 					state.dataPending = false;
 			}
 #if DEBUG || DBG

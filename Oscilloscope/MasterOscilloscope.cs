@@ -31,35 +31,33 @@ namespace Oscilloscope
 		const uint IPADDR_LEN = 4;
 #endif
 		// Fixed MR port for this application.
-		const byte MR_APP_PORT   =  126;
+		const byte MR_APP_PORT = 126;
 		internal static byte port;
 		// Fixed service receiver port
-		const uint UDP_SRV_PORT  =  2123;
+		const uint UDP_SRV_PORT = 2123;
 		// Payload const positions
 		const uint ROFF_UDP_PORT = IPADDR_LEN;
-		const uint ROFF_MR_PORT  = ROFF_UDP_PORT+1; // was +2 
-		const uint ROFF_MSG_TAG  = ROFF_UDP_PORT+2; // was +3 
-		const uint ROFF_TIME     = ROFF_UDP_PORT+7; // was +4
-		const uint ROFF_SADDR  	 = ROFF_TIME+4;
-		const uint ROFF_PAYLOAD  = ROFF_SADDR+2;
+		const uint ROFF_MR_PORT = ROFF_UDP_PORT + 1; // was +2 
+		const uint ROFF_MSG_TAG = ROFF_UDP_PORT + 2; // was +3 
+		const uint ROFF_TIME = ROFF_UDP_PORT + 7; // was +4
+		const uint ROFF_SADDR = ROFF_TIME + 4;
+		const uint ROFF_PAYLOAD = ROFF_SADDR + 2;
 		
 		// Payload flags
-		const byte FLAG_NO_DATA  = (byte)0x00;
-		const byte FLAG_TEMP	 = (byte)0x01;	// Flag for temperature data
-		const byte FLAG_LIGHT	 = (byte)0x02;	// Flag for light data
+		const byte FLAG_NO_DATA = (byte)0x00;
+		const byte FLAG_TEMP = (byte)0x01;	// Flag for temperature data
+		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
 		
 		
 		static byte[] header;
-		
-		const uint headerLength = ROFF_SADDR+2;
-		
+		const uint headerLength = ROFF_SADDR + 2;
 		static Mac mac;
 		
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
-			Assembly.setDataHandler (new DataHandler(onLipData));
-		    // Handle system events
+			Assembly.setDataHandler (new DataHandler (onLipData));
+			// Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
 			LIP.open (MR_APP_PORT); 
@@ -71,7 +69,7 @@ namespace Oscilloscope
 			Util.set32le (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
 #endif
 			Util.set16le (header, ROFF_UDP_PORT, UDP_SRV_PORT);
-			header [ROFF_MR_PORT] =  MR_APP_PORT; // was MR_APP_PORT
+			header [ROFF_MR_PORT] = MR_APP_PORT; // was MR_APP_PORT
 			
 			mac = new Mac ();
 			mac.enable (true);
@@ -88,11 +86,11 @@ namespace Oscilloscope
 //			mac.send (0x0100, Util.rand8 (), cmd);
 		}
 		
-		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
+		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
+		{
 			
 			return 0;
 		}
-		
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
@@ -107,24 +105,25 @@ namespace Oscilloscope
 				
 				//port = Assembly.getActiveAsmId();
 				blink (1);
-				LIP.send (header, headerLength, data, 1, (uint)data.Length-1);
+				LIP.send (header, headerLength, data, 1, (uint)data.Length - 1);
 			}
 			
 			
 			return 0;
 		}
 		
-		public static int onEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
+		public static int onEvent (uint flag, byte[] data, uint len, uint saddr, long time)
+		{
 			
 			return 0;
 		}
 		
-		internal static void blink(uint led)
+		internal static void blink (uint led)
 		{
-			if(LED.getState ((byte)led) == 0)
-				LED.setState ((byte)led,(byte)1);
+			if (LED.getState ((byte)led) == 0)
+				LED.setState ((byte)led, (byte)1);
 			else
-				LED.setState ((byte)led,(byte)0);
+				LED.setState ((byte)led, (byte)0);
 		}
 		
 		static int onSysInfo (int type, int info)
@@ -149,13 +148,13 @@ namespace Oscilloscope
 			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
 				byte[] cmd = new byte[6];
 				
-				Logger.appendString(csr.s2b("Master; data = "));
-				for(uint i = 0; i < len; i++)
-					Logger.appendHexByte (buf[i]);
+				Logger.appendString (csr.s2b ("Master; data = "));
+				for (uint i = 0; i < len; i++)
+					Logger.appendHexByte (buf [i]);
 					
-				long interval = Util.get32 (buf,cmdoff + 3);
-				Logger.appendString(csr.s2b(", readInterval = "));
-				Logger.appendLong(interval);
+				long interval = Util.get32 (buf, cmdoff + 3);
+				Logger.appendString (csr.s2b (", readInterval = "));
+				Logger.appendLong (interval);
 				
 				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
 					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura

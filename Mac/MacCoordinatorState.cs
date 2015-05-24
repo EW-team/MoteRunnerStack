@@ -23,12 +23,6 @@ namespace Mac_Layer
 			this.mac.radio.setShortAddr (saddr);
 			this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
 		}
-		
-//		public override void setNetwork(uint panId, uint saddr) {
-//			this.mac.radio.setPanId (panId, true);
-//			this.mac.radio.setShortAddr (saddr);
-//			this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
-//		}
 
 		public override void dispose ()
 		{
@@ -61,7 +55,12 @@ namespace Mac_Layer
 							this.txBuf = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
 							break;
 						case DATA_REQ: // data request handle - coordinator
-										//TODO		
+							if (this.mac.pdu != null) {
+								uint saddr = Frame.getDestSAddr (this.mac.pdu);
+								uint rSaddr = Frame.getSrcSADDR (data);
+								if (saddr == rSaddr)
+									this.txBuf = this.mac.pdu;
+							}
 							break;
 						}
 						break;
@@ -181,7 +180,13 @@ namespace Mac_Layer
 		// protected methods
 		private void sendBeacon ()
 		{
-			byte[] beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
+			byte[] beacon;
+			if (this.mac.pdu != null) {
+				uint saddr = Frame.getDestSAddr (this.mac.pdu);
+				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), saddr, this);
+			} else {
+				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
+			}
 			this.mac.radio.transmit (Radio.TIMED | Radio.TXMODE_POWER_MAX, beacon, 0, (uint)beacon.Length, Time.currentTicks () + this.slotInterval);
 		}
 	}

@@ -1,15 +1,16 @@
 using com.ibm.saguaro.system;
 using com.ibm.saguaro.logger;
-using System;
 using Mac_Layer;
 
 namespace Mac_Layer
 {
 	internal class MacUnassociatedState : MacState
 	{
-		
+		public bool associated = false;
 		public uint coordinatorSADDR = 0;
 		public uint panId;
+		internal uint _sleepWait = 4;
+		internal uint _activity = 0;
 	
 		public MacUnassociatedState (Mac mac, uint id) : base(mac)
 		{	
@@ -19,12 +20,6 @@ namespace Mac_Layer
 			LED.setState ((byte)1, (byte)1);
 			LED.setState ((byte)2, (byte)0);
 		}
-		
-//		public override void setNetwork(uint panId, uint saddr){
-//			this.mac.radio.setPanId(panId, false);
-//			this.panId = panId;
-//			this.trackBeacon();
-//		}
 	
 		public override void dispose ()
 		{
@@ -43,18 +38,21 @@ namespace Mac_Layer
 						Frame.getBeaconInfo (data, len, this);
 						this.mac.timer1.setAlarmTime (time + this.interSlotInterval);
 						this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
-						this.txBuf = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
+						if (this.associated == false) {
+							this.txBuf = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
 													this.coordinatorSADDR, this);
+						} else {
+						
+						}
 						break;
 					case Radio.FCF_CMD:
 						switch ((uint)data [pos]) {
 						case ASS_RES: // association response handle - not coordinator
 							switch ((uint)data [pos + 3]) {
 							case ASS_SUCC: // association successful
-								this._lock = true;
 								this.mac.radio.stopRx ();
 								this.mac.radio.setShortAddr (Util.get16 (data, pos + 1)); // The SAddr have to be setted when radio is not on!
-								this.mac.onStateEvent (Mac.MAC_ASSOCIATED, this.coordinatorSADDR);
+								this.associated = true;
 								break;
 							case ASS_FAIL: // association failed
 														//TODO
@@ -64,7 +62,15 @@ namespace Mac_Layer
 						}
 						break;
 					case Radio.FCF_DATA:
-							// handle fcf data
+						this.dataPending = false;
+						if ((len - pos) > 0) {
+							byte[] pdu = new byte[len - pos];
+							Util.copyData (data, pos, pdu, 0, len - pos);
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
+								                    Frame.getSrcSADDR (data), time);
+						} else
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
+								                    Frame.getSrcSADDR (data), time);
 						break;
 					}
 				}
@@ -97,8 +103,10 @@ namespace Mac_Layer
 					break;
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				if (this.txBuf == null)
-					this.coordinatorSADDR = 0;
+				if (this.associated == false) {
+					if (this.txBuf == null)
+						this.coordinatorSADDR = 0;
+				}
 			} else {
 
 			}
@@ -135,6 +143,7 @@ namespace Mac_Layer
 					// it's the last interval in superframe
 				} else {
 					this.mac.timer1.setAlarmTime (time + this.slotInterval + this.interSlotInterval);
+//					this.onSlotEvent (time);
 				}
 				if (!this._lock) { // exclusive section - if radio is occupied, ignore the content!
 					if (this.txBuf == null) {
@@ -148,9 +157,8 @@ namespace Mac_Layer
 							this.txBuf = null;
 						} else {
 							this._retry += 1;
-							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.txBuf, 0, (uint)this.txBuf.Length, 
+							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.txBuf, 0, (uint)this.txBuf.Length, 
 										time + this.slotInterval); // transmit in this slot
-										
 						}
 					}
 				}
@@ -158,9 +166,28 @@ namespace Mac_Layer
 			}
 		}
 		
+		internal void onSlotEvent (long time)
+		{
+			if (this.associated == true) {
+				Logger.appendString (csr.s2b ("SLOT ACTION"));
+				Logger.flush (Mote.INFO);
+				LED.setState ((byte)0, (byte)1);
+				if (this.dataPending && this.txBuf == null) {
+					LED.setState ((byte)0, (byte)0);
+					this.txBuf = Frame.getCMDDataFrame (this.mac.radio.getPanId (), this.coordinatorSADDR, this);
+					this._activity = this.slotCount;
+				} else if (this.txBuf == null && this.mac.pdu != null) {
+					this.txBuf = this.mac.pdu;
+					this.mac.pdu = null;
+					this._activity = this.slotCount;
+				}
+			}
+		}
+		
 		// protected methods
 		internal void trackBeacon ()
 		{
+			LED.setState ((byte)0, (byte)0);
 			this.mac.radio.startRx (Radio.ASAP, 0, Time.currentTicks () + this.aScanInterval);
 		}
 	}

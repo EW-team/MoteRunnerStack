@@ -19,8 +19,7 @@ namespace Mac_Layer
 		// Timer parameters
 		internal const byte MAC_WAKEUP = (byte)0x10;
 		internal const byte MAC_SLEEP = (byte)0x11;
-		internal const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
-		internal const byte MAC_SLOT = (byte)0x13;
+		internal const byte MAC_SLOT = (byte)0x12;
 
 		// MAC Flags codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
@@ -39,24 +38,81 @@ namespace Mac_Layer
 		internal Radio radio;
 		internal Timer timer1;
 //		internal Timer timer2;
-		internal byte[] pdu;
-		internal byte[] header;
+		
+		public byte[] pdu;
+//		private byte[] _pdu;
+//		public byte[] pdu {
+//			get {
+//				return this._pdu;
+//			}
+//			set {
+//				if (value == null && this.buffer [this._bufTransm] != null)
+//					this._pdu = (byte[])this.buffer [this._bufTransm];
+//				else if (value != null)
+//					this._pdu = value;
+//				else
+//					this._pdu = null;
+//			}
+//		}
+//		internal byte[] header;
+//		
+//		public uint bufferLength = 8;
+//		public object[] buffer;
+//		
+//		private uint _bufCount = 0;
+//		public uint bufCount {
+//			get {
+//				return this.bufCount;
+//			}
+//			set {
+//#if DEBUGGINO
+//			Logger.appendString(csr.s2b("Buffer status: "));
+//			Logger.appendUInt (this._bufTransm);
+//			Logger.appendString(csr.s2b(" -> "));
+//			Logger.appendUInt (this._bufCount);
+//#endif
+//				if (value == this._bufTransm)
+//					this._bufTransm += 1;
+//				this._bufCount = value % bufferLength;
+//			}
+//		}
+//		
+//		private uint _bufTransm = 0;
+//		public uint bufTransm {
+//			get {
+//				return this._bufTransm;
+//			}
+//			set {
+//#if DEBUGGINO
+//			Logger.appendString(csr.s2b("Buffer status: "));
+//			Logger.appendUInt (this._bufTransm);
+//			Logger.appendString(csr.s2b(" -> "));
+//			Logger.appendUInt (this._bufCount);
+//#endif
+//				if (this._bufTransm != this._bufCount)
+//					this._bufTransm = value % bufferLength;
+//			}
+//		}
 
 //		// Internal logic parameters
 //		private bool scanContinue = false;
 
 		// Callbacks
-		internal DevCallback rxHandler = new DevCallback(onMockEvent);
-		internal DevCallback txHandler = new DevCallback(onMockEvent);
-		internal DevCallback eventHandler = new DevCallback(onMockEvent);
+		internal DevCallback rxHandler = new DevCallback (onMockEvent);
+		internal DevCallback txHandler = new DevCallback (onMockEvent);
+		internal DevCallback eventHandler = new DevCallback (onMockEvent);
 //		internal MacScanCallback scanHandler;
 
 		// Configuration
 		internal MacState state;
 
-		public Mac () {
-			this.timer1 = new Timer();
-			this.radio = new Radio();
+		public Mac ()
+		{
+			this.timer1 = new Timer ();
+			this.radio = new Radio ();
+			this.pdu = null;
+//			buffer = (object[])Util.alloca (8, Util.OBJECT_ARRAY);
+//			this.buffer = new object[8];
 		}
 
 		internal void onStateEvent (uint flag, uint param)
@@ -72,31 +128,35 @@ namespace Mac_Layer
 			}
 		}
 
-		public void setChannel(uint channel) {
-			this.radio.setChannel((byte)channel);
+		public void setChannel (uint channel)
+		{
+			this.radio.setChannel ((byte)channel);
 		}
 
-		public void associate(uint panId) {
-			this.state = new MacUnassociatedState(this, panId);
+		public void associate (uint panId)
+		{
+			this.state = new MacUnassociatedState (this, panId);
 		}
 
-		public void createPan(uint panId, uint saddr) {
-			this.state = new MacCoordinatorState(this, panId, saddr);
+		public void createPan (uint panId, uint saddr)
+		{
+			this.state = new MacCoordinatorState (this, panId, saddr);
 		}
 
 		// to define
-		public void disassociate( ) {
+		public void disassociate ()
+		{
 			//TODO
 		}
 
-		public void enable(bool onOff){
+		public void enable (bool onOff)
+		{
 			if (onOff) {
-				this.radio.open(Radio.DID,null,0,0);
-			}
-			else {
-				this.timer1.cancelAlarm();
-				this.disassociate();
-				this.radio.close();
+				this.radio.open (Radio.DID, null, 0, 0);
+			} else {
+				this.timer1.cancelAlarm ();
+				this.disassociate ();
+				this.radio.close ();
 			}
 		}
 		
@@ -104,35 +164,61 @@ namespace Mac_Layer
 //			this.scanHandler = callback;
 //		}
 
-		public void setTxHandler(DevCallback callback) {
+		public void setTxHandler (DevCallback callback)
+		{
 			this.txHandler = callback;
 		}
 
-		public void setRxHandler(DevCallback callback) {
+		public void setRxHandler (DevCallback callback)
+		{
 			this.rxHandler = callback;
 		}
 
-		public void setEventHandler(DevCallback callback) {
+		public void setEventHandler (DevCallback callback)
+		{
 			this.eventHandler = callback;
 		}
 
-		public void send(uint dstSaddr, short seq, byte[] data) {
-			byte[] header = Frame.getDataHeader(this.radio.getPanId (),this.radio.getShortAddr (),dstSaddr, seq);
-//			this.pdu = (byte[])Util.alloca((byte)(header.Length+data.Length),(byte)Util.BYTE_ARRAY);
-			uint headLen = (uint) header.Length;
-			uint dataLen = (uint) data.Length;
-			this.pdu = new byte[headLen+dataLen];
-			Util.copyData(header,0,this.pdu,0,headLen);
-			Util.copyData(data,0,this.pdu,headLen,dataLen);
+		public void send (uint dstSaddr, short seq, byte[] data)
+		{
+#if DBG
+			Logger.appendString(csr.s2b("send("));
+			Logger.appendUInt (dstSaddr);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt ((uint)seq);
+			Logger.appendString(csr.s2b(")"));
+			Logger.flush(Mote.INFO);
+#endif
+			Logger.appendString (csr.s2b ("send("));
+			Logger.appendUInt (dstSaddr);
+			Logger.appendString (csr.s2b (", "));
+			Logger.appendUInt ((uint)seq);
+			Logger.appendString (csr.s2b (")"));
+			Logger.flush (Mote.INFO);
+			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
+			uint len = (uint)(header.Length + data.Length);
+
+			if (len <= 127) {
+				this.pdu = new byte[len];
+				Util.copyData (header, 0, this.pdu, 0, (uint)header.Length);
+				Util.copyData (data, 0, this.pdu, (uint)header.Length, (uint)data.Length);
+//				this.bufCount += 1;
+//				buffer [this.bufCount] = packet;
+//				if (this.pdu == null)
+//					this.pdu = packet;
+			}
+			
 		}
 		
 		// static methods
-		public static int onMockEvent(uint flags, byte[] data, uint len, uint info, long time){
+		public static int onMockEvent (uint flags, byte[] data, uint len, uint info, long time)
+		{
 			
 			return 0;
 		}
 		
-		static void setParameters(long cXaddr, uint cSaddr, uint Saddr) {
+		static void setParameters (long cXaddr, uint cSaddr, uint Saddr)
+		{
 			//TODO
 		}
 
