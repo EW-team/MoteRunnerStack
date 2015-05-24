@@ -94,9 +94,9 @@ namespace Mac_Layer
 				uint pos = Frame.getPayloadPosition (data);
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_BEACON:
-					LED.setState ((byte)1, (byte)1);
 					this.mac.timer1.setParam (Mac.MAC_SLOT);
-					this.onTimerEvent (Mac.MAC_SLOT, time + this.interSlotInterval);
+					this._sync = time;
+					this.mac.timer1.setAlarmTime (this._sync + 2 * this.interSlotInterval);
 					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
@@ -137,10 +137,10 @@ namespace Mac_Layer
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this.mac.timer1.cancelAlarm ();
-				this.mac.timer1.setAlarmTime (time + this.beaconInterval - this.nSlot * this.slotInterval);
+				this._sync = time + this.beaconInterval - this.nSlot * this.slotInterval;
+				this.mac.timer1.setAlarmTime (this._sync);
 				break;
 			case Mac.MAC_WAKEUP:
-				this._lock = true;
 				this.slotCount = 0;
 				this.sendBeacon ();
 				break;
@@ -149,10 +149,11 @@ namespace Mac_Layer
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;
 				} else {
-//					Logger.appendString (csr.s2b ("slotCount"));
+//					Logger.appendString (csr.s2b ("Coordinator slot "));
 //					Logger.appendUInt (this.slotCount);
 //					Logger.flush (Mote.INFO);
-					this.mac.timer1.setAlarmTime (time + this.slotInterval + this.interSlotInterval);
+					this._sync = time + this.slotInterval + this.interSlotInterval;
+					this.mac.timer1.setAlarmTime (this._sync);
 				}
 				if (!this._lock) { // exclusive section - if radio is occupied, ignore the content!
 					if (this.txBuf == null) {
@@ -180,6 +181,7 @@ namespace Mac_Layer
 		// protected methods
 		private void sendBeacon ()
 		{
+			this._lock = true;
 			byte[] beacon;
 			if (this.mac.pdu != null) {
 				uint saddr = Frame.getDestSAddr (this.mac.pdu);

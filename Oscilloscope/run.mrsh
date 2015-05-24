@@ -5,13 +5,13 @@ socket-close -f osciSocket
 source socket.js
 socket-bind osciSocket
 
-mote-create -d iris 3
+mote-create -d iris 2
 
 
 
 a0 msetup-setup oscilloscope
 a1 msetup-setup oscilloscopes
-a2 msetup-setup oscilloscopes
+# a2 msetup-setup oscilloscopes
 
 # cmd type - read - flag - delay - saddr
 socket-send osciSocket 126 1 1 1 500 0x0100

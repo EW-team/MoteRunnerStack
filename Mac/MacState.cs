@@ -11,6 +11,7 @@ namespace Mac_Layer
 		internal uint _abort = 3;
 		internal uint slotCount = 0;
 		private byte[] _txBuf;
+		internal long _sync;
 
 		internal byte[] txBuf {
 			get {
@@ -59,6 +60,7 @@ namespace Mac_Layer
 					this._BO = 8;
 					ArgumentException.throwIt (ArgumentException.TOO_SMALL);
 				}
+				this.scanOrder = this._BO + 1;
 			}
 		}
 
@@ -115,9 +117,8 @@ namespace Mac_Layer
 			this.mac.radio.setTxHandler (this.onTxEvent);
 			this.mac.radio.setRxHandler (this.onRxEvent);
 			this.mac.timer1.setCallback (this.onTimerEvent);
-			this.scanOrder = 10;
-			this.BO = 8;
-			this.SO = 5;
+			this.BO = 10;
+			this.SO = 8;
 			this.txBuf = null;
 		}
 		

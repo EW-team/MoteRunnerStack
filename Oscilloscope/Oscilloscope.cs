@@ -19,8 +19,8 @@ namespace Oscilloscope
 		// See ADC class documentation
 		// See below
 		// Sensors power pins
-		internal static readonly byte TEMP_PWR_PIN    = IRIS.PIN_PW0; 	// Temperature sensor power pin
-		internal static readonly byte LIGHT_PWR_PIN   = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
+		internal static readonly byte TEMP_PWR_PIN = IRIS.PIN_PW0; 	// Temperature sensor power pin
+		internal static readonly byte LIGHT_PWR_PIN = IRIS.PIN_INT5; 	// Temperature sensor power pin (on the doc is INT1 but is not available in com.ibm.iris)  
 
 		// To read sensor values
 		static ADC adc ;
@@ -35,8 +35,8 @@ namespace Oscilloscope
 		static long readInterval;	// Read ADC every (Secs)
 
 		// Payload flags
-		const byte FLAG_TEMP	= (byte)0x01;	// Flag for temperature data
-		const byte FLAG_LIGHT 	= (byte)0x02;	// Flag for light data
+		const byte FLAG_TEMP = (byte)0x01;	// Flag for temperature data
+		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
 	
 		
 
@@ -47,27 +47,27 @@ namespace Oscilloscope
 			fake.setCallback (new TimerEvent(onFakeTimerEvent));
 #else
 			//GPIO, power pins
-			pwrPins = new GPIO();
+			pwrPins = new GPIO ();
 			
 			//ADC
-			adc = new ADC();
-			adc.setReadHandler(new DevCallback(adcReadCallback));
+			adc = new ADC ();
+			adc.setReadHandler (new DevCallback (adcReadCallback));
 			adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 			
-			pwrPins.open(); 
-			pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			pwrPins.open (); 
+			pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
 			
 #endif
-			mac = new Mac();
-			mac.enable(true);
+			mac = new Mac ();
+			mac.enable (true);
 			mac.setChannel (1);
-			mac.setRxHandler (new DevCallback(onRxEvent));
-			mac.setTxHandler (new DevCallback(onTxEvent));
-			mac.setEventHandler (new DevCallback(onEvent));
-			mac.associate(0x0234);
+			mac.setRxHandler (new DevCallback (onRxEvent));
+			mac.setTxHandler (new DevCallback (onTxEvent));
+			mac.setEventHandler (new DevCallback (onEvent));
+			mac.associate (0x0234);
 
 			// convert 2 seconds to the platform ticks
-        	readInterval = Time.toTickSpan(Time.SECONDS, 2);
+			readInterval = Time.toTickSpan (Time.SECONDS, 2);
 		}
 		
 #if SIM
@@ -80,26 +80,28 @@ namespace Oscilloscope
 			fake.setAlarmTime (Time.currentTicks () + readInterval);
 		}
 #else
-		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time) {
-			if ( len != 2 || ((flags & Device.FLAG_FAILED) != 0) ) {
+		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time)
+		{
+			if (len != 2 || ((flags & Device.FLAG_FAILED) != 0)) {
 				// Can't read sensors
-				LED.setState(IRIS.LED_RED,(byte)1);
+				LED.setState (IRIS.LED_RED, (byte)1);
 				return 0;
 			} else {
-				LED.setState(IRIS.LED_RED,(byte)0);
+				LED.setState (IRIS.LED_RED, (byte)0);
 			}
 
-			Util.copyData(data, 0, rpdu, 1, 2);	// Payload data bytes
+			Util.copyData (data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
-			mac.send(0x0002, 1, rpdu);
+			mac.send (0x0002, 1, rpdu);
 			// Schedule next read
-			adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
+			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 			return 0;
 		}
 #endif	
 
 		//On transmission blink green led
-		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time) {
+		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time)
+		{
 			if (LED.getState (IRIS.LED_GREEN) == 0)
 				LED.setState (IRIS.LED_GREEN, (byte)1);
 			else
@@ -147,9 +149,9 @@ namespace Oscilloscope
 #else
 					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 			
-					pwrPins.open(); 
-					pwrPins.configureOutput(TEMP_PWR_PIN, GPIO.OUT_SET); 
-					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
+					pwrPins.open (); 
+					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET); 
+					adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 					// Simulation
 #endif					
 //					Logger.appendString(csr.s2b(", START"));
@@ -171,13 +173,17 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time) {
-			switch(flag){
-				case Mac.MAC_ASSOCIATED:
+		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time)
+		{
+			switch (flag) {
+			case Mac.MAC_ASSOCIATED:
 //					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
-					break;
-				default:
-					return 0;
+				break;
+			case Mac.MAC_BEACON_RXED:
+				
+				break;
+			default:
+				return 0;
 			}
 			return 0;
 		}

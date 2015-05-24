@@ -102,9 +102,7 @@ namespace Oscilloscope
 				Util.set32le (header, ROFF_TIME, time);
 
 				Util.set16le (header, ROFF_SADDR, saddr); // 0 if XADDR	
-				
-				//port = Assembly.getActiveAsmId();
-				blink (1);
+
 				LIP.send (header, headerLength, data, 1, (uint)data.Length - 1);
 			}
 			
@@ -145,17 +143,8 @@ namespace Oscilloscope
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
-			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
-				byte[] cmd = new byte[6];
-				
-				Logger.appendString (csr.s2b ("Master; data = "));
-				for (uint i = 0; i < len; i++)
-					Logger.appendHexByte (buf [i]);
-					
-				long interval = Util.get32 (buf, cmdoff + 3);
-				Logger.appendString (csr.s2b (", readInterval = "));
-				Logger.appendLong (interval);
-				
+			else if (len - cmdoff > 7 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
+				byte[] cmd = new byte[6];			
 				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
 					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura
 						cmd [0] = FLAG_TEMP;
@@ -165,8 +154,7 @@ namespace Oscilloscope
 				} else
 					cmd [1] = (byte)0;
 				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
-				uint saddr = Util.get16 (buf, cmdoff + 7);
-				Logger.flush (Mote.INFO);
+				uint saddr = Util.get16le (buf, cmdoff + 7); // dall'ottavo al nono l'indirizzo del destinatario
 				mac.send (saddr, Util.rand8 (), cmd);
 			}
 			

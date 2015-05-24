@@ -77,35 +77,44 @@ namespace Mac_Layer
 			return beacon;
 		}
 
-		public static void getBeaconInfo (byte[] beacon, uint len, MacSimpleState state)
+		public static uint getBeaconInfo (byte[] beacon, uint len, MacUnassociatedState state)
 		{
+			Logger.appendString (csr.s2b ("beacon info: "));
+			Logger.appendString (csr.s2b ("len - "));
+			Logger.appendUInt (len);
 			state.coordinatorSADDR = Util.get16 (beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
 			if (len > 15) {
+				Logger.appendString (csr.s2b (" and something pending "));
+				Logger.appendString (csr.s2b ("My address is "));
+				Logger.appendUInt (state.mySaddr);
 				uint pendingAddr = Util.get16 (beacon, 14);
 				if (pendingAddr == state.mySaddr || pendingAddr == Radio.SADDR_BROADCAST) {
+					Logger.appendString (csr.s2b (" so it's for me"));
 					state.dataPending = true;
-					Logger.appendString (csr.s2b ("DATA PENDING IN FRAME"));
-					Logger.appendUInt (state.coordinatorSADDR);
-				} else
+				} else {
+					Logger.appendString (csr.s2b (" so it's not not for me"));
 					state.dataPending = false;
+				}
 			}
+			Logger.flush (Mote.INFO);
+			return 1;
 #if DEBUG || DBG
-			Logger.appendString(csr.s2b("coordinatorSADDR"));
+			Logger.appendString(csr.s2b("coordinatorSADDR: "));
 			Logger.appendUInt (state.coordinatorSADDR);
 			Logger.appendString(csr.s2b(", "));
-			Logger.appendString(csr.s2b("BO"));
+			Logger.appendString(csr.s2b("BO: "));
 			Logger.appendUInt (state.BO);
 			Logger.appendString(csr.s2b(", "));
-			Logger.appendString(csr.s2b("SO"));
+			Logger.appendString(csr.s2b("SO: "));
 			Logger.appendUInt (state.SO);
 			Logger.appendString(csr.s2b(", "));
-			Logger.appendString(csr.s2b("panId"));
+			Logger.appendString(csr.s2b("panId: "));
 			Logger.appendUInt (state.panId);
 			Logger.appendString(csr.s2b(", "));
-			Logger.appendString(csr.s2b("dataPending"));
+			Logger.appendString(csr.s2b("dataPending: "));
 			if(state.dataPending)
 				Logger.appendUInt(1);
 			else
@@ -163,7 +172,7 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static byte[] getCMDDataFrame (uint panId, uint saddr, MacSimpleState state)
+		public static byte[] getCMDDataFrame (uint panId, uint saddr, MacUnassociatedState state)
 		{
 			byte[] cmd;
 			if (state.mySaddr != 0) {

@@ -115,18 +115,14 @@ namespace Mac_Layer
 //			this.buffer = new object[8];
 		}
 
-//		internal void onStateEvent (uint flag, uint param)
-//		{
-//			if (flag == MAC_ASSOCIATED) {
-//				if (LED.getState ((byte)2) == 0)
-//					LED.setState ((byte)2, (byte)1);
-//				else
-//					LED.setState ((byte)2, (byte)0);	
-//				this.timer1.cancelAlarm ();
-//				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
-//				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
-//			}
-//		}
+		internal void onStateEvent (uint flag, uint param)
+		{
+			if (flag == MAC_ASSOCIATED) {
+				this.timer1.cancelAlarm ();
+				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
+				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
+			}
+		}
 
 		public void setChannel (uint channel)
 		{
@@ -135,14 +131,19 @@ namespace Mac_Layer
 
 		public void associate (uint panId)
 		{
-			this.state = new MacSimpleState (this, panId);
+			this.state = new MacUnassociatedState (this, panId);
 		}
 
 		public void createPan (uint panId, uint saddr)
 		{
 			this.state = new MacCoordinatorState (this, panId, saddr);
 		}
-
+		
+		internal void setState (MacState state)
+		{
+			this.state = state;
+		}
+		
 		// to define
 		public void disassociate ()
 		{
