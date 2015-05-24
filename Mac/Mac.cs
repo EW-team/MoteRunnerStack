@@ -115,13 +115,14 @@ namespace Mac_Layer
 //			this.buffer = new object[8];
 		}
 
-		internal void onStateEvent (uint flag, uint param)
+		internal uint onStateEvent (uint flag, uint param)
 		{
 			if (flag == MAC_ASSOCIATED) {
 				this.timer1.cancelAlarm ();
 				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
 				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
 			}
+			return 0;
 		}
 
 		public void setChannel (uint channel)
@@ -180,7 +181,7 @@ namespace Mac_Layer
 			this.eventHandler = callback;
 		}
 
-		public void send (uint dstSaddr, short seq, byte[] data)
+		public uint send (uint dstSaddr, short seq, byte[] data)
 		{
 #if DBG
 			Logger.appendString(csr.s2b("send("));
@@ -199,7 +200,7 @@ namespace Mac_Layer
 				Util.copyData (header, 0, this.pdu, 0, (uint)header.Length);
 				Util.copyData (data, 0, this.pdu, (uint)header.Length, (uint)data.Length);
 			}
-			
+			return 0;
 		}
 		
 		// static methods
