@@ -118,6 +118,9 @@ namespace Mac_Layer
 		internal uint onStateEvent (uint flag, uint param)
 		{
 			if (flag == MAC_ASSOCIATED) {
+				LED.setState ((byte)0, (byte)0);
+				LED.setState ((byte)1, (byte)0);
+				LED.setState ((byte)2, (byte)0);
 				this.timer1.cancelAlarm ();
 				this.state = new MacAssociatedState (this, this.radio.getPanId (), param);
 				this.eventHandler (MAC_ASSOCIATED, null, 0, this.radio.getShortAddr (), Time.currentTicks ());
