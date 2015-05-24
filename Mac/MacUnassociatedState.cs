@@ -154,7 +154,10 @@ namespace Mac_Layer
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
 				this.trackBeacon ();
-				LED.setState ((byte)0, (byte)1);
+				if (LED.getState ((byte)0) == 0)
+					LED.setState ((byte)0, (byte)1);
+				else
+					LED.setState ((byte)0, (byte)0);
 				this.mac.timer1.setAlarmTime (time + this.aScanInterval + this.interSlotInterval);
 				break;
 			case Mac.MAC_SLOT:
