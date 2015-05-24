@@ -6,8 +6,21 @@ namespace Mac_Layer
 	{
 		
 		internal const uint FRAME_TYPE_MASK = 0x07;
-		
 		internal bool _lock = false;
+		internal uint _retry = 0;
+		internal uint _abort = 3;
+		internal uint slotCount = 0;
+		private byte[] _txBuf;
+
+		internal byte[] txBuf {
+			get {
+				return this._txBuf;
+			}
+			set {
+				this._txBuf = value;
+				this._retry = 0;
+			}
+		}
 		
 		// Beacon Positions
 		internal const uint FRAME_POS = 0;
@@ -22,10 +35,7 @@ namespace Mac_Layer
 		// CMD Response
 		internal const uint ASS_SUCC = 0x00;
 		internal const uint ASS_FAIL = 0x01;
-		
 		internal Mac mac;
-//		internal MacConfig config;
-		internal bool duringSuperframe;
 		
 		// Beacon & Superframe Parameters
 		public uint nSlot = 15; // n. of time slots in superframe
@@ -35,10 +45,10 @@ namespace Mac_Layer
 		public long beaconInterval; // Beacon Interval = 60sym * nSlot * 2^BO / 20kbps [s] = 3 * nSlot * 2^BO [ms]
 		private uint _BO;  // beacon order
 		public uint BO {
-			get{
+			get {
 				return this._BO;
 			}
-			set{
+			set {
 				if (value < 15 && value > 0) {
 					this._BO = value;
 					this.beaconInterval = Time.toTickSpan (Time.MILLISECS, 3 * nSlot * 2 ^ this._BO);
@@ -51,16 +61,19 @@ namespace Mac_Layer
 				}
 			}
 		}
+
 		public long slotInterval; // Superframe duration = 60sym * nSlot * 2^SO / 20kbps [s] = 3 * nSlot * 2^SO [ms]
+		public long interSlotInterval; // Slot between two slot intervals
 		private uint _SO; // superframe order
 		public uint SO {
-			get{
+			get {
 				return this._SO;
 			}
-			set{
+			set {
 				if (value < 15 && value >= 0 && value < this._BO) {
 					this._SO = value;
 					this.slotInterval = Time.toTickSpan (Time.MILLISECS, 3 * 2 ^ this._SO);
+					this.interSlotInterval = this.slotInterval >> 1;
 				} else if (value == 15 && value < this._BO) {// no beacon
 
 				} else if (value > 15 || value > this._BO) {
@@ -76,6 +89,7 @@ namespace Mac_Layer
 		// Scan parameters
 		public long aScanInterval;
 		private uint _scanOrder;
+
 		public uint scanOrder {
 			get {
 				return this._scanOrder;
@@ -97,24 +111,25 @@ namespace Mac_Layer
 		public MacState (Mac mac)
 		{
 			this.mac = mac;
-			this.mac.radio.setEventHandler(this.onRadioEvent);
-			this.mac.radio.setTxHandler(this.onTxEvent);
-			this.mac.radio.setRxHandler(this.onRxEvent);
+			this.mac.radio.setEventHandler (this.onRadioEvent);
+			this.mac.radio.setTxHandler (this.onTxEvent);
+			this.mac.radio.setRxHandler (this.onRxEvent);
 			this.mac.timer1.setCallback (this.onTimerEvent);
 			this.scanOrder = 10;
 			this.BO = 8;
 			this.SO = 5;
+			this.txBuf = null;
 		}
 		
-		public abstract void dispose(); // destroy this instance
+		public abstract void dispose (); // destroy this instance
 		
-		public abstract int onRxEvent(uint flags, byte[] data, uint len, uint info, long time);
+		public abstract int onRxEvent (uint flags, byte[] data, uint len, uint info, long time);
 		
-		public abstract int onTxEvent(uint flags, byte[] data, uint len, uint info, long time);
+		public abstract int onTxEvent (uint flags, byte[] data, uint len, uint info, long time);
 		
-		public abstract int onRadioEvent(uint flags, byte[] data, uint len, uint info, long time);
+		public abstract int onRadioEvent (uint flags, byte[] data, uint len, uint info, long time);
 		
-		public abstract void onTimerEvent(byte param, long time);
+		public abstract void onTimerEvent (byte param, long time);
 	}
 }
 

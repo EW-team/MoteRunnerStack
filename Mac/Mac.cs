@@ -20,6 +20,7 @@ namespace Mac_Layer
 		internal const byte MAC_WAKEUP = (byte)0x10;
 		internal const byte MAC_SLEEP = (byte)0x11;
 		internal const byte MAC_SLEEP_WAITING_BEACON = (byte)0x12;
+		internal const byte MAC_SLOT = (byte)0x13;
 
 		// MAC Flags codes
 		public const uint MAC_TX_COMPLETE = 0xE001;
