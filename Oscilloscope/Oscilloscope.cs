@@ -92,6 +92,7 @@ namespace Oscilloscope
 
 			Util.copyData (data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
+			LED.setState ((byte)2, (byte)1);
 			mac.send (0x0002, 1, rpdu);
 			// Schedule next read
 			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
@@ -102,10 +103,7 @@ namespace Oscilloscope
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
-			if (LED.getState (IRIS.LED_GREEN) == 0)
-				LED.setState (IRIS.LED_GREEN, (byte)1);
-			else
-				LED.setState (IRIS.LED_GREEN, (byte)0);
+			LED.setState ((byte)2, (byte)0);
 			return 0;
 		}
 		

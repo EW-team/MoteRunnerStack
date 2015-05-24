@@ -142,6 +142,7 @@ namespace Mac_Layer
 		{
 			switch (param) {
 			case Mac.MAC_SLEEP:
+				LED.setState ((byte)0, (byte)0);
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
 				this.mac.radio.setState (Radio.S_STDBY);
@@ -152,9 +153,14 @@ namespace Mac_Layer
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
 				this.trackBeacon ();
+				LED.setState ((byte)0, (byte)1);
 				this.mac.timer1.setAlarmTime (time + this.aScanInterval + this.interSlotInterval);
 				break;
 			case Mac.MAC_SLOT:
+				if (LED.getState ((byte)1) == 1)
+					LED.setState ((byte)1, (byte)0);
+				else
+					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;

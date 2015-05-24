@@ -44,6 +44,7 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
+					LED.setState ((byte)2, (byte)1);
 					uint pos = Frame.getPayloadPosition (data);
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // there's another coordinator in this pan
@@ -90,6 +91,7 @@ namespace Mac_Layer
 		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
+				LED.setState ((byte)2, (byte)0);
 				this.txBuf = null;
 				uint pos = Frame.getPayloadPosition (data);
 				switch (data [0] & FRAME_TYPE_MASK) {
@@ -131,6 +133,7 @@ namespace Mac_Layer
 		{
 			switch (param) {
 			case Mac.MAC_SLEEP:
+				LED.setState ((byte)0, (byte)0);
 				int state = this.mac.radio.getState ();
 				if (state == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
@@ -143,8 +146,13 @@ namespace Mac_Layer
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
 				this.sendBeacon ();
+				LED.setState ((byte)0, (byte)1);
 				break;
 			case Mac.MAC_SLOT:
+				if (LED.getState ((byte)1) == 1)
+					LED.setState ((byte)1, (byte)0);
+				else
+					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;
