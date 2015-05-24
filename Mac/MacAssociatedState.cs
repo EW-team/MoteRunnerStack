@@ -14,9 +14,6 @@ namespace Mac_Layer
 		{
 			this.coordinatorSADDR = saddr;
 			this.mySaddr = this.mac.radio.getShortAddr ();
-			
-			LED.setState ((byte)1, (byte)0);
-			LED.setState ((byte)2, (byte)1);
 		}
 		
 		public override void dispose ()
@@ -69,6 +66,8 @@ namespace Mac_Layer
 					}
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
+				if (this.slotCount == 0)
+					this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ());
 				//TODO
 			} else {
 				//TODO

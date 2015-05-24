@@ -21,9 +21,10 @@ namespace Mac_Layer
 			this.panId = id;
 			this.mac.radio.setPanId (this.panId, false);
 			this.mac.timer1.setParam (Mac.MAC_WAKEUP);
-			this.mac.timer1.setAlarmTime (Time.currentTicks ());
+			this.mac.timer1.setAlarmTime (Time.currentTicks () + this.aScanInterval);
+			LED.setState ((byte)0, (byte)1);
 			LED.setState ((byte)1, (byte)1);
-			LED.setState ((byte)2, (byte)0);
+			LED.setState ((byte)2, (byte)1);
 		}
 		
 		internal uint getSaddr ()
@@ -89,7 +90,7 @@ namespace Mac_Layer
 					}
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-				this.trackBeacon (); //FIXME: sostituire con azione timer
+				this.onTimerEvent (Mac.MAC_WAKEUP, Time.currentTicks ()); //FIXME: sostituire con azione timer
 //				Logger.appendString(csr.s2b("Rx Error"));
 //				Logger.flush(Mote.INFO);
 			} else {
