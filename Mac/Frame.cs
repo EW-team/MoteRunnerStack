@@ -79,27 +79,18 @@ namespace Mac_Layer
 
 		public static uint getBeaconInfo (byte[] beacon, uint len, MacUnassociatedState state)
 		{
-			Logger.appendString (csr.s2b ("beacon info: "));
-			Logger.appendString (csr.s2b ("len - "));
-			Logger.appendUInt (len);
 			state.coordinatorSADDR = Util.get16 (beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
 			state.SO = (uint)beacon [11] & 0x0F;
 			state.panId = Util.get16 (beacon, 7);
 			if (len > 15) {
-				Logger.appendString (csr.s2b (" and something pending "));
-				Logger.appendString (csr.s2b ("My address is "));
-				Logger.appendUInt (state.mySaddr);
 				uint pendingAddr = Util.get16 (beacon, 14);
 				if (pendingAddr == state.mySaddr || pendingAddr == Radio.SADDR_BROADCAST) {
-					Logger.appendString (csr.s2b (" so it's for me"));
 					state.dataPending = true;
 				} else {
-					Logger.appendString (csr.s2b (" so it's not not for me"));
 					state.dataPending = false;
 				}
 			}
-			Logger.flush (Mote.INFO);
 			return 1;
 #if DEBUG || DBG
 			Logger.appendString(csr.s2b("coordinatorSADDR: "));

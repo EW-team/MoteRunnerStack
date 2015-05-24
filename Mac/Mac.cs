@@ -190,12 +190,7 @@ namespace Mac_Layer
 			Logger.appendString(csr.s2b(")"));
 			Logger.flush(Mote.INFO);
 #endif
-			Logger.appendString (csr.s2b ("send("));
-			Logger.appendUInt (dstSaddr);
-			Logger.appendString (csr.s2b (", "));
-			Logger.appendUInt ((uint)seq);
-			Logger.appendString (csr.s2b (")"));
-			Logger.flush (Mote.INFO);
+
 			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
 			uint len = (uint)(header.Length + data.Length);
 
@@ -203,10 +198,6 @@ namespace Mac_Layer
 				this.pdu = new byte[len];
 				Util.copyData (header, 0, this.pdu, 0, (uint)header.Length);
 				Util.copyData (data, 0, this.pdu, (uint)header.Length, (uint)data.Length);
-//				this.bufCount += 1;
-//				buffer [this.bufCount] = packet;
-//				if (this.pdu == null)
-//					this.pdu = packet;
 			}
 			
 		}

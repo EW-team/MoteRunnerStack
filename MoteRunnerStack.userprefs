@@ -3,7 +3,7 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Oscilloscope/Oscilloscope.cs">
     <Files>
       <File FileName="Mac/MacAssociatedState.cs" Line="90" Column="13" />
-      <File FileName="Oscilloscope/Oscilloscope.cs" Line="53" Column="4" />
+      <File FileName="Oscilloscope/Oscilloscope.cs" Line="150" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -149,9 +149,6 @@ namespace Mac_Layer
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;
 				} else {
-//					Logger.appendString (csr.s2b ("Coordinator slot "));
-//					Logger.appendUInt (this.slotCount);
-//					Logger.flush (Mote.INFO);
 					this._sync = time + this.slotInterval + this.interSlotInterval;
 					this.mac.timer1.setAlarmTime (this._sync);
 				}

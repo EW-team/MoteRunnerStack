@@ -114,14 +114,7 @@ namespace Oscilloscope
 			if (flag == Mac.MAC_DATA_RXED) {
 				long interval = Util.get32 (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
-				
-//				Logger.appendString(csr.s2b("data = "));
-//				for(uint i = 0; i < len; i++)
-//					Logger.appendHexByte (data[i]);
-//				
-//				Logger.appendString(csr.s2b(", readInterval = "));
-//				Logger.appendLong(interval);
-				
+
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
 #if SIM
@@ -141,7 +134,6 @@ namespace Oscilloscope
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
 #endif
-//					Logger.appendString(csr.s2b(", FLAG_LIGHT"));
 				}
 				if ((uint)data [1] == 1) {
 #if SIM
@@ -154,7 +146,6 @@ namespace Oscilloscope
 					adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 					// Simulation
 #endif					
-//					Logger.appendString(csr.s2b(", START"));
 				} else {
 #if SIM
 					fake.cancelAlarm ();
@@ -162,7 +153,6 @@ namespace Oscilloscope
 					adc.setState (CDev.S_OFF);
 					adc.close ();
 #endif					
-//					Logger.appendString(csr.s2b(", STOP"));
 				}
 				
 //				Logger.flush (Mote.INFO);
