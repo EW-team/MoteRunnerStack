@@ -56,11 +56,7 @@ namespace Mac_Layer
 						break;
 					case Radio.FCF_CMD:
 						switch ((uint)data [pos]) {
-						case ASS_REQ: // association request handle - coordinator
-							if (LED.getState ((byte)2) == 0)
-								LED.setState ((byte)2, (byte)1);
-							else
-								LED.setState ((byte)2, (byte)0);	
+						case ASS_REQ: // association request handle - coordinator	
 							this.mac.eventHandler (Mac.MAC_ASS_REQ, data, len, info, time);
 							this.txBuf = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
 							break;
@@ -72,7 +68,7 @@ namespace Mac_Layer
 					case Radio.FCF_DATA:
 						if ((len - pos) > 0) {
 							byte[] pdu = new byte[len - pos];
-							Util.copyData (data, len, pdu, 0, len - pos);
+							Util.copyData (data, pos, pdu, 0, len - pos);
 							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
 								                    Frame.getSrcSADDR (data), time);
 						} else

@@ -5,7 +5,9 @@ namespace Mac_Layer
 {
 	internal class MacAssociatedState : MacUnassociatedState
 	{
-		
+		internal uint _sleepWait = 4;
+		internal uint _activity = 0;
+
 		public MacAssociatedState (Mac mac, uint panId, uint saddr) : base(mac, panId)
 		{
 			this.coordinatorSADDR = saddr;
@@ -32,12 +34,9 @@ namespace Mac_Layer
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // look for pending data here
 						this.mac.timer1.setParam (Mac.MAC_SLEEP);
-						this.mac.timer1.setAlarmTime (time + this.nSlot * this.slotInterval);
-						Frame.getBeaconInfo (data, this);
-						if (this.mac.pdu != null && this.txBuf == null) { // there's something to transmit
-							this.txBuf = this.mac.pdu;
-							this.mac.pdu = null;
-						}
+						Frame.getBeaconInfo (data, len, this);
+						this.mac.timer1.setAlarmTime (time + this.interSlotInterval);
+						this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
 						break;
 					case Radio.FCF_CMD:
 						switch ((uint)data [pos]) {
@@ -47,8 +46,15 @@ namespace Mac_Layer
 						}
 						break;
 					case Radio.FCF_DATA:
-							// handle fcf data
-							//TODO
+						this.dataPending = false;
+						if ((len - pos) > 0) {
+							byte[] pdu = new byte[len - pos];
+							Util.copyData (data, pos, pdu, 0, len - pos);
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, pdu, len - pos, 
+								                    Frame.getSrcSADDR (data), time);
+						} else
+							this.mac.rxHandler (Mac.MAC_DATA_RXED, null, 0, 
+								                    Frame.getSrcSADDR (data), time);
 						break;
 					}
 				}
@@ -90,24 +96,23 @@ namespace Mac_Layer
 			return 0;
 		}
 		
-//		public void onTimerEvent(byte param, long time){
-//			if (param == Mac.MAC_SLEEP) {
-//				this.duringSuperframe = false;
-//				this.mac.radio.stopRx ();
-//				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
-//				this.mac.timer1.setAlarmTime (time + this.beaconInterval -
-//											(this.nSlot+1)*this.slotInterval);
-//			}
-//			else if (param == Mac.MAC_WAKEUP) {
-//				this.trackBeacon ();
-//			}
-//		}
-//		
-//		// private methods
-//		private void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
-//			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (this.nSlot+1) * (2^14+1));
-//			this.mac.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+this.aScanInterval);
-//		}
+		public override void onTimerEvent (byte param, long time)
+		{
+			if (this.dataPending && this.txBuf == null) {
+				this.txBuf = Frame.getCMDDataFrame (this.mac.radio.getPanId (), this.coordinatorSADDR, this);
+				this._activity = this.slotCount;
+			} else if (this.txBuf == null && this.mac.pdu != null) {
+				this.txBuf = this.mac.pdu;
+				this.mac.pdu = null;
+				this._activity = this.slotCount;
+			}
+			if (this._activity + this._sleepWait <= this.slotCount)
+				base.onTimerEvent (param, time);
+			else if (this.slotCount < this.nSlot) {
+				this.mac.timer1.setParam (Mac.MAC_SLEEP);
+				this.mac.timer1.setAlarmTime (time + (this.nSlot - this.slotCount - 1) * this.slotInterval);
+			}
+		}
 
 		internal void transmit (long time)
 		{

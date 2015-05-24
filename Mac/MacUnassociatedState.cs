@@ -39,12 +39,8 @@ namespace Mac_Layer
 					uint pos = Frame.getPayloadPosition (data);
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON:
-						if (LED.getState ((byte)2) == 0)
-							LED.setState ((byte)2, (byte)1);
-						else
-							LED.setState ((byte)2, (byte)0);
 						this.mac.timer1.setParam (Mac.MAC_SLOT);
-						Frame.getBeaconInfo (data, this);
+						Frame.getBeaconInfo (data, len, this);
 						this.mac.timer1.setAlarmTime (time + this.interSlotInterval);
 						this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
 						this.txBuf = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 

@@ -32,13 +32,14 @@ namespace Oscilloscope
 #endif
 		// Fixed MR port for this application.
 		const byte MR_APP_PORT   =  126;
+		internal static byte port;
 		// Fixed service receiver port
 		const uint UDP_SRV_PORT  =  2123;
 		// Payload const positions
 		const uint ROFF_UDP_PORT = IPADDR_LEN;
-		const uint ROFF_MR_PORT  = ROFF_UDP_PORT+2;
-		const uint ROFF_MSG_TAG  = ROFF_UDP_PORT+3;
-		const uint ROFF_TIME     = ROFF_UDP_PORT+4;
+		const uint ROFF_MR_PORT  = ROFF_UDP_PORT+1; // was +2 
+		const uint ROFF_MSG_TAG  = ROFF_UDP_PORT+2; // was +3 
+		const uint ROFF_TIME     = ROFF_UDP_PORT+7; // was +4
 		const uint ROFF_SADDR  	 = ROFF_TIME+4;
 		const uint ROFF_PAYLOAD  = ROFF_SADDR+2;
 		
@@ -57,20 +58,20 @@ namespace Oscilloscope
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
-			Assembly.setDataHandler (onLipData);
+			Assembly.setDataHandler (new DataHandler(onLipData));
 		    // Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
-			LIP.open (MR_APP_PORT);
+			LIP.open (MR_APP_PORT); 
 	    	
 			header = new byte[headerLength];
 #if CFG_dust
 		    DN.setIpv6AllRoutersMulticast(header, 0);
 #else
-			Util.set32 (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
+			Util.set32le (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
 #endif
-			Util.set16 (header, ROFF_UDP_PORT, UDP_SRV_PORT);
-			header [ROFF_MR_PORT] = MR_APP_PORT;
+			Util.set16le (header, ROFF_UDP_PORT, UDP_SRV_PORT);
+			header [ROFF_MR_PORT] =  MR_APP_PORT; // was MR_APP_PORT
 			
 			mac = new Mac ();
 			mac.enable (true);
@@ -78,7 +79,13 @@ namespace Oscilloscope
 			mac.setTxHandler (new DevCallback (onTxEvent));
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
-			mac.createPan(0x0234, 0x0002);
+			mac.createPan (0x0234, 0x0002);
+			
+//			byte[] cmd = new byte[6];
+//			cmd [0] = FLAG_TEMP;
+//			cmd [1] = (byte)1;
+//			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
+//			mac.send (0x0100, Util.rand8 (), cmd);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time) {
@@ -94,12 +101,16 @@ namespace Oscilloscope
 					header [ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
 				else
 					header [ROFF_MSG_TAG] = data [0];
-				Util.set32 (header, ROFF_TIME, time);
+				Util.set32le (header, ROFF_TIME, time);
 
-				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
+				Util.set16le (header, ROFF_SADDR, saddr); // 0 if XADDR	
 				
-				LIP.send (header, headerLength, data, 1, (uint)data.Length);
+				//port = Assembly.getActiveAsmId();
+				blink (1);
+				LIP.send (header, headerLength, data, 1, (uint)data.Length-1);
 			}
+			
+			
 			return 0;
 		}
 		
@@ -108,23 +119,19 @@ namespace Oscilloscope
 			return 0;
 		}
 		
-		internal static void blink()
+		internal static void blink(uint led)
 		{
-			uint num = LED.getNumLEDs();
-			for(uint i = 0; i<2*num; i++)
-			{
-				if(LED.getState ((byte)(i%num)) == 0)
-					LED.setState ((byte)(i%num),(byte)1);
-				else
-					LED.setState ((byte)(i%num),(byte)0);
-			}
+			if(LED.getState ((byte)led) == 0)
+				LED.setState ((byte)led,(byte)1);
+			else
+				LED.setState ((byte)led,(byte)0);
 		}
 		
 		static int onSysInfo (int type, int info)
 		{
 			if (type == Assembly.SYSEV_DELETED) {
 				try {
-					LIP.close (MR_APP_PORT);
+					LIP.close (MR_APP_PORT); 
 				} catch {
 				}
 			}
@@ -133,15 +140,40 @@ namespace Oscilloscope
 			}
 			return 0;
 		}
-		
+		// Called by soclkesend
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
 			uint cmdoff = LIP.getPortOff () + 1;
 			if (cmdoff >= len)
 				return 0;
-			Util.set32 (header, ROFF_TIME, Time.currentTicks ());
+			else if (len - cmdoff > 6 && buf [cmdoff] == (byte)1) { // primo byte a 1 indica il comando
+				byte[] cmd = new byte[6];
+				
+				Logger.appendString(csr.s2b("Master; data = "));
+				for(uint i = 0; i < len; i++)
+					Logger.appendHexByte (buf[i]);
+					
+				long interval = Util.get32 (buf,cmdoff + 3);
+				Logger.appendString(csr.s2b(", readInterval = "));
+				Logger.appendLong(interval);
+				
+				if ((short)buf [cmdoff + 1] == 1) { // secondo byte attivazione/disattivazione
+					if ((short)buf [cmdoff + 2] == 1) // terzo byta tipo di lettura
+						cmd [0] = FLAG_TEMP;
+					else
+						cmd [0] = FLAG_LIGHT;
+					cmd [1] = (byte)1;
+				} else
+					cmd [1] = (byte)0;
+				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
+				uint saddr = Util.get16 (buf, cmdoff + 7);
+				mac.send (saddr, Util.rand8 (), cmd);
+				Logger.flush (Mote.INFO);
+			}
+			
+			Util.set32le (header, ROFF_TIME, Time.currentTicks ());
 			Util.copyData (buf, 0, header, 0, headerLength);
-			return (int) headerLength+2;
+			return (int)headerLength + 2;
 		}
 		
 	}
