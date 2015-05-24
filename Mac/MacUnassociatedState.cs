@@ -12,6 +12,10 @@ namespace Mac_Layer
 		public uint panId;
 		public uint mySaddr = 0x0000;
 		
+		internal bool _waitingResponse = false;
+		internal uint _wait = 0;
+		internal uint _max_wait = 2;
+		
 		// Indirect data control
 		public bool dataPending = false;
 	
@@ -53,9 +57,11 @@ namespace Mac_Layer
 						
 						if (Frame.getBeaconInfo (data, len, this) == 1) {
 							this.mac.eventHandler (Mac.MAC_BEACON_RXED, data, len, info, time);
-							if (this.coordinatorSADDR != 0)
+							if (this.coordinatorSADDR != 0 && this._waitingResponse == false)
 								this.txBuf = Frame.getCMDAssReqFrame (this.mac.radio.getPanId (), 
 													this.coordinatorSADDR, this);
+							else if (this._waitingResponse == true)
+								this._wait += 1;
 						}
 						break;
 					case Radio.FCF_CMD:
@@ -114,6 +120,7 @@ namespace Mac_Layer
 					break;
 				case Radio.FCF_CMD:
 					if (data [pos] == ASS_REQ) { // association request - not coordinator
+						this._waitingResponse = true;
 						this.mac.txHandler (Mac.MAC_ASS_REQ, data, len, info, time);
 					} else if (data [pos] == DATA_REQ) { // data request - not coordinator
 
@@ -150,6 +157,11 @@ namespace Mac_Layer
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this._sync = time + this.beaconInterval - (this.nSlot + 1) * this.slotInterval;
 				this.mac.timer1.setAlarmTime (this._sync);
+				if(this._wait >= _max_wait){
+					this.txBuf = null;
+					this._wait = 0;
+					this._waitingResponse = false;
+				}
 				break;
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
@@ -175,7 +187,7 @@ namespace Mac_Layer
 				}
 				
 				if (!this._lock) { // exclusive section - if radio is occupied, ignore the content!
-					if (this.txBuf == null) {
+					if (this.txBuf == null || this._waitingResponse == true) {
 						if (this.mac.radio.getState () != Radio.S_RXEN) // if the radio is not receiving then start to receive
 							this.mac.radio.startRx (Radio.ASAP | Radio.RX4EVER, 0, 0);
 					} else { // there's something to transmit
@@ -184,6 +196,7 @@ namespace Mac_Layer
 							this.mac.radio.stopRx (); // stop receive if receiving
 						this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.txBuf, 0, (uint)this.txBuf.Length, 
 										time + this.slotInterval); // transmit in this slot
+						this._wait = 0;
 					}
 				}
 				break;

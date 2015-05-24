@@ -91,7 +91,6 @@ namespace Mac_Layer
 					state.dataPending = false;
 				}
 			}
-			return 1;
 #if DEBUG || DBG
 			Logger.appendString(csr.s2b("coordinatorSADDR: "));
 			Logger.appendUInt (state.coordinatorSADDR);
@@ -112,6 +111,7 @@ namespace Mac_Layer
 				Logger.appendUInt(0);
 			Logger.flush(Mote.INFO);
 #endif
+			return 1;
 		}
 
 		public static byte[] getCMDAssReqFrame (uint panId, uint saddr, MacState state)
