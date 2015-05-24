@@ -166,8 +166,8 @@ namespace Oscilloscope
 					cmd [1] = (byte)0;
 				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
 				uint saddr = Util.get16 (buf, cmdoff + 7);
-				mac.send (saddr, Util.rand8 (), cmd);
 				Logger.flush (Mote.INFO);
+				mac.send (saddr, Util.rand8 (), cmd);
 			}
 			
 			Util.set32le (header, ROFF_TIME, Time.currentTicks ());

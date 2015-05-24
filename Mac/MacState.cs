@@ -86,10 +86,6 @@ namespace Mac_Layer
 			}
 		}
 		
-		// Indirect data
-		public bool dataPending = false;
-		public uint saddr = 0x0000;
-		
 		// Scan parameters
 		public long aScanInterval;
 		private uint _scanOrder;

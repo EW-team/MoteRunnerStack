@@ -77,7 +77,7 @@ namespace Mac_Layer
 			return beacon;
 		}
 
-		public static void getBeaconInfo (byte[] beacon, uint len, MacUnassociatedState state)
+		public static void getBeaconInfo (byte[] beacon, uint len, MacSimpleState state)
 		{
 			state.coordinatorSADDR = Util.get16 (beacon, 9);
 			state.BO = (uint)(beacon [11] & 0xF0) >> 4;
@@ -85,7 +85,7 @@ namespace Mac_Layer
 			state.panId = Util.get16 (beacon, 7);
 			if (len > 15) {
 				uint pendingAddr = Util.get16 (beacon, 14);
-				if (pendingAddr == state.saddr || pendingAddr == Radio.SADDR_BROADCAST) {
+				if (pendingAddr == state.mySaddr || pendingAddr == Radio.SADDR_BROADCAST) {
 					state.dataPending = true;
 					Logger.appendString (csr.s2b ("DATA PENDING IN FRAME"));
 					Logger.appendUInt (state.coordinatorSADDR);
@@ -163,13 +163,13 @@ namespace Mac_Layer
 			return cmd;
 		}
 
-		public static byte[] getCMDDataFrame (uint panId, uint saddr, MacUnassociatedState state)
+		public static byte[] getCMDDataFrame (uint panId, uint saddr, MacSimpleState state)
 		{
 			byte[] cmd;
-			if (state.saddr != 0) {
+			if (state.mySaddr != 0) {
 				cmd = new byte[12];
 				cmd [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
-				Util.set16 (cmd, 9, state.saddr);
+				Util.set16 (cmd, 9, state.mySaddr);
 				cmd [11] = (byte)MacState.DATA_REQ;
 			} else {
 				cmd = new byte[18];

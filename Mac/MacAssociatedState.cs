@@ -3,7 +3,7 @@ using com.ibm.saguaro.logger;
 
 namespace Mac_Layer
 {
-	internal class MacAssociatedState : MacUnassociatedState
+	internal class MacAssociatedState : MacSimpleState
 	{
 		internal uint _sleepWait = 4;
 		internal uint _activity = 0;

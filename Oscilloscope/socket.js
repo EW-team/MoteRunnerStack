@@ -31,7 +31,7 @@ var osciSocket = {
 		var on = argv[1]; // 1 byte
 		var flag = argv[2]; // 1 byte
 		var time = argv[3]; // 4 byte
-		var saddr = argv[4];
+		var saddr = argv[4]; // 2 byte
 		// var msg = 0101010300;
 		println(parseInt(cmd))
 		var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)(2uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time), parseInt(saddr));
