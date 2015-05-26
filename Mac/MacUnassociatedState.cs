@@ -11,7 +11,6 @@ namespace Mac_Layer
 		public uint coordinatorSADDR = 0;
 		public uint panId;
 		public uint mySaddr = 0x0000;
-		
 		internal bool _waitingResponse = false;
 		internal uint _wait = 0;
 		internal uint _max_wait = 2;
@@ -26,9 +25,9 @@ namespace Mac_Layer
 			this.mac.radio.setPanId (this.panId, false);
 			this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 			this.mac.timer1.setAlarmTime (Time.currentTicks () + this.aScanInterval);
-			LED.setState ((byte)0, (byte)1);
-			LED.setState ((byte)1, (byte)1);
-			LED.setState ((byte)2, (byte)1);
+//			LED.setState ((byte)0, (byte)1);
+//			LED.setState ((byte)1, (byte)1);
+//			LED.setState ((byte)2, (byte)1);
 		}
 		
 		internal uint getSaddr ()
@@ -157,7 +156,7 @@ namespace Mac_Layer
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 				this._sync = time + this.beaconInterval - (this.nSlot + 1) * this.slotInterval;
 				this.mac.timer1.setAlarmTime (this._sync);
-				if(this._wait >= _max_wait){
+				if (this._wait >= _max_wait) {
 					this.txBuf = null;
 					this._wait = 0;
 					this._waitingResponse = false;
@@ -173,10 +172,10 @@ namespace Mac_Layer
 				this.mac.timer1.setAlarmTime (time + this.aScanInterval + this.interSlotInterval);
 				break;
 			case Mac.MAC_SLOT:
-				if (LED.getState ((byte)1) == 1)
-					LED.setState ((byte)1, (byte)0);
-				else
-					LED.setState ((byte)1, (byte)1);
+//				if (LED.getState ((byte)1) == 1)
+//					LED.setState ((byte)1, (byte)0);
+//				else
+//					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;

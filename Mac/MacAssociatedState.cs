@@ -82,6 +82,10 @@ namespace Mac_Layer
 				this.txBuf = null;
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_DATA:
+					if (LED.getState ((byte)1) == 0)
+						LED.setState ((byte)1, (byte)1);
+					else
+						LED.setState ((byte)1, (byte)0);
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:

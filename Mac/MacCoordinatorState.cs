@@ -44,14 +44,17 @@ namespace Mac_Layer
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				if (data != null) {
-					LED.setState ((byte)2, (byte)1);
 					uint pos = Frame.getPayloadPosition (data);
 					switch (data [0] & FRAME_TYPE_MASK) {
 					case Radio.FCF_BEACON: // there's another coordinator in this pan
 						break;
 					case Radio.FCF_CMD:
 						switch ((uint)data [pos]) {
-						case ASS_REQ: // association request handle - coordinator	
+						case ASS_REQ: // association request handle - coordinator
+							if (LED.getState ((byte)2) == 0)
+								LED.setState ((byte)2, (byte)1);
+							else
+								LED.setState ((byte)2, (byte)0);
 							this.mac.eventHandler (Mac.MAC_ASS_REQ, data, len, info, time);
 							this.txBuf = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
 							break;
@@ -81,7 +84,6 @@ namespace Mac_Layer
 				}
 			} else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
 				//TODO
-				LED.setState ((byte)0, (byte)0);
 			} else {
 				//TODO
 			}
@@ -92,7 +94,6 @@ namespace Mac_Layer
 		{
 			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-				LED.setState ((byte)2, (byte)0);
 				this.txBuf = null;
 				uint pos = Frame.getPayloadPosition (data);
 				switch (data [0] & FRAME_TYPE_MASK) {
@@ -107,7 +108,11 @@ namespace Mac_Layer
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:
-					if (data [pos] == ASS_RES) { // association response
+					if ((uint)data [pos] == ASS_RES) { // association response
+						if (LED.getState ((byte)1) == 0)
+							LED.setState ((byte)1, (byte)1);
+						else
+							LED.setState ((byte)1, (byte)0);
 						if (data [pos + 3] == (byte)MacState.ASS_SUCC)
 							this.setNextAddr ();
 						this.mac.txHandler (Mac.MAC_ASS_RESP, data, len, info, time);
@@ -151,10 +156,10 @@ namespace Mac_Layer
 				LED.setState ((byte)0, (byte)1);
 				break;
 			case Mac.MAC_SLOT:
-				if (LED.getState ((byte)1) == 1)
-					LED.setState ((byte)1, (byte)0);
-				else
-					LED.setState ((byte)1, (byte)1);
+//				if (LED.getState ((byte)1) == 1)
+//					LED.setState ((byte)1, (byte)0);
+//				else
+//					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;
