@@ -9,7 +9,6 @@
     \end{itemize}
     \item Flexible -> functionality on demand
   \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -22,9 +21,29 @@
     \centering
     \includegraphics[width=.7\textwidth]{img/MAC_STATES.png}
   \end{figure}
-  \begin{center}
-	\includegraphics{../../../Pictures/Schermata del 2015-05-24 13:20:19.png}
-	% Schermata del 2015-05-24 13:20:19.png: 1366x768 pixel, 72dpi, 48.19x27.09 cm, bb=0 0 1366 768
-\end{center}
-
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mac Coordinator Behaviour}
+  \vspace{-2.7em}
+  \begin{figure}
+    \centering
+    \includegraphics[width=.99\textwidth]{img/MAC_COORDINATOR.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example}
+  \vspace{-2em}
+  The node associates with coordinator, then responds to beacon pending list and gets data.
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/associazione.png}
+  \end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/dataIndirect.png}
+  \end{figure}
+\end{frame}
+
+
