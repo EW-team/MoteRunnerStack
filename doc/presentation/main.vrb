@@ -1,1 +1,5 @@
-\frametitle {TODO}
+\frametitle {Association}
+  \begin{figure}
+    \centering
+    \includegraphics[width=.8\textwidth]{img/Association.png}
+  \end{figure}

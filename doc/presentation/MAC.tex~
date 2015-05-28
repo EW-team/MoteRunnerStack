@@ -9,7 +9,6 @@
     \end{itemize}
     \item Flexible -> functionality on demand
   \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -30,6 +29,5 @@
     \centering
     \includegraphics[width=\textwidth]{img/MAC_COORDINATOR.png}
   \end{figure}
-
 \end{frame}
 
