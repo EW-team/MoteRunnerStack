@@ -16,6 +16,7 @@ namespace Oscilloscope
 	
 	public class MasterOscilloscope
 	{
+		internal static byte[] dummy;
 #if CFG_dust
 		const uint IPADDR_LEN = 16;
 		const byte ALARM_PIN  = 21;
@@ -37,9 +38,9 @@ namespace Oscilloscope
 		const uint UDP_SRV_PORT = 2123;
 		// Payload const positions
 		const uint ROFF_UDP_PORT = IPADDR_LEN;
-		const uint ROFF_MR_PORT = ROFF_UDP_PORT + 1; // was +2 
-		const uint ROFF_MSG_TAG = ROFF_UDP_PORT + 2; // was +3 
-		const uint ROFF_TIME = ROFF_UDP_PORT + 7; // was +4
+		const uint ROFF_MR_PORT = ROFF_UDP_PORT + 2; // was +2 
+		const uint ROFF_MSG_TAG = ROFF_UDP_PORT + 3; // was +3 
+		const uint ROFF_TIME = ROFF_UDP_PORT + 4; // was +4
 		const uint ROFF_SADDR = ROFF_TIME + 4;
 		const uint ROFF_PAYLOAD = ROFF_SADDR + 2;
 		
@@ -47,7 +48,6 @@ namespace Oscilloscope
 		const byte FLAG_NO_DATA = (byte)0x00;
 		const byte FLAG_TEMP = (byte)0x01;	// Flag for temperature data
 		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
-		
 		
 		static byte[] header;
 		const uint headerLength = ROFF_SADDR + 2;
@@ -60,7 +60,7 @@ namespace Oscilloscope
 			// Handle system events
 			Assembly.setSystemInfoCallback (new SystemInfo (onSysInfo));
 			// Open specific fixed LIP port
-			LIP.open (MR_APP_PORT); 
+			LIP.open (MR_APP_PORT);
 	    	
 			header = new byte[headerLength];
 #if CFG_dust
@@ -68,7 +68,7 @@ namespace Oscilloscope
 #else
 			Util.set32le (header, 0, (192 << 24) | (168 << 16) | (0 << 8) | (1 << 0));		
 #endif
-			Util.set16le (header, ROFF_UDP_PORT, UDP_SRV_PORT);
+			Util.set16 (header, ROFF_UDP_PORT, UDP_SRV_PORT);
 			header [ROFF_MR_PORT] = MR_APP_PORT; // was MR_APP_PORT
 			
 			mac = new Mac ();
@@ -78,17 +78,18 @@ namespace Oscilloscope
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
 			mac.createPan (0x0234, 0x0002);
-			
-//			byte[] cmd = new byte[6];
-//			cmd [0] = FLAG_TEMP;
-//			cmd [1] = (byte)1;
-//			Util.set32 (cmd, 2, 500); // dal quarto al settimo byte l'intervallo di lettura
-//			mac.send (0x0100, Util.rand8 (), cmd);
+			dummy = new byte[6];			
+			dummy [0] = FLAG_TEMP;
+			dummy [1] = (byte)1;
+			Util.set32 (dummy, 2, 500);
+			mac.send (0x0101, Util.rand8 (), dummy);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
-			
+			if (flag == Mac.MAC_TX_COMPLETE) {
+				mac.send (0x0101, Util.rand8 (), dummy);
+			}
 			return 0;
 		}
 		
@@ -101,7 +102,7 @@ namespace Oscilloscope
 					header [ROFF_MSG_TAG] = data [0];
 				Util.set32le (header, ROFF_TIME, time);
 
-				Util.set16le (header, ROFF_SADDR, saddr); // 0 if XADDR	
+				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
 
 				LIP.send (header, headerLength, data, 1, (uint)data.Length - 1);
 			}
@@ -114,14 +115,6 @@ namespace Oscilloscope
 		{
 			
 			return 0;
-		}
-		
-		internal static void blink (uint led)
-		{
-			if (LED.getState ((byte)led) == 0)
-				LED.setState ((byte)led, (byte)1);
-			else
-				LED.setState ((byte)led, (byte)0);
 		}
 		
 		static int onSysInfo (int type, int info)
@@ -154,7 +147,7 @@ namespace Oscilloscope
 				} else
 					cmd [1] = (byte)0;
 				Util.copyData (buf, cmdoff + 3, cmd, 2, 4); // dal quarto al settimo byte l'intervallo di lettura
-				uint saddr = Util.get16le (buf, cmdoff + 7); // dall'ottavo al nono l'indirizzo del destinatario
+				uint saddr = Util.get16 (buf, cmdoff + 7); // dall'ottavo al nono l'indirizzo del destinatario
 				mac.send (saddr, Util.rand8 (), cmd);
 			}
 			

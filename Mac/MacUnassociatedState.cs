@@ -25,9 +25,6 @@ namespace Mac_Layer
 			this.mac.radio.setPanId (this.panId, false);
 			this.mac.timer1.setParam (Mac.MAC_WAKEUP);
 			this.mac.timer1.setAlarmTime (Time.currentTicks () + this.aScanInterval);
-//			LED.setState ((byte)0, (byte)1);
-//			LED.setState ((byte)1, (byte)1);
-//			LED.setState ((byte)2, (byte)1);
 		}
 		
 		internal uint getSaddr ()
@@ -50,7 +47,7 @@ namespace Mac_Layer
 					case Radio.FCF_BEACON:
 						this.mac.timer1.cancelAlarm ();
 						this._sync = time;
-						
+						LED.setState ((byte)1, (byte)1);
 						this.mac.timer1.setParam (Mac.MAC_SLOT);
 						this.mac.timer1.setAlarmTime (this._sync + 2 * this.interSlotInterval);
 						
@@ -68,7 +65,6 @@ namespace Mac_Layer
 						case ASS_RES: // association response handle - not coordinator
 							switch ((uint)data [pos + 3]) {
 							case ASS_SUCC: // association successful
-								LED.setState ((byte)1, (byte)0);
 								if (this.mac.radio.getState () == Radio.S_RXEN)
 									this.mac.radio.stopRx ();
 								this.mac.radio.setShortAddr (Util.get16 (data, pos + 1)); // The SAddr have to be setted when radio is not on!
@@ -111,7 +107,6 @@ namespace Mac_Layer
 			uint pos = Frame.getPayloadPosition (data);
 			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
 				this.txBuf = null;
-				this._lock = false;
 				switch (data [0] & FRAME_TYPE_MASK) {
 				default:
 					this.mac.timer1.setParam (Mac.MAC_WAKEUP);
@@ -136,6 +131,7 @@ namespace Mac_Layer
 			} else {
 
 			}
+			this._lock = false;
 			return 0;
 		}
 		
@@ -149,7 +145,6 @@ namespace Mac_Layer
 		{
 			switch (param) {
 			case Mac.MAC_SLEEP:
-				LED.setState ((byte)0, (byte)0);
 				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
 				this.mac.radio.setState (Radio.S_STDBY);
@@ -165,17 +160,9 @@ namespace Mac_Layer
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
 				this.trackBeacon ();
-				if (LED.getState ((byte)0) == 0)
-					LED.setState ((byte)0, (byte)1);
-				else
-					LED.setState ((byte)0, (byte)0);
 				this.mac.timer1.setAlarmTime (time + this.aScanInterval + this.interSlotInterval);
 				break;
 			case Mac.MAC_SLOT:
-//				if (LED.getState ((byte)1) == 1)
-//					LED.setState ((byte)1, (byte)0);
-//				else
-//					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;

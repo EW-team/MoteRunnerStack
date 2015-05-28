@@ -1,0 +1,2 @@
+mote-create -p /dev/ttyUSB1
+msetup-setup -f oscilloscope

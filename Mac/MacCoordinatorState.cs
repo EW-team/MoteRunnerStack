@@ -10,7 +10,7 @@ namespace Mac_Layer
 
 		// Pan parameters
 		public bool associationPermitted = true;
-		public uint lastAssigned = 0x0100;
+		public uint lastAssigned = 0x0101;
 		
 		// Max number of associations and currently associated
 		public uint maxAssociated = 5;
@@ -51,18 +51,18 @@ namespace Mac_Layer
 					case Radio.FCF_CMD:
 						switch ((uint)data [pos]) {
 						case ASS_REQ: // association request handle - coordinator
-							if (LED.getState ((byte)2) == 0)
-								LED.setState ((byte)2, (byte)1);
-							else
-								LED.setState ((byte)2, (byte)0);
 							this.mac.eventHandler (Mac.MAC_ASS_REQ, data, len, info, time);
 							this.txBuf = Frame.getCMDAssRespFrame (data, this.mac.radio.getPanId (), this);
 							break;
 						case DATA_REQ: // data request handle - coordinator
+							if (LED.getState ((byte)2) == 0)
+								LED.setState ((byte)2, (byte)1);
+							else
+								LED.setState ((byte)2, (byte)0);
 							if (this.mac.pdu != null) {
 								uint saddr = Frame.getDestSAddr (this.mac.pdu);
 								uint rSaddr = Frame.getSrcSADDR (data);
-								if (saddr == rSaddr) {
+								if (saddr == rSaddr || saddr == Radio.SADDR_BROADCAST) {
 									this.txBuf = this.mac.pdu;
 								}
 							}
@@ -70,6 +70,7 @@ namespace Mac_Layer
 						}
 						break;
 					case Radio.FCF_DATA:
+						LED.setState ((byte)0, (byte)0);
 						if ((len - pos) > 0) {
 							byte[] pdu = new byte[len - pos];
 							Util.copyData (data, pos, pdu, 0, len - pos);
@@ -98,21 +99,22 @@ namespace Mac_Layer
 				uint pos = Frame.getPayloadPosition (data);
 				switch (data [0] & FRAME_TYPE_MASK) {
 				case Radio.FCF_BEACON:
+					LED.setState ((byte)0, (byte)1);
 					this.mac.timer1.setParam (Mac.MAC_SLOT);
 					this._sync = time;
 					this.mac.timer1.setAlarmTime (this._sync + 2 * this.interSlotInterval);
 					this.mac.eventHandler (Mac.MAC_BEACON_SENT, data, len, info, time);
 					break;
 				case Radio.FCF_DATA:
+					if (LED.getState ((byte)1) == 0)
+						LED.setState ((byte)1, (byte)1);
+					else
+						LED.setState ((byte)1, (byte)0);
 					this.mac.pdu = null;
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:
 					if ((uint)data [pos] == ASS_RES) { // association response
-						if (LED.getState ((byte)1) == 0)
-							LED.setState ((byte)1, (byte)1);
-						else
-							LED.setState ((byte)1, (byte)0);
 						if (data [pos + 3] == (byte)MacState.ASS_SUCC)
 							this.setNextAddr ();
 						this.mac.txHandler (Mac.MAC_ASS_RESP, data, len, info, time);
@@ -140,9 +142,7 @@ namespace Mac_Layer
 		{
 			switch (param) {
 			case Mac.MAC_SLEEP:
-				LED.setState ((byte)0, (byte)0);
-				int state = this.mac.radio.getState ();
-				if (state == Radio.S_RXEN)
+				if (this.mac.radio.getState () == Radio.S_RXEN)
 					this.mac.radio.stopRx ();
 				this.mac.radio.setState (Radio.S_STDBY);
 				this.mac.timer1.setParam (Mac.MAC_WAKEUP);
@@ -153,13 +153,8 @@ namespace Mac_Layer
 			case Mac.MAC_WAKEUP:
 				this.slotCount = 0;
 				this.sendBeacon ();
-				LED.setState ((byte)0, (byte)1);
 				break;
 			case Mac.MAC_SLOT:
-//				if (LED.getState ((byte)1) == 1)
-//					LED.setState ((byte)1, (byte)0);
-//				else
-//					LED.setState ((byte)1, (byte)1);
 				this.slotCount += 1;
 				if (this.slotCount > this.nSlot) {
 					goto case Mac.MAC_SLEEP;
@@ -180,7 +175,7 @@ namespace Mac_Layer
 							this.txBuf = null;
 						} else {
 							this._retry += 1;
-							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, this.txBuf, 0, (uint)this.txBuf.Length, 
+							this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_CCA, this.txBuf, 0, (uint)this.txBuf.Length, 
 										time + this.slotInterval); // transmit in this slot
 										
 						}
@@ -201,7 +196,7 @@ namespace Mac_Layer
 			} else {
 				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
 			}
-			this.mac.radio.transmit (Radio.TIMED | Radio.TXMODE_POWER_MAX, beacon, 0, (uint)beacon.Length, Time.currentTicks () + this.slotInterval);
+			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, beacon, 0, (uint)beacon.Length, Time.currentTicks () + this.slotInterval);
 		}
 	}
 }

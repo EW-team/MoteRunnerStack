@@ -62,8 +62,17 @@
 \headcommand {\beamer@framepages {26}{26}}
 \headcommand {\slideentry {3}{0}{27}{27/27}{}{0}}
 \headcommand {\beamer@framepages {27}{27}}
-\headcommand {\beamer@partpages {1}{27}}
-\headcommand {\beamer@subsectionpages {25}{27}}
-\headcommand {\beamer@sectionpages {25}{27}}
-\headcommand {\beamer@documentpages {27}}
-\headcommand {\def \inserttotalframenumber {26}}
+\headcommand {\slideentry {3}{0}{28}{28/28}{}{0}}
+\headcommand {\beamer@framepages {28}{28}}
+\headcommand {\sectionentry {4}{Conclusions & Future }{29}{Conclusions & Future }{0}}
+\headcommand {\beamer@sectionpages {25}{28}}
+\headcommand {\beamer@subsectionpages {25}{28}}
+\headcommand {\slideentry {4}{0}{29}{29/29}{}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {4}{0}{30}{30/30}{}{0}}
+\headcommand {\beamer@framepages {30}{30}}
+\headcommand {\beamer@partpages {1}{30}}
+\headcommand {\beamer@subsectionpages {29}{30}}
+\headcommand {\beamer@sectionpages {29}{30}}
+\headcommand {\beamer@documentpages {30}}
+\headcommand {\def \inserttotalframenumber {29}}

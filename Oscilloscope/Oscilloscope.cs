@@ -82,13 +82,13 @@ namespace Oscilloscope
 #else
 		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time)
 		{
-			if (len != 2 || ((flags & Device.FLAG_FAILED) != 0)) {
-				// Can't read sensors
-				LED.setState (IRIS.LED_RED, (byte)1);
-				return 0;
-			} else {
-				LED.setState (IRIS.LED_RED, (byte)0);
-			}
+//			if (len != 2 || ((flags & Device.FLAG_FAILED) != 0)) {
+//				// Can't read sensors
+//				LED.setState (IRIS.LED_RED, (byte)1);
+//				return 0;
+//			} else {
+//				LED.setState (IRIS.LED_RED, (byte)0);
+//			}
 
 			Util.copyData (data, 0, rpdu, 1, 2);	// Payload data bytes
 			//Transmission  
@@ -103,14 +103,13 @@ namespace Oscilloscope
 		//On transmission blink green led
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
-			LED.setState ((byte)2, (byte)0);
 			return 0;
 		}
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED) {
-				long interval = Util.get32 (data, 2);
+				long interval = Util.get16 (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 
 				if (data [0] == FLAG_TEMP) {
@@ -165,7 +164,7 @@ namespace Oscilloscope
 		{
 			switch (flag) {
 			case Mac.MAC_ASSOCIATED:
-//					adc.read(Device.TIMED, 1, Time.currentTicks() + readInterval);
+//					adc.read(Device.TIMED, 1, 	Time.currentTicks() + readInterval);
 				break;
 			case Mac.MAC_BEACON_RXED:
 				

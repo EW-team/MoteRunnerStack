@@ -74,6 +74,7 @@ namespace Mac_Layer
 				beacon [13] = (byte)(state.gtsSlots << 5 | 1);
 			else
 				beacon [13] = (byte)(state.gtsSlots << 5 | 0);
+			
 			return beacon;
 		}
 
@@ -90,7 +91,10 @@ namespace Mac_Layer
 				} else {
 					state.dataPending = false;
 				}
+			} else {
+				state.dataPending = false;
 			}
+			
 #if DEBUG || DBG
 			Logger.appendString(csr.s2b("coordinatorSADDR: "));
 			Logger.appendUInt (state.coordinatorSADDR);
@@ -150,7 +154,7 @@ namespace Mac_Layer
 			cmd [1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_XADDR;
 			cmd [2] = Util.rand8 ();
 			Util.set16 (cmd, 3, panId);
-			Util.copyData ((object)req, 9, (object)cmd, 5, 8);
+			Util.copyData (req, 9, cmd, 5, 8);
 			Util.set16 (cmd, 13, panId);
 			Mote.getParam (Mote.EUI64, cmd, 15);
 			cmd [23] = (byte)MacState.ASS_RES;
@@ -227,10 +231,11 @@ namespace Mac_Layer
 #endif
 			byte[] header = new byte[11];
 			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
-			header [1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			header [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
 			header [2] = (byte)seq;
 			Util.set16 (header, 3, panId);
 			Util.set16 (header, 5, dsaddr);
+//			Util.set16 (header, 5, Radio.SADDR_BROADCAST);
 			Util.set16 (header, 7, panId);
 			Util.set16 (header, 9, saddr);
 			return header;
@@ -254,8 +259,8 @@ namespace Mac_Layer
 			header [2] = (byte)seq;
 			Util.set16 (header, 3, panId);
 			Util.copyData (dsaddr, 0, header, 5, dlen);
-			Util.set16 (header, 5 + dlen, panId);
-			Util.copyData (saddr, 0, header, 7 + dlen, slen);
+			Util.set16 (header, 5 + dlen - 1, panId);
+			Util.copyData (saddr, 0, header, 7 + dlen - 1, slen);
 			return header;
 		}
 
@@ -317,7 +322,7 @@ namespace Mac_Layer
 		{
 			uint srcSaddr = (uint)(data [1] & Radio.FCA_SRC_MASK);
 			uint dstSaddr = (uint)(data [1] & Radio.FCA_DST_MASK);
-			if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR || dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+			if ((dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_SADDR) || (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR))
 				return Util.get16 (data, 5);
 			else 
 				ArgumentException.throwIt (ArgumentException.TOO_BIG);

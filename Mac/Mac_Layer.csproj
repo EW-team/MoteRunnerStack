@@ -21,7 +21,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc  -DIRIS --assembly=mac-11.0 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacUnassociatedState.cs MacAssociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc  -DIRIS -DDBG --assembly=mac-11.0 Mac.cs Frame.cs MacState.cs MacCoordinatorState.cs MacUnassociatedState.cs MacAssociatedState.cs -r:logger-11.0  -r:iris-system-11.1" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrgac --add mac-11.0.sba mac-11.0.sdx mac-11.0.sxp" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="../../moterunner/linux64/bin/mrgac --del mac" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="find . -type f -name mac-\* -exec rm {} \;" workingdir="${ProjectDir}" />

@@ -74,5 +74,7 @@
     <None Include="js_server\test.js" />
     <None Include="prun.mrsh" />
     <None Include="socket.js" />
+    <None Include="coord.mrsh" />
+    <None Include="simple.mrsh" />
   </ItemGroup>
 </Project>
