@@ -74,17 +74,19 @@
 \headcommand {\beamer@framepages {32}{32}}
 \headcommand {\slideentry {3}{0}{33}{33/33}{}{0}}
 \headcommand {\beamer@framepages {33}{33}}
-\headcommand {\sectionentry {4}{Conclusion}{34}{Conclusion}{0}}
-\headcommand {\beamer@sectionpages {25}{33}}
-\headcommand {\beamer@subsectionpages {25}{33}}
-\headcommand {\slideentry {4}{0}{34}{34/34}{}{0}}
+\headcommand {\slideentry {3}{0}{34}{34/34}{}{0}}
 \headcommand {\beamer@framepages {34}{34}}
+\headcommand {\sectionentry {4}{Conclusion}{35}{Conclusion}{0}}
+\headcommand {\beamer@sectionpages {25}{34}}
+\headcommand {\beamer@subsectionpages {25}{34}}
 \headcommand {\slideentry {4}{0}{35}{35/35}{}{0}}
 \headcommand {\beamer@framepages {35}{35}}
 \headcommand {\slideentry {4}{0}{36}{36/36}{}{0}}
 \headcommand {\beamer@framepages {36}{36}}
-\headcommand {\beamer@partpages {1}{36}}
-\headcommand {\beamer@subsectionpages {34}{36}}
-\headcommand {\beamer@sectionpages {34}{36}}
-\headcommand {\beamer@documentpages {36}}
-\headcommand {\def \inserttotalframenumber {35}}
+\headcommand {\slideentry {4}{0}{37}{37/37}{}{0}}
+\headcommand {\beamer@framepages {37}{37}}
+\headcommand {\beamer@partpages {1}{37}}
+\headcommand {\beamer@subsectionpages {35}{37}}
+\headcommand {\beamer@sectionpages {35}{37}}
+\headcommand {\beamer@documentpages {37}}
+\headcommand {\def \inserttotalframenumber {36}}

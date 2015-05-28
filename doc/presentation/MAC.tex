@@ -15,7 +15,6 @@
     	\begin{itemize}
 	  \item e.g.: Coordinator - Associated
     	\end{itemize}
-
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -47,18 +46,6 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Timing with beacon}
-  \begin{itemize}
-    \item It grants synchronization between mote and coordinator
-    \item Realized with a timer and scheduled events
-  \end{itemize}
-  \begin{figure}
-    \centering
-    \includegraphics[width=.7\textwidth]{img/MAC_STATES.png}
-  \end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
   \frametitle{Association}
   \begin{figure}
     \centering
@@ -74,6 +61,41 @@
     \includegraphics[width=.7\textwidth]{img/DataRequest.png}
   \end{figure}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Timing with beacon}
+  \begin{itemize}
+    \item It grants synchronization between mote and coordinator
+    \item Realized with a timer and scheduled events
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=.7\textwidth]{img/MAC_STATES.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Beacon}
+  \begin{columns}
+    \begin{column}{.58\linewidth}
+      \begin{itemize}
+      	\item Superframe Parameters:
+      	\begin{itemize}
+	  \item Beacon Order -> BO
+	  \item Superframe Order -> SO
+	  \item Association permitted
+      	\end{itemize}
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{.4\linewidth}
+      \begin{figure}
+	\includegraphics[width=\textwidth]{img/beacon.png}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Mac Coordinator Behaviour}
