@@ -42,6 +42,18 @@ namespace Oscilloscope
 
 		static Oscilloscope ()
 		{	
+
+			mac = new Mac ();
+			mac.enable (true);
+			mac.setChannel (1);
+			mac.setRxHandler (new DevCallback (onRxEvent));
+			mac.setTxHandler (new DevCallback (onTxEvent));
+			mac.setEventHandler (new DevCallback (onEvent));
+			mac.associate (0x0234);
+
+			// convert 2 seconds to the platform ticks
+			readInterval = Time.toTickSpan (Time.MILLISECS, 500);
+			
 #if SIM
 			fake = new Timer();
 			fake.setCallback (new TimerEvent(onFakeTimerEvent));
@@ -57,17 +69,11 @@ namespace Oscilloscope
 			pwrPins.open (); 
 			pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
 			
+			rpdu [0] = FLAG_TEMP;
+			
+			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
+			
 #endif
-			mac = new Mac ();
-			mac.enable (true);
-			mac.setChannel (1);
-			mac.setRxHandler (new DevCallback (onRxEvent));
-			mac.setTxHandler (new DevCallback (onTxEvent));
-			mac.setEventHandler (new DevCallback (onEvent));
-			mac.associate (0x0234);
-
-			// convert 2 seconds to the platform ticks
-			readInterval = Time.toTickSpan (Time.SECONDS, 2);
 		}
 		
 #if SIM

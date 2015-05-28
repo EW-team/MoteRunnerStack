@@ -78,17 +78,12 @@ namespace Oscilloscope
 			mac.setEventHandler (new DevCallback (onEvent));
 			mac.setChannel (1);
 			mac.createPan (0x0234, 0x0002);
-			dummy = new byte[6];			
-			dummy [0] = FLAG_TEMP;
-			dummy [1] = (byte)1;
-			Util.set32 (dummy, 2, 500);
-			mac.send (0x0101, Util.rand8 (), dummy);
 		}
 		
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
 			if (flag == Mac.MAC_TX_COMPLETE) {
-				mac.send (0x0101, Util.rand8 (), dummy);
+//				mac.send (0x0101, Util.rand8 (), dummy);
 			}
 			return 0;
 		}
@@ -98,8 +93,10 @@ namespace Oscilloscope
 			if (flag == Mac.MAC_DATA_RXED) {
 				if (data == null)
 					header [ROFF_MSG_TAG] = (byte)FLAG_NO_DATA;
-				else
+				else 
 					header [ROFF_MSG_TAG] = data [0];
+					
+				
 				Util.set32le (header, ROFF_TIME, time);
 
 				Util.set16 (header, ROFF_SADDR, saddr); // 0 if XADDR	
@@ -154,6 +151,7 @@ namespace Oscilloscope
 			Util.set32le (header, ROFF_TIME, Time.currentTicks ());
 			Util.copyData (buf, 0, header, 0, headerLength);
 			return (int)headerLength + 2;
+
 		}
 		
 	}

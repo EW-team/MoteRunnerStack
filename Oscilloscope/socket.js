@@ -27,18 +27,23 @@ var osciSocket = {
 	send: function(dstport, dstmote, argv) {
 		println("socket-send: called..");
 		// argv format: cmd:on/off:flag:
-		var cmd = argv[0]; // 1 byte
-		var on = argv[1]; // 1 byte
-		var flag = argv[2]; // 1 byte
-		var time = argv[3]; // 4 byte
-		var saddr = argv[4]; // 2 byte
-		// var msg = 0101010300;
-		println (saddr);
-		println(parseInt(cmd))
-		var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)(2uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time), parseInt(saddr));
-		println('...');
-		println(msg);
-		return msg;
+		if ( argv.length > 3) {
+			var cmd = argv[0]; // 1 byte
+			var on = argv[1]; // 1 byte
+			var flag = argv[2]; // 1 byte
+			var time = argv[3]; // 4 byte
+			var saddr = argv[4]; // 2 byte
+			// var msg = 0101010300;
+			println (saddr);
+			println(parseInt(cmd))
+			var msg = Util.Formatter.transcode('(1uL)(1uL)(1uL)(4uL)(2uL)', parseInt(cmd), parseInt(on),parseInt(flag), parseInt(time), parseInt(saddr));
+			println('...');
+			println(msg);
+			return msg;
+		} else {
+			return argv;
+		}
+			
 	},
 
 	/**                                                   
@@ -85,8 +90,9 @@ var osciSocket = {
 			//println(sensorValue);
 			var logRThr = Math.log(rThr);
 			sensorValue = 1/(0.001010024 + 0.000242127*logRThr + 0.000000146*(logRThr^3));
+			sensorValue -= 273.13;
 			var t = osciSocket.convert_millis_2_str(time)
-			return sprintf("%s - temp data: %d from %s\n", t, sensorValue, srcAddr);
+			return sprintf("%s - temp data(C): %d from %s\n", t, sensorValue, srcAddr);
 		}
 		else if (flagData == FLAG_LIGHT){
 			return sprintf("%d - light data: %d from %s\n", time, sensorValue, srcAddr);

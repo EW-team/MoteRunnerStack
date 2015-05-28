@@ -17,12 +17,12 @@ namespace Mac_Layer
 		public static byte[] getBeaconFrame (uint panId, uint saddr, MacCoordinatorState state)
 		{
 #if DEBUG
-//			Logger.appendString(csr.s2b("getBeaconFrame("));
-//			Logger.appendUInt (panId);
-//			Logger.appendString(csr.s2b(", "));
-//			Logger.appendUInt (saddr);
-//			Logger.appendString(csr.s2b(");"));
-//			Logger.flush(Mote.INFO);
+			Logger.appendString(csr.s2b("getBeaconFrame("));
+			Logger.appendUInt (panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt (saddr);
+			Logger.appendString(csr.s2b(");"));
+			Logger.flush(Mote.INFO);
 #endif
 			byte[] beacon = new byte[14];
 			beacon [0] = beaconFCF;
@@ -48,12 +48,12 @@ namespace Mac_Layer
 		public static byte[] getBeaconFrame (uint panId, uint saddr, uint dstSaddr, MacCoordinatorState state)
 		{
 #if DEBUG
-//			Logger.appendString(csr.s2b("getBeaconFrame("));
-//			Logger.appendUInt (panId);
-//			Logger.appendString(csr.s2b(", "));
-//			Logger.appendUInt (saddr);
-//			Logger.appendString(csr.s2b(");"));
-//			Logger.flush(Mote.INFO);
+			Logger.appendString(csr.s2b("getBeaconFrame("));
+			Logger.appendUInt (panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt (saddr);
+			Logger.appendString(csr.s2b(");"));
+			Logger.flush(Mote.INFO);
 #endif
 			byte[] beacon = new byte[16];
 			beacon [0] = beaconFCF;
