@@ -4,8 +4,6 @@
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
 
-\usepackage[english]{babel}
-
 \usepgfplotslibrary{dateplot}
 
 \title{Realization of a network stack that supports TAKS+WIDS on WSN with Mote Runner}
@@ -41,6 +39,7 @@
 \input{moterunner}
 \input{moterunner-test}
 \input{MAC}
+\input{Oscilloscope}
 \input{Conclusioni}
 
 \end{document}

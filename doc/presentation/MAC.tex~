@@ -79,7 +79,7 @@
   \begin{columns}
     \begin{column}{.58\linewidth}
       \begin{itemize}
-      	\item Superframe Parameters:
+      	\item Superframe Specification:
       	\begin{itemize}
 	  \item Beacon Order -> BO
 	  \item Superframe Order -> SO
@@ -87,12 +87,15 @@
       	\end{itemize}
       \end{itemize}
     \end{column}
+    \hfill
     \begin{column}{.4\linewidth}
       \begin{figure}
 	\includegraphics[width=\textwidth]{img/beacon.png}
       \end{figure}
     \end{column}
   \end{columns}
+  \vfill
+  $$\text{Beacon Interval} = \frac{60sym \cdot n.Slot \cdot 2^{BO}}{20\text{kbps}}$$
 \end{frame}
 
 

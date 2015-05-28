@@ -76,7 +76,27 @@
 
 \begin{frame}[fragile]
   \frametitle{Beacon}
-  
+  \begin{columns}
+    \begin{column}{.58\linewidth}
+      \begin{itemize}
+      	\item Superframe Specification:
+      	\begin{itemize}
+	  \item Beacon Order -> BO
+	  \item Superframe Order -> SO
+	  \item Association permitted
+      	\end{itemize}
+      \end{itemize}
+      \begin{equation}
+      	
+      \end{equation}
+    \end{column}
+    \hfill
+    \begin{column}{.4\linewidth}
+      \begin{figure}
+	\includegraphics[width=\textwidth]{img/beacon.png}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 
