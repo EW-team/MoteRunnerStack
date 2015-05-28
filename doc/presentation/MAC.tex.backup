@@ -2,17 +2,34 @@
 \begin{frame}[fragile]
   \frametitle{Design strategy}
   \begin{itemize}
-    \item Mac class:
+    \item Mac class behaviours:
     \begin{itemize}
-      \item Coordinator behaviour
-      \item Associated node behaviour
+      \item Coordinator -> Beacon enabled, Slotted CSMA/CA
+      \item Unassociated -> Handles association with a Coordinator
+      \item Associated -> Sends data from upper layer and receives data from Coordinator
     \end{itemize}
-    \item Flexible -> functionality on demand
+    \item Flexibility:
+    \begin{itemize}
+    	\item State changes are ruled by Mac class through events
+    	\item Mac can handle more than one state -> Mac - entities
+    	\begin{itemize}
+	  \item e.g.: Coordinator - Associated
+    	\end{itemize}
+
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Timing}
+  \frametitle{The concept}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/MAClan.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Timing with beacon}
   \begin{itemize}
     \item It grants synchronization between mote and coordinator
     \item Realized with a timer and scheduled events
