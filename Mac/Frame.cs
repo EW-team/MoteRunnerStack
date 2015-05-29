@@ -179,8 +179,6 @@ namespace Mac_Layer
 				Util.set16 (cmd, 9, state.mySaddr);
 				cmd [11] = (byte)MacState.DATA_REQ;
 				Mote.getParam ((uint)Mote.EUI64, cmd, 12);
-				Logger.appendString (csr.s2b ("EUI64 setted in DATA req."));
-				Logger.flush (Mote.INFO);
 			} else {
 				cmd = new byte[18];
 				cmd [1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_SADDR;

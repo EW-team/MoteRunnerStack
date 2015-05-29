@@ -111,8 +111,6 @@ namespace Mac_Layer
 			this.timer1 = new Timer ();
 			this.radio = new Radio ();
 			this.pdu = null;
-//			buffer = (object[])Util.alloca (8, Util.OBJECT_ARRAY);
-//			this.buffer = new object[8];
 		}
 
 		internal uint onStateEvent (uint flag, uint param)
