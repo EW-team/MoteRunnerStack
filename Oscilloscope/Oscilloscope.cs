@@ -115,12 +115,15 @@ namespace Oscilloscope
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED && data != null) {
+				Logger.appendString (csr.s2b ("Handler"));
+				Logger.flush (Mote.INFO);
 				uint interval = Util.get16 (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 				
 				Logger.appendString (csr.s2b ("Oscilloscope RX Event - "));
 				Logger.appendString (csr.s2b ("Interval: "));
 				Logger.appendLong (interval);
+				Logger.flush (Mote.INFO);
 				
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
@@ -166,8 +169,8 @@ namespace Oscilloscope
 //					adc.setState (CDev.S_OFF);
 #endif				
 				}
-				
 				Logger.flush (Mote.INFO);
+				
 				
 			} else {
 				Logger.appendString (csr.s2b ("DATA NULL"));
