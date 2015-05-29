@@ -32,11 +32,11 @@
   \begin{itemize}
     \item Motes have to be subdivided into PANs
     \begin{itemize}
-    	\item Every PAN as a PAN Id
+    	\item Every PAN has a PAN Id
     	\item Every mote has a unique short address (SADDR) inside the PAN
     \end{itemize}
-    \item To obtain the SADDR the mote has to require association with the PAN coordinator
-    \item To grant communication between motes it's needed synchronization
+    \item To obtain the SADDR the mote must associate with the PAN coordinator
+    \item To grant communication between motes synchronization is crucial
     \begin{itemize}
       \item Beacon + Superframe
     \end{itemize}
@@ -65,7 +65,7 @@
 \begin{frame}[fragile]
   \frametitle{Timing with beacon}
   \begin{itemize}
-    \item It grants synchronization between mote and coordinator
+    \item Grants synchronization between mote and coordinator
     \item Realized with a timer and scheduled events
   \end{itemize}
   \begin{figure}
@@ -80,12 +80,12 @@
   \begin{columns}
     \begin{column}{.58\linewidth}
       \begin{itemize}
-      	\item Superframe Specification:
-      	\begin{itemize}
+	\item Superframe Specification:
+	\begin{itemize}
 	  \item Beacon Order -> BO
 	  \item Superframe Order -> SO
 	  \item Association permitted
-      	\end{itemize}
+	\end{itemize}
       \end{itemize}
     \end{column}
     \hfill
@@ -96,9 +96,12 @@
     \end{column}
   \end{columns}
   \vspace{1em}
-  $$\text{Beacon Interval} = \frac{60sym \cdot n.Slot \cdot 2^{BO}}{20\text{kbps}}$$
-  $$\text{Superframe Duration} = \frac{60sym \cdot n.Slot \cdot 2^{SO}}{20\text{kbps}}$$
+  $$\text{Beacon Interval} = \frac{60sym \cdot n.Slot \cdot
+2^{BO}}{20\text{kbps}}$$
+  $$\text{Superframe Duration} = \frac{60sym \cdot n.Slot \cdot
+2^{SO}}{20\text{kbps}}$$
 \end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Mac Coordinator Behaviour}
@@ -123,4 +126,42 @@
   \end{figure}
 \end{frame}
 
+\begin{frame}[fragile]
+ \frametitle{Oscilloscope}
+ \begin{columns}
+    \begin{column}{.58\linewidth}
+      \begin{itemize}
+      	\item Periodically reads values of TEMPERATURE and LIGHT
+      	\item Read interval and type can be setted by master
+      	\item Readings are sent through MAC once associated to master
+      	\item Readings done by MDA100 board
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{.4\linewidth}
+      \begin{figure}
+	\includegraphics[width=\textwidth]{img/mda100.jpg}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
 
+\begin{frame}[fragile]
+ \frametitle{Master Oscilloscope}
+ \begin{columns}
+    \begin{column}{.58\linewidth}
+      \begin{itemize}
+	\item It creates a PAN with the MAC layer
+	\item It listens LIP for commands that sends to associated motes
+	\item MAC layer sends readings to Master Oscilloscope that are redirected through LIP 
+	\item A JavaScript Socket running on Sonoran process displays the readings
+      \end{itemize}
+  \end{column}
+  \hfill
+    \begin{column}{.4\linewidth}
+      %\begin{figure}
+	%\includegraphics[width=\textwidth]{}
+      %\end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
