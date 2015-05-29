@@ -143,6 +143,7 @@ namespace Oscilloscope
 				} else
 					cmd [1] = (byte)0;
 				uint t = Util.get16 (buf, cmdoff + 3); // dal quarto al settimo byte l'intervallo di lettura
+				Util.set16 (cmd, 2, t);
 				uint saddr = Util.get16 (buf, cmdoff + 5); // dall'ottavo al nono l'indirizzo del destinatario
 				Logger.appendString (csr.s2b ("t: "));
 				Logger.appendUInt (t);

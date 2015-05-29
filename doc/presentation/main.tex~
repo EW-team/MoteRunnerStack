@@ -6,7 +6,7 @@
 
 \usepgfplotslibrary{dateplot}
 
-\title{Realization of a network stack that supports TAKS+WIDS on WSN with Mote Runner}
+\title{Realization of an 802.15.4-like MAC layer with Mote Runner}
 \subtitle{}
 \date{\today}
 \author{Andrea Salini - 231413\\Lorenzo Di Giuseppe - 227515\\Matteo Gentile - 230997}
@@ -37,6 +37,7 @@
 \end{frame}
 
 \input{moterunner}
+% \input{lora}
 \input{moterunner-test}
 \input{MAC}
 \input{Conclusioni}

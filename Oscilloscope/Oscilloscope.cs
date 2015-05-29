@@ -64,10 +64,10 @@ namespace Oscilloscope
 			//ADC
 			adc = new ADC ();
 			adc.setReadHandler (new DevCallback (adcReadCallback));
-//			adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+			adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
 			
-//			pwrPins.open (); 
-//			pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
+			pwrPins.open (); 
+			pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);  // power on the sensor
 			
 			rpdu [0] = FLAG_TEMP;
 			
@@ -115,9 +115,7 @@ namespace Oscilloscope
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED && data != null) {
-				Logger.appendString (csr.s2b ("Handler"));
-				Logger.flush (Mote.INFO);
-				uint interval = Util.get16 (data, 2);
+				uint interval = Util.get16le (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
 				
 				Logger.appendString (csr.s2b ("Oscilloscope RX Event - "));
@@ -130,11 +128,12 @@ namespace Oscilloscope
 #if SIM
 					
 #else
+					Logger.appendString (csr.s2b (", FLAG_TEMP "));
 					// Powers ON temperature and ON light sensor
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
 #endif
-					Logger.appendString (csr.s2b (", FLAG_TEMP "));
+					
 				} else {
 					rpdu [0] = FLAG_LIGHT;
 #if SIM
