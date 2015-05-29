@@ -9,7 +9,10 @@ namespace Mac_Layer
 		const byte beaconFCF = Radio.FCF_BEACON;  // FCF header: data-frame & no-SRCPAN
 		const byte beaconFCA = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR; // FCA header to use short-addresses
 		const byte cmdFCF = Radio.FCF_CMD | Radio.FCF_ACKRQ; // FCF header: CMD + Acq request
-
+		
+		internal const byte DST_ADDR = (byte)1;
+		internal const byte SRC_ADDR = (byte)2;
+		
 		static Frame ()
 		{
 		}
@@ -171,10 +174,13 @@ namespace Mac_Layer
 		{
 			byte[] cmd;
 			if (state.mySaddr != 0) {
-				cmd = new byte[12];
+				cmd = new byte[20];
 				cmd [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
 				Util.set16 (cmd, 9, state.mySaddr);
 				cmd [11] = (byte)MacState.DATA_REQ;
+				Mote.getParam ((uint)Mote.EUI64, cmd, 12);
+				Logger.appendString (csr.s2b ("EUI64 setted in DATA req."));
+				Logger.flush (Mote.INFO);
 			} else {
 				cmd = new byte[18];
 				cmd [1] = Radio.FCA_SRC_XADDR | Radio.FCA_DST_SADDR;
@@ -217,18 +223,6 @@ namespace Mac_Layer
 		
 		public static byte[] getDataHeader (uint panId, uint saddr, uint dsaddr, short seq)
 		{
-#if DEBUG
-			Logger.appendString(csr.s2b("getDataHaeder("));
-			Logger.appendUInt (panId);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendUInt (saddr);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendUInt (dsaddr);
-			Logger.appendString(csr.s2b(", "));
-			Logger.appendInt (seq);
-			Logger.appendString(csr.s2b(");"));
-			Logger.flush(Mote.INFO);
-#endif
 			byte[] header = new byte[11];
 			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
 			header [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_SADDR;
@@ -241,27 +235,81 @@ namespace Mac_Layer
 			return header;
 		}
 		
-		public static byte[] getDataHeader (uint panId, byte[] saddr, byte[] dsaddr, short seq)
-		{ // settare correttamente FCA in base alla dimensione degli indirizzi
+		public static byte[] getDataHeader (uint panId, uint saddr, byte[] dsaddr, short seq)
+		{
 #if DEBUG
 			Logger.appendString(csr.s2b("getDataHaeder("));
 			Logger.appendUInt (panId);
+			Logger.appendString(csr.s2b(", "));
+			Logger.appendUInt (saddr);
+			Logger.appendString(csr.s2b(", "));
 			Logger.appendString(csr.s2b(", "));
 			Logger.appendInt (seq);
 			Logger.appendString(csr.s2b(");"));
 			Logger.flush(Mote.INFO);
 #endif
-			uint dlen = (uint)dsaddr.Length;
-			uint slen = (uint)saddr.Length;
-			byte[] header = new byte[7 + slen + dlen];
+
+			Logger.appendString (csr.s2b ("M "));
+			Logger.appendUInt (panId);
+			Logger.flush (Mote.INFO);
+			byte[] header = new byte[17];
 			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
-			header [1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+			header [1] = Radio.FCA_SRC_SADDR | Radio.FCA_DST_XADDR;
 			header [2] = (byte)seq;
 			Util.set16 (header, 3, panId);
-			Util.copyData (dsaddr, 0, header, 5, dlen);
-			Util.set16 (header, 5 + dlen - 1, panId);
-			Util.copyData (saddr, 0, header, 7 + dlen - 1, slen);
+			if (dsaddr != null && dsaddr.Length == 8) {
+				Util.copyData (dsaddr, 0, header, 5, 8);
+			}
+			Util.set16 (header, 13, panId);
+			Util.set16 (header, 15, saddr);
 			return header;
+		}
+		
+//		public static byte[] getDataHeader (uint panId, byte[] saddr, byte[] dsaddr, short seq)
+//		{ // settare correttamente FCA in base alla dimensione degli indirizzi
+//#if DEBUG
+//			Logger.appendString(csr.s2b("getDataHaeder("));
+//			Logger.appendUInt (panId);
+//			Logger.appendString(csr.s2b(", "));
+//			Logger.appendInt (seq);
+//			Logger.appendString(csr.s2b(");"));
+//			Logger.flush(Mote.INFO);
+//#endif
+//			uint dlen = (uint)dsaddr.Length;
+//			uint slen = (uint)saddr.Length;
+//			byte[] header = new byte[7 + slen + dlen];
+//			header [0] = Radio.FCF_DATA | Radio.FCF_ACKRQ;
+//			header [1] = Radio.FCA_DST_SADDR | Radio.FCA_SRC_SADDR;
+//			header [2] = (byte)seq;
+//			Util.set16 (header, 3, panId);
+//			Util.copyData (dsaddr, 0, header, 5, dlen);
+//			Util.set16 (header, 5 + dlen - 1, panId);
+//			Util.copyData (saddr, 0, header, 7 + dlen - 1, slen);
+//			return header;
+//		}
+		
+		public static uint setEUI (uint flag, byte[] data, byte[] addr, uint off)
+		{
+			if (data == null)
+				return 0;
+			Logger.appendString (csr.s2b ("Setting EUI"));
+			Logger.flush (Mote.INFO);
+			uint srcSaddr = (uint)(data [1] & Radio.FCA_SRC_MASK);
+			uint dstSaddr = (uint)(data [1] & Radio.FCA_DST_MASK);
+			if (flag == DST_ADDR) {
+				if (dstSaddr == Radio.FCA_DST_XADDR) {
+					Util.copyData (addr, off, data, 5, 8);
+				} else 
+					ArgumentException.throwIt (ArgumentException.TOO_BIG);
+			} else {
+				if (dstSaddr == Radio.FCA_DST_SADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+					Mote.getParam ((uint)Mote.EUI64, data, 9);
+				else if (dstSaddr == Radio.FCA_DST_XADDR && srcSaddr == Radio.FCA_SRC_XADDR)
+					Mote.getParam ((uint)Mote.EUI64, data, 15);
+				else
+					ArgumentException.throwIt (ArgumentException.TOO_BIG);
+			}
+			return 0;
 		}
 
 		public static uint getCMDType (byte[] cmd)

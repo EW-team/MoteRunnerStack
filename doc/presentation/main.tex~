@@ -39,6 +39,10 @@
 \input{moterunner}
 \input{moterunner-test}
 \input{MAC}
+<<<<<<< HEAD
+=======
+\input{Oscilloscope}
+>>>>>>> lock
 \input{Conclusioni}
 
 \end{document}

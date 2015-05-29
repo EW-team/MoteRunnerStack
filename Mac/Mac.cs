@@ -194,16 +194,7 @@ namespace Mac_Layer
 			Logger.appendString(csr.s2b(")"));
 			Logger.flush(Mote.INFO);
 #endif
-
-			byte[] header = Frame.getDataHeader (this.radio.getPanId (), this.radio.getShortAddr (), dstSaddr, seq);
-			uint len = (uint)(header.Length + data.Length);
-
-			if (len <= 127) {
-				this.pdu = new byte[len];
-				Util.copyData (header, 0, this.pdu, 0, (uint)header.Length);
-				Util.copyData (data, 0, this.pdu, (uint)header.Length, (uint)data.Length);
-			}
-			return 0;
+			return this.state.send (dstSaddr, seq, data);
 		}
 		
 		// static methods

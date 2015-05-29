@@ -71,7 +71,7 @@ namespace Oscilloscope
 			
 			rpdu [0] = FLAG_TEMP;
 			
-			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
+//			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 			
 #endif
 		}

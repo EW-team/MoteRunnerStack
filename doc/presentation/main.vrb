@@ -1,5 +1,15 @@
-\frametitle {Association}
-  \begin{figure}
-    \centering
-    \includegraphics[width=.8\textwidth]{img/Association.png}
-  \end{figure}
+\frametitle {Final considerations about Mote Runner}
+   \begin{itemize}
+    \item Pro:
+    \begin{itemize}
+      \item Good simulation environment
+      \item It allows to develop mote applications in high-level object-oriented languages
+      \item Good assumptions and expectations with respect to LoRa
+    \end{itemize}
+    \item Con:
+    \begin{itemize}
+      \item It's still in beta
+      \item Low support (docs, API, \dots)
+      \item q
+    \end{itemize}
+  \end{itemize}

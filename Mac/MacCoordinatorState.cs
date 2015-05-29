@@ -10,12 +10,14 @@ namespace Mac_Layer
 
 		// Pan parameters
 		public bool associationPermitted = true;
-		public uint lastAssigned = 0x0101;
+		public uint lastAssigned = 0x0100;
 		
 		// Max number of associations and currently associated
 		public uint maxAssociated = 5;
 		public uint currentlyAssociated = 0;
 		public short seq = Util.rand8 (); // random sequence number for cmd
+		
+		public uint dstAddress = 0;
 		
 		public MacCoordinatorState (Mac mac, uint panId, uint saddr) : base(mac)
 		{
@@ -60,9 +62,9 @@ namespace Mac_Layer
 							else
 								LED.setState ((byte)2, (byte)0);
 							if (this.mac.pdu != null) {
-								uint saddr = Frame.getDestSAddr (this.mac.pdu);
 								uint rSaddr = Frame.getSrcSADDR (data);
-								if (saddr == rSaddr || saddr == Radio.SADDR_BROADCAST) {
+								Frame.setEUI (Frame.DST_ADDR, this.mac.pdu, data, pos + 1);
+								if (this.dstAddress == rSaddr || this.dstAddress == Radio.SADDR_BROADCAST) {
 									this.txBuf = this.mac.pdu;
 								}
 							}
@@ -111,6 +113,7 @@ namespace Mac_Layer
 					else
 						LED.setState ((byte)1, (byte)0);
 					this.mac.pdu = null;
+					this.dstAddress = 0;
 					this.mac.txHandler (Mac.MAC_TX_COMPLETE, data, len, info, time);
 					break;
 				case Radio.FCF_CMD:
@@ -191,12 +194,25 @@ namespace Mac_Layer
 			this._lock = true;
 			byte[] beacon;
 			if (this.mac.pdu != null) {
-				uint saddr = Frame.getDestSAddr (this.mac.pdu);
-				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), saddr, this);
+				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this.dstAddress, this);
 			} else {
 				beacon = Frame.getBeaconFrame (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), this);
 			}
 			this.mac.radio.transmit (Radio.ASAP | Radio.TXMODE_POWER_MAX, beacon, 0, (uint)beacon.Length, Time.currentTicks () + this.slotInterval);
+		}
+		
+		internal override uint send (uint dstSaddr, short seq, byte[] data)
+		{
+			this.dstAddress = dstSaddr;
+//			byte[] saddr = new byte[1];
+			byte[] header = Frame.getDataHeader (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), null, seq);
+			uint len = (uint)(header.Length + data.Length);
+			if (len <= 127) {
+				this.mac.pdu = new byte[len];
+				Util.copyData (header, 0, this.mac.pdu, 0, (uint)header.Length);
+				Util.copyData (data, 0, this.mac.pdu, (uint)header.Length, (uint)data.Length);
+			}
+			return 0;
 		}
 	}
 }

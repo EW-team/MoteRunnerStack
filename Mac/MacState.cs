@@ -131,7 +131,19 @@ namespace Mac_Layer
 		public abstract int onRadioEvent (uint flags, byte[] data, uint len, uint info, long time);
 		
 		public abstract void onTimerEvent (byte param, long time);
-		
+			
+		internal virtual uint send (uint dstSaddr, short seq, byte[] data)
+		{
+			byte[] header = Frame.getDataHeader (this.mac.radio.getPanId (), this.mac.radio.getShortAddr (), dstSaddr, seq);
+			uint len = (uint)(header.Length + data.Length);
+
+			if (len <= 127) {
+				this.mac.pdu = new byte[len];
+				Util.copyData (header, 0, this.mac.pdu, 0, (uint)header.Length);
+				Util.copyData (data, 0, this.mac.pdu, (uint)header.Length, (uint)data.Length);
+			}
+			return 0;
+		}
 	}
 }
 
