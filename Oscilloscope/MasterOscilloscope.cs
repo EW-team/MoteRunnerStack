@@ -53,6 +53,9 @@ namespace Oscilloscope
 		const uint headerLength = ROFF_SADDR + 2;
 		static Mac mac;
 		
+		/// <summary>MasterOscilloscope is the gateway interface between motes that use Oscilloscope and a PC.</summary>
+		/// <remarks><para>MasterOscilloscope gets sensor readings from motes after creating a PAN with Mac and sends them 
+		/// through LIP so that a js socket running on Sonoran can read them.</para>
 		static MasterOscilloscope ()
 		{			
 //			// Register a method for network message directed to this assembly.
@@ -80,6 +83,27 @@ namespace Oscilloscope
 			mac.createPan (0x0234, 0x0002);
 		}
 		
+		/// <summary>
+		/// This method is called by Mac to notify transmission events.
+		/// </summary>
+		/// <returns>
+		/// An integer with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag. Represents the status of the transmission.
+		/// </param>
+		/// <param name='data'>
+		/// Data. The data transmitted.
+		/// </param>
+		/// <param name='len'>
+		/// Length. Length of the trasmitted data.
+		/// </param>
+		/// <param name='saddr'>
+		/// Saddr. Destination short address.
+		/// </param>
+		/// <param name='time'>
+		/// Time. The time when the transmission's been completed.
+		/// </param>
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
 			if (flag == Mac.MAC_TX_COMPLETE) {
@@ -88,6 +112,27 @@ namespace Oscilloscope
 			return 0;
 		}
 		
+		/// <summary>
+		/// This method is called by Mac to notify reception events.
+		/// </summary>
+		/// <returns>
+		/// An integer with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag. Represents the status of the reception.
+		/// </param>
+		/// <param name='data'>
+		/// Data. The data received.
+		/// </param>
+		/// <param name='len'>
+		/// Length. Length of the received data.
+		/// </param>
+		/// <param name='saddr'>
+		/// Saddr. Source short address.
+		/// </param>
+		/// <param name='time'>
+		/// Time. The time when the data's been received.
+		/// </param>
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED) {
@@ -107,12 +152,45 @@ namespace Oscilloscope
 			return 0;
 		}
 		
+		/// <summary>
+		/// Called to notify Mac events as Association completed.
+		/// </summary>
+		/// <returns>
+		/// Integer with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag. Represents the notified event.
+		/// </param>
+		/// <param name='data'>
+		/// Data. Data associated with the particular event.
+		/// </param>
+		/// <param name='len'>
+		/// Length. Length of Data.
+		/// </param>
+		/// <param name='saddr'>
+		/// Saddr.
+		/// </param>
+		/// <param name='time'>
+		/// Time. The Time when the event occurred.
+		/// </param>
 		public static int onEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
 			
 			return 0;
 		}
 		
+		/// <summary>
+		/// Callback that handles the system activity (refer to Assembly documentation)
+		/// </summary>
+		/// <returns>
+		/// The sys info.
+		/// </returns>
+		/// <param name='type'>
+		/// Type.
+		/// </param>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
 		static int onSysInfo (int type, int info)
 		{
 			if (type == Assembly.SYSEV_DELETED) {
@@ -126,7 +204,21 @@ namespace Oscilloscope
 			}
 			return 0;
 		}
-		// Called by soclkesend
+		/// <summary>
+		/// Method called when data are been sent through LIP to mote.
+		/// </summary>
+		/// <returns>
+		/// The position of data in the next LIP transmission from mote to PC.
+		/// </returns>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='buf'>
+		/// Buffer. Data sent to mote.
+		/// </param>
+		/// <param name='len'>
+		/// Length.
+		/// </param>
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
 			uint cmdoff = LIP.getPortOff () + 1;

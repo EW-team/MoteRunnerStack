@@ -3,31 +3,71 @@ using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Runtime.Remoting.Messaging;
 
+/// <summary>
+/// Mac.
+/// </summary>
 namespace Mac_Layer
 {
 	using com.ibm.saguaro.system;
 	using com.ibm.saguaro.logger;
 
-//	public delegate int MacScanCallback(uint flags, byte[] data, int chn, uint info, long time);
-
+	/// <summary>
+	/// Mac.
+	/// </summary>
 	public class Mac
 	{
 		// MAC scan modes
+		/// <summary>
+		/// Constant MA c_ SCA n_ PASSIV.
+		/// </summary>
 		public const byte MAC_SCAN_PASSIVE = (byte)0x00;
+		/// <summary>
+		/// Constant MA c_ SCA n_ E.
+		/// </summary>
 		public const byte MAC_SCAN_ED = (byte)0x01;
 
 		// Timer parameters
+		/// <summary>
+		/// Constant MA c_ WAKEU.
+		/// </summary>
 		internal const byte MAC_WAKEUP = (byte)0x10;
+		/// <summary>
+		/// Constant MA c_ SLEE.
+		/// </summary>
 		internal const byte MAC_SLEEP = (byte)0x11;
+		/// <summary>
+		/// Constant MA c_ SLO.
+		/// </summary>
 		internal const byte MAC_SLOT = (byte)0x12;
 
 		// MAC Flags codes
+		/// <summary>
+		/// Constant MA c_ T x_ COMPLET.
+		/// </summary>
 		public const uint MAC_TX_COMPLETE = 0xE001;
+		/// <summary>
+		/// Constant MA c_ ASSOCIATE.
+		/// </summary>
 		public const uint MAC_ASSOCIATED = 0xE002;
+		/// <summary>
+		/// Constant MA c_ BEACO n_ SEN.
+		/// </summary>
 		public const uint MAC_BEACON_SENT = 0xE003;
+		/// <summary>
+		/// Constant MA c_ AS s_ RE.
+		/// </summary>
 		public const uint MAC_ASS_REQ = 0xE004;
+		/// <summary>
+		/// Constant MA c_ AS s_ RES.
+		/// </summary>
 		public const uint MAC_ASS_RESP = 0xE005;
+		/// <summary>
+		/// Constant MA c_ BEACO n_ RXE.
+		/// </summary>
 		public const uint MAC_BEACON_RXED = 0xE006;
+		/// <summary>
+		/// Constant MA c_ DAT a_ RXE.
+		/// </summary>
 		public const uint MAC_DATA_RXED = 0xE007;
 
 		//----------------------------------------------------------------------//
@@ -39,6 +79,9 @@ namespace Mac_Layer
 		internal Timer timer1;
 //		internal Timer timer2;
 		
+		/// <summary>
+		/// The pdu.
+		/// </summary>
 		public byte[] pdu;
 //		private byte[] _pdu;
 //		public byte[] pdu {
@@ -105,14 +148,29 @@ namespace Mac_Layer
 
 		// Configuration
 		internal MacState state;
-
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Mac_Layer.Mac"/> class.
+		/// </summary>
 		public Mac ()
 		{
 			this.timer1 = new Timer ();
 			this.radio = new Radio ();
 			this.pdu = null;
 		}
-
+		
+		/// <summary>
+		/// Ons the state event.
+		/// </summary>
+		/// <returns>
+		/// The state event.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag.
+		/// </param>
+		/// <param name='param'>
+		/// Parameter.
+		/// </param>
 		internal uint onStateEvent (uint flag, uint param)
 		{
 			if (flag == MAC_ASSOCIATED) {
@@ -126,32 +184,67 @@ namespace Mac_Layer
 			return 0;
 		}
 
+/// <summary>
+/// Sets the channel.
+/// </summary>
+/// <param name='channel'>
+/// Channel.
+/// </param>
 		public void setChannel (uint channel)
 		{
 			this.radio.setChannel ((byte)channel);
 		}
-
+		
+		/// <summary>
+		/// Associate the specified panId.
+		/// </summary>
+		/// <param name='panId'>
+		/// Pan identifier.
+		/// </param>
 		public void associate (uint panId)
 		{
 			this.state = new MacUnassociatedState (this, panId);
 		}
-
+		
+		/// <summary>
+		/// Creates the pan.
+		/// </summary>
+		/// <param name='panId'>
+		/// Pan identifier.
+		/// </param>
+		/// <param name='saddr'>
+		/// Saddr.
+		/// </param>
 		public void createPan (uint panId, uint saddr)
 		{
 			this.state = new MacCoordinatorState (this, panId, saddr);
 		}
 		
+		/// <summary>
+		/// Sets the state.
+		/// </summary>
+		/// <param name='state'>
+		/// State.
+		/// </param>
 		internal void setState (MacState state)
 		{
 			this.state = state;
 		}
 		
-		// to define
+		/// <summary>
+		/// Disassociate this instance.
+		/// </summary>
 		public void disassociate ()
 		{
 			//TODO
 		}
-
+		
+		/// <summary>
+		/// Enable the specified onOff.
+		/// </summary>
+		/// <param name='onOff'>
+		/// On off.
+		/// </param>
 		public void enable (bool onOff)
 		{
 			if (onOff) {
@@ -166,22 +259,52 @@ namespace Mac_Layer
 //		public void setScanHandler(MacScanCallback callback) {
 //			this.scanHandler = callback;
 //		}
-
+		
+		/// <summary>
+		/// Sets the tx handler.
+		/// </summary>
+		/// <param name='callback'>
+		/// Callback.
+		/// </param>
 		public void setTxHandler (DevCallback callback)
 		{
 			this.txHandler = callback;
 		}
-
+		
+		/// <summary>
+		/// Sets the rx handler.
+		/// </summary>
+		/// <param name='callback'>
+		/// Callback.
+		/// </param>
 		public void setRxHandler (DevCallback callback)
 		{
 			this.rxHandler = callback;
 		}
-
+		
+		/// <summary>
+		/// Sets the event handler.
+		/// </summary>
+		/// <param name='callback'>
+		/// Callback.
+		/// </param>
 		public void setEventHandler (DevCallback callback)
 		{
 			this.eventHandler = callback;
 		}
-
+		
+		/// <summary>
+		/// Send the specified data with sequence seq to dstSaddr.
+		/// </summary>
+		/// <param name='dstSaddr'>
+		/// Destination short address.
+		/// </param>
+		/// <param name='seq'>
+		/// Sequence number.
+		/// </param>
+		/// <param name='data'>
+		/// Data.
+		/// </param>
 		public uint send (uint dstSaddr, short seq, byte[] data)
 		{
 #if DBG
@@ -202,6 +325,18 @@ namespace Mac_Layer
 			return 0;
 		}
 		
+		/// <summary>
+		/// Permits to set Mac parameters. Currently not implemented.
+		/// </summary>
+		/// <param name='cXaddr'>
+		/// C xaddr.
+		/// </param>
+		/// <param name='cSaddr'>
+		/// C saddr.
+		/// </param>
+		/// <param name='Saddr'>
+		/// Saddr.
+		/// </param>
 		static void setParameters (long cXaddr, uint cSaddr, uint Saddr)
 		{
 			//TODO
