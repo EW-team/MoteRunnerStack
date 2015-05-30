@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.10pt}
+\beamer@sectionintoc {1}{Introduction to \unhbox \voidb@x \hbox {Mote Runner}}{4}{0}{1}
+\beamer@sectionintoc {2}{LoRaWAN}{18}{0}{2}
+\beamer@sectionintoc {3}{Testing \unhbox \voidb@x \hbox {Mote Runner}}{23}{0}{3}
+\beamer@sectionintoc {4}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{29}{0}{4}
+\beamer@sectionintoc {5}{Conclusion}{41}{0}{5}
