@@ -71,7 +71,7 @@ namespace Oscilloscope
 			
 			rpdu [0] = FLAG_TEMP;
 			
-			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
+//			adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 			
 #endif
 		}
@@ -114,20 +114,26 @@ namespace Oscilloscope
 		
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
-			if (flag == Mac.MAC_DATA_RXED) {
-				long interval = Util.get16 (data, 2);
+			if (flag == Mac.MAC_DATA_RXED && data != null) {
+				uint interval = Util.get16le (data, 2);
 				readInterval = Time.toTickSpan (Time.MILLISECS, interval);
-
+				
+				Logger.appendString (csr.s2b ("Oscilloscope RX Event - "));
+				Logger.appendString (csr.s2b ("Interval: "));
+				Logger.appendLong (interval);
+				Logger.flush (Mote.INFO);
+				
 				if (data [0] == FLAG_TEMP) {
 					rpdu [0] = FLAG_TEMP;
 #if SIM
 					
 #else
+					Logger.appendString (csr.s2b (", FLAG_TEMP "));
 					// Powers ON temperature and ON light sensor
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_CLR);
 #endif
-//					Logger.appendString(csr.s2b(", FLAG_TEMP"));
+					
 				} else {
 					rpdu [0] = FLAG_LIGHT;
 #if SIM
@@ -136,15 +142,17 @@ namespace Oscilloscope
 					// Powers ON light and OFF temperature sensor
 					pwrPins.configureOutput (LIGHT_PWR_PIN, GPIO.OUT_SET);
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_CLR);
+					Logger.appendString (csr.s2b (", FLAG_LIGHT "));
 #endif
 				}
 				if ((uint)data [1] == 1) {
 #if SIM
 					fake.setAlarmBySpan (readInterval);
-#else
-					adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
-			
-					pwrPins.open (); 
+#else				
+					if (adc.getState () == CDev.S_CLOSED)
+						adc.open (/* chmap */ MDA100_ADC_CHANNEL_MASK, /* GPIO power pin*/ GPIO.NO_PIN, /*no warmup*/0, /*no interval*/0);
+					if (pwrPins.getState () == CDev.S_CLOSED)
+						pwrPins.open (); 
 					pwrPins.configureOutput (TEMP_PWR_PIN, GPIO.OUT_SET); 
 					adc.read (Device.TIMED, 1, Time.currentTicks () + readInterval);
 					// Simulation
@@ -153,15 +161,19 @@ namespace Oscilloscope
 #if SIM
 					fake.cancelAlarm ();
 #else
-					adc.setState (CDev.S_OFF);
-					adc.close ();
-#endif					
+					if (pwrPins.getState () != CDev.S_CLOSED)
+						pwrPins.close ();
+					if (adc.getState () != CDev.S_CLOSED)
+						adc.close ();
+//					adc.setState (CDev.S_OFF);
+#endif				
 				}
+				Logger.flush (Mote.INFO);
 				
-//				Logger.flush (Mote.INFO);
 				
 			} else {
-				
+				Logger.appendString (csr.s2b ("DATA NULL"));
+				Logger.flush (Mote.INFO);
 			}
 			return 0;
 		}

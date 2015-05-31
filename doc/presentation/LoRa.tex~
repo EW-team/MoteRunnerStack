@@ -1,32 +1,33 @@
-\maketitle {What is LoRa?}
-
+  \section{LoRaWAN}
+  \begin{frame}[fragile]
+    \maketitle{What is LoRa?}
+    
   \end{frame}
-
+  
   \begin{frame}[fragile]
     \maketitle{LoRa devices}
     \begin{itemize}
       \item Class A: Bi-directional end-devices
       \begin{itemize}
-       \item
+      	\item .
       \end{itemize}
-      \item  Class B: Bi-directional end-devices with scheduled receive slots
+      \item Class B: Bi-directional end-devices with scheduled receive slots
       \begin{itemize}
-       \item
+      	\item .
       \end{itemize}
       \item Class C: Bi-directional end-devices with maximal receive slots
       \begin{itemize}
-       \item
+      	\item .
       \end{itemize}
     \end{itemize}
-
+  \end{frame}
+  
+  \begin{frame}[fragile]
+    \maketitle{LoRa technology}
+    
   \end{frame}
 
   \begin{frame}[fragile]
     \maketitle{LoRa technology}
-
-  \end{frame}
-
-  \begin{frame}[fragile]
-    \maketitle{LoRa technology}
-
+    
   \end{frame}

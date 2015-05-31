@@ -215,8 +215,8 @@
     	\end{itemize}
     	\item v.11, v.13 are better choices:
     	\begin{itemize}
-	  \item radio interface could be used to implement an 802.15.4 MAC 
-	  \item this MAC could be possibly used to build upper layer with WIDS
+	  \item radio interface could be used to implement an 802.15.4 MAC with TAKS support
+	  \item this MAC could be used to build upper layer with WIDS
     	\end{itemize}
     \end{itemize}
     \item This does not exclude a future integration with LoRa-LRSC

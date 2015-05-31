@@ -1,12 +1,12 @@
-\section{Testing Mote Runner}
+\section{Testing \mbox{Mote Runner}}
 \begin{frame}[fragile]
-  \frametitle{Problems}
+  \frametitle{Points to explore}
   \begin{itemize}
     \item MR v.13 offers:
     \begin{itemize}
     	\item Radio interface IEEE 802.15.4 compliant
     	\item Hopi
-    	\item A simulation environment IRIS friendly
+    	\item An IRIS-friendly simulation environment
     	\item Many nice features (Debugger, Logger and so on)
     \end{itemize}
   \end{itemize}
@@ -38,7 +38,7 @@
     	\item The radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
     	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
     \end{itemize}
-    \item Each mote mantains 3 addresses:
+    \item Each mote holds 3 addresses:
     \begin{itemize}
     	\item a 16-bit PAN identifier
     	\item a 64-bit extended address that uniquely identifies a mote

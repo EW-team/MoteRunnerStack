@@ -13,6 +13,6 @@ socket-bind osciSocket
 
 # 01	01	F4	01	00	00	00
 
-#socket-send osciSocket 126 1 1 1 500 0x0101
-#socket-send osciSocket 126 ff
-# socket-send osciSocket 126 1 1 2 500 0x0101
+# socket-send osciSocket 126 1 1 1 11 0x0100
+# socket-send osciSocket 126 ff
+ socket-send osciSocket 126 1 1 1 0x0300 0x0100
