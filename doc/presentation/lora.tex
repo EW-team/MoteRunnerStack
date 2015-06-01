@@ -6,7 +6,7 @@
       \item LoRaWAN is a Low Power Wide Area Network (LPWAN) specification intended for wireless battery operated Things in regional, national or global network. 
       \item LoRaWAN target key requirements of internet of things:
       \begin{itemize}
-      	\item secure bi-directional communication - INDAGARE
+      	\item secure bi-directional communication
       	\item mobility - INDAGARE
       	\item localization services - INDAGARE
       \end{itemize}
@@ -14,33 +14,66 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa devices}
+  \frametitle{LoRa devices sync}
+  For time synchronization gateways periodically broadcast so-called beacons. Each beacon
+  minimally contains:
   \begin{itemize}
-    \item Class A: Bi-directional end-devices
-    \begin{itemize}
-      \item .
-    \end{itemize}
-    \item Class B: Bi-directional end-devices with scheduled receive slots
-    \begin{itemize}
-      \item .
-    \end{itemize}
-    \item Class C: Bi-directional end-devices with maximal receive slots
-    \begin{itemize}
-      \item .
-    \end{itemize}
+      \item available channels (ChMask)
+      \item current GPS time (Time)
+      \end{itemize}
+      The broadcasting of beacons (in implicit mode) is done time-synchronously (BEACON\_INTERVAL) by all gateways of a network with no interference.
+      \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/lora_beaconing.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa end-devices}
+  \begin{itemize}
+   \item  Release v1.0 allows at MAC and Application layers, Bi-directional communications:
+     \begin{itemize}
+       \item Class A: after send operation two tiny time windows are opened in order to allow reception
+       \item Class B: send and receive operations may be scheduled based on the time information contained in the beacons
+     \end{itemize}
+    \item  Last Release = Release v1.0 plus:
+     \begin{itemize}
+       \item Class C: nearly continuously open receive windows, only closed when transmitting.
+     \end{itemize}
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/lora_rx_windows.png}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LoRa secure communications - 1}
+  In order to partecipate in a LoRa network an end device first has to be personalized and the activated.
+  Activation of an end device can be achieved in two ways:
+  \begin{itemize}
+    \item OTAA (over-the-air activation) when an end device is deployed or reset;
+    \item APB (activation by personalization) one-step personalization and activation.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa technology}
+  \frametitle{LoRa secure communications - 2}
+  During activation the end device holds the following informations:
   \begin{itemize}
-      \item .
+      \item \textbf{DevAddr:} device ID of 32 bits that uniquely identifies the end device.
+      \item \textbf{AppEUI:} globally unique application ID that uniquely identifies the application provider of the end device.
+      \item \textbf{NwkSKey:} device-specific network session key, ensures data integrity and os used to encrypt/decrypt MAC data messages payload
+      \item \textbf{AppSKey:} device-specific application session key, used to encrypt and decrypt the payload field of application-specific data messages.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa technology}
-  \begin{itemize}
-      \item .
-  \end{itemize}
+  \frametitle{LoRa secure communications - OTAA}
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/lora_secure.png}
+  \end{figure}
 \end{frame}
