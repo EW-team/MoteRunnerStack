@@ -1,14 +1,14 @@
 \section{LoRaWAN}
   
 \begin{frame}[fragile]
-  \frametitle{What is LoRa}
+  \frametitle{A deeper look at LoRa}
   \begin{itemize}
       \item LoRaWAN is a Low Power Wide Area Network (LPWAN) specification intended for wireless battery operated Things in regional, national or global network. 
       \item LoRaWAN target key requirements of internet of things:
       \begin{itemize}
       	\item secure bi-directional communication
-      	\item mobility - INDAGARE
-      	\item localization services - INDAGARE
+      	\item mobility - Non molto materiale se non quello su ADR
+      	\item localization services - INDAGARE(Beaconing)
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -26,6 +26,27 @@
   \centering
   \includegraphics[width=\textwidth]{img/lora_beaconing.png}
   \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa MAC Payload Frame}
+  \begin{columns}
+    \begin{column}{.48\linewidth}
+    LoRa MAC message types:
+       \begin{itemize}
+        \item join request
+        \item join accept 
+        \item unconfirmed data messages
+        \item confirmed data messages
+       \end{itemize}
+  \end{column}
+   \begin{column}{.48\linewidth}
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/mac_frame.png}
+  \end{figure}
+  \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -70,10 +91,39 @@
   \end{itemize}
 \end{frame}
 
+
 \begin{frame}[fragile]
   \frametitle{LoRa secure communications - OTAA}
  \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{img/lora_secure.png}
   \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa mobility}
+  LoRa network data rates are:
+ \begin{itemize}
+  \item Network controlled for fixed devices by means of using ADR bit in the PHY payload of data messages:
+  \begin{itemize}
+    \item If is set, the network will control the data rate of the end device through the appropriate MAC commands
+    \item If is cleared, the network will not attempt to control the data rate of the end device independently of the received signal quality
+  \end{itemize}
+  \item default for mobile end-devices.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/PHYpayload.png}
+  \end{figure}
+ \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa mobility 2}
+ \begin{itemize}
+  \item \hypertarget{refthis}{}
+  \item However, whenever possible, the ADR scheme should
+be enabled to increase the battery life of the end device and maximize the network capacity
+ \end{itemize}
+
 \end{frame}
