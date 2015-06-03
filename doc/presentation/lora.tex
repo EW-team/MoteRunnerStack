@@ -115,15 +115,34 @@
   \includegraphics[width=0.9\textwidth]{img/PHYpayload.png}
   \end{figure}
  \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{LoRa mobility 2}
- \begin{itemize}
-  \item \hypertarget{refthis}{}
-  \item However, whenever possible, the ADR scheme should
-be enabled to increase the battery life of the end device and maximize the network capacity
- \end{itemize}
+  LoRa modes (868 band):
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/LoRamode.png}
+  \caption{SX1272 module modes}
+ \end{figure}
 
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LoRa localization}
+  All gateways send their beacon at exactly the same point in time:
+  \begin{itemize}
+    \item on first 15 bytes there are no visible on-air collisions 
+    \item wrt the optional part , device within the proximity of more than one
+	  gateway will still be able to decode the strongest beacon with high probability
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/optional.png}
+  \caption{Beacon optional part}
+ \end{figure}
+  
+
+\end{frame}
+
