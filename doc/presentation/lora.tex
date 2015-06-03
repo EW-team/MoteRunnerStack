@@ -7,8 +7,8 @@
       \item LoRaWAN target key requirements of internet of things:
       \begin{itemize}
       	\item secure bi-directional communication
-      	\item mobility - Non molto materiale se non quello su ADR
-      	\item localization services - INDAGARE(Beaconing)
+      	\item mobility
+      	\item localization services 
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -57,7 +57,7 @@
        \item Class A: after send operation two tiny time windows are opened in order to allow reception
        \item Class B: send and receive operations may be scheduled based on the time information contained in the beacons
      \end{itemize}
-    \item  Last Release = Release v1.0 plus:
+    \item subsequent releases:
      \begin{itemize}
        \item Class C: nearly continuously open receive windows, only closed when transmitting.
      \end{itemize}
@@ -119,7 +119,7 @@
 
 \begin{frame}[fragile]
   \frametitle{LoRa mobility 2}
-  LoRa modes (868 band):
+  LoRa modes (868Mhz band):
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{img/LoRamode.png}
@@ -144,5 +144,26 @@
  \end{figure}
   
 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa conclusions 1}
+  For what applications is LoRa a good option?
+  \begin{itemize}
+    \item solar or mains-powered nodes transmitting every 10 or 15 minutes in networks with low or medium number of nodes
+    \item very wide networks, with long-range links (Up to 22km, Sensitivity -134dBm) 
+  \end{itemize}
+  
+\end{frame}
+  
+ \begin{frame}[fragile]
+  \frametitle{LoRa conclusions 2}
+  For what applications is NOT LoRa a good option?
+  \begin{itemize}
+    \item projects which require high data-rate and/or very frequent transmissions (e.g., each 10 seconds)
+    \item including receipt of ACK message, mode 10 (the fastest), takes twice the time of XBee (<200ms)
+    \item due to low data-rates OTA re-programming is not easily achieved (3G, GPRS may be better choiches)
+  \end{itemize}
+ 
 \end{frame}
 
