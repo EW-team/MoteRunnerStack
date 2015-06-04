@@ -65,7 +65,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Mac.cs" />
     <Compile Include="Frame.cs" />
-    <Compile Include="MacConfig.cs" />
     <Compile Include="MacState.cs" />
     <Compile Include="MacCoordinatorState.cs" />
     <Compile Include="MacAssociatedState.cs" />

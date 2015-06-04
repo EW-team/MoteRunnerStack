@@ -622,16 +622,17 @@ NamespacesTable = [
 ];
 
 ClassesTable = [
-   "Oscilloscope.MasterOscilloscope"
+   "Oscilloscope.Oscilloscope"
 ];
 
 DelegatesTable = [];
 
 MethodsTable = [
-   "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
-   "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
-   "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
-   "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)"
+   "Oscilloscope.Oscilloscope.Oscilloscope()",
+   "Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)",
+   "Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)",
+   "Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)",
+   "Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)"
 ];
 
 FieldsTable = [];
@@ -639,7 +640,7 @@ FieldsTable = [];
 Namespaces = {
    "Oscilloscope" : {
       "classes" : [
-         "Oscilloscope.MasterOscilloscope"
+         "Oscilloscope.Oscilloscope"
       ],
       "delegates" : [],
       "uid" : 1,
@@ -649,22 +650,23 @@ Namespaces = {
 };
 
 Classes = {
-   "Oscilloscope.MasterOscilloscope" : {
+   "Oscilloscope.Oscilloscope" : {
       "subclasses" : [],
       "flags" : 268435457,
       "uid" : 2,
-      "name" : "MasterOscilloscope",
+      "name" : "Oscilloscope",
       "fields" : [],
       "interfaces" : [],
       "methods" : [
-         "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
-         "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
-         "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
-         "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)"
+         "Oscilloscope.Oscilloscope.Oscilloscope()",
+         "Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)",
+         "Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)",
+         "Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)",
+         "Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)"
       ],
-      "fqname" : "Oscilloscope.MasterOscilloscope",
+      "fqname" : "Oscilloscope.Oscilloscope",
       "superclass" : null,
-      "doc" : "",
+      "doc" : "<p class=\"first-line\">The class that reads value from sensors and sends them with Mac to MasterOscilloscope.",
       "seealso" : []
    }
 };
@@ -672,21 +674,21 @@ Classes = {
 Fields = {};
 
 Methods = {
-   "Oscilloscope.MasterOscilloscope.MasterOscilloscope()" : {
+   "Oscilloscope.Oscilloscope.Oscilloscope()" : {
       "ret" : null,
       "flags" : 1073742849,
       "uid" : 3,
       "args" : [],
-      "name" : "MasterOscilloscope",
+      "name" : "Oscilloscope",
       "signature" : "()",
-      "fqname" : "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
-      "fullname" : "MasterOscilloscope()",
+      "fqname" : "Oscilloscope.Oscilloscope.Oscilloscope()",
+      "fullname" : "Oscilloscope()",
       "doc" : "<p class=\"first-line\">Default constructor.",
       "seealso" : null
    },
-   "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)" : {
+   "Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)" : {
       "ret" : {
-         "doc" : "An integer with no meaning.",
+         "doc" : "An int with no meaning.",
          "type" : "i"
       },
       "flags" : 1073741841,
@@ -694,81 +696,122 @@ Methods = {
       "args" : [
          {
             "name" : "flag",
-            "doc" : "Represents the status of the reception.",
+            "doc" : "Flag that indicates the event.",
             "type" : "u"
          },
          {
             "name" : "data",
-            "doc" : "The data received.",
+            "doc" : "Data transmitted",
             "type" : "b[]"
          },
          {
             "name" : "len",
-            "doc" : "Length of the received data.",
+            "doc" : "Length of data.",
             "type" : "u"
          },
          {
-            "name" : "saddr",
-            "doc" : "Source short address.",
+            "name" : "info",
+            "doc" : "Info.",
             "type" : "u"
          },
          {
             "name" : "time",
-            "doc" : "The time when the data's been received.",
+            "doc" : "The end of transmission.",
             "type" : "l"
          }
       ],
-      "name" : "onRxEvent",
+      "name" : "onTxEvent",
       "signature" : "(u,b[],u,u,l)i",
-      "fqname" : "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
-      "fullname" : "onRxEvent(u flag, b[] data, u len, u saddr, l time)i",
-      "doc" : "<p class=\"first-line\">This method is called by Mac to notify reception events.",
+      "fqname" : "Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)",
+      "fullname" : "onTxEvent(u flag, b[] data, u len, u info, l time)i",
+      "doc" : "<p class=\"first-line\">Mac tx event.",
       "seealso" : null
    },
-   "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)" : {
+   "Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)" : {
       "ret" : {
-         "doc" : "An integer with no meaning.",
+         "doc" : "A value with no meaning.",
+         "type" : "i"
+      },
+      "flags" : 1073741841,
+      "uid" : 7,
+      "args" : [
+         {
+            "name" : "flag",
+            "doc" : "Flag that indicates the event.",
+            "type" : "u"
+         },
+         {
+            "name" : "data",
+            "doc" : "Data associated to event.",
+            "type" : "b[]"
+         },
+         {
+            "name" : "len",
+            "doc" : "Length of data.",
+            "type" : "u"
+         },
+         {
+            "name" : "info",
+            "doc" : "Info.",
+            "type" : "u"
+         },
+         {
+            "name" : "time",
+            "doc" : "The time when the event occurred.",
+            "type" : "l"
+         }
+      ],
+      "name" : "onEvent",
+      "signature" : "(u,b[],u,u,l)i",
+      "fqname" : "Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)",
+      "fullname" : "onEvent(u flag, b[] data, u len, u info, l time)i",
+      "doc" : "<p class=\"first-line\">Handles Mac generic events.",
+      "seealso" : null
+   },
+   "Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)" : {
+      "ret" : {
+         "doc" : null,
          "type" : "i"
       },
       "flags" : 1073741841,
       "uid" : 4,
       "args" : [
          {
-            "name" : "flag",
-            "doc" : "Represents the status of the transmission.",
+            "name" : "flags",
+            "doc" : "",
             "type" : "u"
          },
          {
             "name" : "data",
-            "doc" : "The data transmitted.",
+            "doc" : "",
             "type" : "b[]"
          },
          {
             "name" : "len",
-            "doc" : "Length of the trasmitted data.",
+            "doc" : "",
             "type" : "u"
          },
          {
-            "name" : "saddr",
-            "doc" : "Destination short address.",
+            "name" : "info",
+            "doc" : "",
             "type" : "u"
          },
          {
             "name" : "time",
-            "doc" : "The time when the transmission's been completed.",
+            "doc" : "",
             "type" : "l"
          }
       ],
-      "name" : "onTxEvent",
+      "name" : "adcReadCallback",
       "signature" : "(u,b[],u,u,l)i",
-      "fqname" : "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)",
-      "fullname" : "onTxEvent(u flag, b[] data, u len, u saddr, l time)i",
-      "doc" : "<p class=\"first-line\">This method is called by Mac to notify transmission events.",
+      "fqname" : "Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)",
+      "fullname" : "adcReadCallback(u flags, b[] data, u len, u info, l time)i",
+      "doc" : "",
       "seealso" : null
    },
-   "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)" : {
+   "Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)" : {
       "ret" : {
-         "doc" : "Integer with no meaning.",
+         "doc" : "An int with no meaning.",
          "type" : "i"
       },
       "flags" : 1073741841,
@@ -776,35 +819,35 @@ Methods = {
       "args" : [
          {
             "name" : "flag",
-            "doc" : "Flag. Represents the notified event.",
+            "doc" : "Flag that indicates the event.",
             "type" : "u"
          },
          {
             "name" : "data",
-            "doc" : "Data. Data associated with the particular event.",
+            "doc" : "Data received.",
             "type" : "b[]"
          },
          {
             "name" : "len",
-            "doc" : "Length. Length of Data.",
+            "doc" : "Length of data.",
             "type" : "u"
          },
          {
-            "name" : "saddr",
-            "doc" : "Saddr.",
+            "name" : "info",
+            "doc" : "Info.",
             "type" : "u"
          },
          {
             "name" : "time",
-            "doc" : "Time. The Time when the event occurred.",
+            "doc" : "The end of reception.",
             "type" : "l"
          }
       ],
-      "name" : "onEvent",
+      "name" : "onRxEvent",
       "signature" : "(u,b[],u,u,l)i",
-      "fqname" : "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
-      "fullname" : "onEvent(u flag, b[] data, u len, u saddr, l time)i",
-      "doc" : "<p class=\"first-line\">Called to notify Mac events as Association completed.",
+      "fqname" : "Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)",
+      "fullname" : "onRxEvent(u flag, b[] data, u len, u info, l time)i",
+      "doc" : "<p class=\"first-line\">Mac rx event.",
       "seealso" : null
    }
 };
@@ -824,11 +867,12 @@ Delegates = {};
 
 var qualifiedNamesMap={
     'Oscilloscope':'Oscilloscope',
-    'Oscilloscope.MasterOscilloscope':'r:Oscilloscope.MasterOscilloscope',
-    'Oscilloscope.MasterOscilloscope.MasterOscilloscope()':'Oscilloscope.MasterOscilloscope.MasterOscilloscope()',
-    'Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)',
-    'Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)',
-    'Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)',
+    'Oscilloscope.Oscilloscope':'r:Oscilloscope.Oscilloscope',
+    'Oscilloscope.Oscilloscope.Oscilloscope()':'Oscilloscope.Oscilloscope.Oscilloscope()',
+    'Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)':'Oscilloscope.Oscilloscope.onTxEvent(u,b[],u,u,l)',
+    'Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)':'Oscilloscope.Oscilloscope.onEvent(u,b[],u,u,l)',
+    'Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)':'Oscilloscope.Oscilloscope.adcReadCallback(u,b[],u,u,l)',
+    'Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)':'Oscilloscope.Oscilloscope.onRxEvent(u,b[],u,u,l)',
  };
 
 /** The Walrus Engine main class.

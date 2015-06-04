@@ -5,10 +5,16 @@ namespace Oscilloscope
 	using Mac_Layer;
 	
 	using com.ibm.iris;
-
+	
+	/// <summary>
+	/// The class that reads value from sensors and sends them with Mac to MasterOscilloscope.
+	/// </summary>
 	public class Oscilloscope
 	{
-
+		
+		/// <summary>
+		/// Instance of Mac used to send data.
+		/// </summary>
 		static Mac mac;
 #if SIM
 		static Timer fake;
@@ -27,19 +33,33 @@ namespace Oscilloscope
 		// To power on the sensors
 		static GPIO pwrPins;
 #endif
-
+		
+		/// <summary>
+		/// Size of data to send MasterOscilloscope.
+		/// </summary>
 		const uint PAYLOAD_SIZE = 3; // 3 bytes flag + 2 bytes data
 		
 		internal static byte[]	rpdu = new byte[PAYLOAD_SIZE];	// The read PDU 
 		
+		/// <summary>
+		/// The interval of readings.
+		/// </summary>
 		static long readInterval;	// Read ADC every (Secs)
 
 		// Payload flags
+		
+		/// <summary>
+		/// Constant flag for temperature readings.
+		/// </summary>
 		const byte FLAG_TEMP = (byte)0x01;	// Flag for temperature data
+		/// <summary>
+		/// Constant flag for light readings.
+		/// </summary>
 		const byte FLAG_LIGHT = (byte)0x02;	// Flag for light data
 	
-		
-
+		/// <summary>
+		/// Initializes the <see cref="Oscilloscope.Oscilloscope"/> class. Prepares the mac associating to a PAN.
+		/// </summary>
 		static Oscilloscope ()
 		{	
 
@@ -86,6 +106,13 @@ namespace Oscilloscope
 			fake.setAlarmTime (Time.currentTicks () + readInterval);
 		}
 #else
+/// <summary>
+/// Method called when adc completes sensor reading.
+/// </summary>
+/// <returns>
+/// The read callback.
+/// </returns>
+/// </param>
 		public static int adcReadCallback (uint flags, byte[] data, uint len, uint info, long time)
 		{
 //			if (len != 2 || ((flags & Device.FLAG_FAILED) != 0)) {
@@ -107,11 +134,55 @@ namespace Oscilloscope
 #endif	
 
 		//On transmission blink green led
+		
+		/// <summary>
+		/// Mac tx event.
+		/// </summary>
+		/// <returns>
+		/// An int with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag that indicates the event.
+		/// </param>
+		/// <param name='data'>
+		/// Data transmitted
+		/// </param>
+		/// <param name='len'>
+		/// Length of data.
+		/// </param>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='time'>
+		/// The end of transmission.
+		/// </param>
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			return 0;
 		}
 		
+		
+		/// <summary>
+		/// Mac rx event.
+		/// </summary>
+		/// <returns>
+		/// An int with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag that indicates the event.
+		/// </param>
+		/// <param name='data'>
+		/// Data received.
+		/// </param>
+		/// <param name='len'>
+		/// Length of data.
+		/// </param>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='time'>
+		/// The end of reception.
+		/// </param>
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			if (flag == Mac.MAC_DATA_RXED && data != null) {
@@ -178,6 +249,27 @@ namespace Oscilloscope
 			return 0;
 		}
 		
+		/// <summary>
+		/// Handles Mac generic events.
+		/// </summary>
+		/// <returns>
+		/// A value with no meaning.
+		/// </returns>
+		/// <param name='flag'>
+		/// Flag that indicates the event.
+		/// </param>
+		/// <param name='data'>
+		/// Data associated to event.
+		/// </param>
+		/// <param name='len'>
+		/// Length of data.
+		/// </param>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='time'>
+		/// The time when the event occurred.
+		/// </param>
 		public static int onEvent (uint flag, byte[] data, uint len, uint info, long time)
 		{
 			switch (flag) {
@@ -192,14 +284,6 @@ namespace Oscilloscope
 			}
 			return 0;
 		}
-		
-//		public static int onScan(uint flag, byte[] data, int chn, uint len, long time) {
-//			Logger.appendInt(chn);
-//			Logger.flush(Mote.INFO);
-//			if(chn == 27)
-//				mac.createPan(1, 0x0234, 0x0002);
-//			return 0;
-//		}
 		
 	}
 }

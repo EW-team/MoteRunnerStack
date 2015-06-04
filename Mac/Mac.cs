@@ -16,57 +16,50 @@ namespace Mac_Layer
 	/// </summary>
 	public class Mac
 	{
-		// MAC scan modes
+		//---------- MAC scan modes -----------//
+		
 		/// <summary>
-		/// Constant MA c_ SCA n_ PASSIV.
+		/// Indicates the passive scan mode.
 		/// </summary>
 		public const byte MAC_SCAN_PASSIVE = (byte)0x00;
 		/// <summary>
-		/// Constant MA c_ SCA n_ E.
+		/// Indicates the energy detection scan mode.
 		/// </summary>
 		public const byte MAC_SCAN_ED = (byte)0x01;
 
 		// Timer parameters
-		/// <summary>
-		/// Constant MA c_ WAKEU.
-		/// </summary>
 		internal const byte MAC_WAKEUP = (byte)0x10;
-		/// <summary>
-		/// Constant MA c_ SLEE.
-		/// </summary>
 		internal const byte MAC_SLEEP = (byte)0x11;
-		/// <summary>
-		/// Constant MA c_ SLO.
-		/// </summary>
 		internal const byte MAC_SLOT = (byte)0x12;
 
-		// MAC Flags codes
+		//---------- MAC Flags codes ------------//
+		
 		/// <summary>
-		/// Constant MA c_ T x_ COMPLET.
+		/// Indicate the successful completion of a transmission.
 		/// </summary>
 		public const uint MAC_TX_COMPLETE = 0xE001;
 		/// <summary>
-		/// Constant MA c_ ASSOCIATE.
+		/// Indicates a successful association.
 		/// </summary>
 		public const uint MAC_ASSOCIATED = 0xE002;
 		/// <summary>
-		/// Constant MA c_ BEACO n_ SEN.
+		/// Indicates a successful transmision of a beacon.
 		/// </summary>
 		public const uint MAC_BEACON_SENT = 0xE003;
 		/// <summary>
-		/// Constant MA c_ AS s_ RE.
+		/// Indicates the reception of an association request frame.
 		/// </summary>
 		public const uint MAC_ASS_REQ = 0xE004;
 		/// <summary>
-		/// Constant MA c_ AS s_ RES.
+		/// Indicates the reception of an association response frame.
 		/// </summary>
 		public const uint MAC_ASS_RESP = 0xE005;
 		/// <summary>
-		/// Constant MA c_ BEACO n_ RXE.
+		/// Indicates the reception of a beacon frame.
 		/// </summary>
 		public const uint MAC_BEACON_RXED = 0xE006;
 		/// <summary>
-		/// Constant MA c_ DAT a_ RXE.
+		/// Indicates the reception of a data frame.
 		/// </summary>
 		public const uint MAC_DATA_RXED = 0xE007;
 
@@ -77,66 +70,12 @@ namespace Mac_Layer
 		// Instance Variables
 		internal Radio radio;
 		internal Timer timer1;
-//		internal Timer timer2;
 		
 		/// <summary>
-		/// The pdu.
+		/// The buffer containing the pdu to transmit.
 		/// </summary>
 		public byte[] pdu;
-//		private byte[] _pdu;
-//		public byte[] pdu {
-//			get {
-//				return this._pdu;
-//			}
-//			set {
-//				if (value == null && this.buffer [this._bufTransm] != null)
-//					this._pdu = (byte[])this.buffer [this._bufTransm];
-//				else if (value != null)
-//					this._pdu = value;
-//				else
-//					this._pdu = null;
-//			}
-//		}
-//		internal byte[] header;
-//		
-//		public uint bufferLength = 8;
-//		public object[] buffer;
-//		
-//		private uint _bufCount = 0;
-//		public uint bufCount {
-//			get {
-//				return this.bufCount;
-//			}
-//			set {
-//#if DEBUGGINO
-//			Logger.appendString(csr.s2b("Buffer status: "));
-//			Logger.appendUInt (this._bufTransm);
-//			Logger.appendString(csr.s2b(" -> "));
-//			Logger.appendUInt (this._bufCount);
-//#endif
-//				if (value == this._bufTransm)
-//					this._bufTransm += 1;
-//				this._bufCount = value % bufferLength;
-//			}
-//		}
-//		
-//		private uint _bufTransm = 0;
-//		public uint bufTransm {
-//			get {
-//				return this._bufTransm;
-//			}
-//			set {
-//#if DEBUGGINO
-//			Logger.appendString(csr.s2b("Buffer status: "));
-//			Logger.appendUInt (this._bufTransm);
-//			Logger.appendString(csr.s2b(" -> "));
-//			Logger.appendUInt (this._bufCount);
-//#endif
-//				if (this._bufTransm != this._bufCount)
-//					this._bufTransm = value % bufferLength;
-//			}
-//		}
-
+		
 //		// Internal logic parameters
 //		private bool scanContinue = false;
 
@@ -144,7 +83,6 @@ namespace Mac_Layer
 		internal DevCallback rxHandler = new DevCallback (onMockEvent);
 		internal DevCallback txHandler = new DevCallback (onMockEvent);
 		internal DevCallback eventHandler = new DevCallback (onMockEvent);
-//		internal MacScanCallback scanHandler;
 
 		// Configuration
 		internal MacState state;
@@ -160,16 +98,16 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Ons the state event.
+		/// This method is called internally when a state event occurs.
 		/// </summary>
 		/// <returns>
 		/// The state event.
 		/// </returns>
 		/// <param name='flag'>
-		/// Flag.
+		/// A flag that notifies the occurred event.
 		/// </param>
 		/// <param name='param'>
-		/// Parameter.
+		/// A parameter related to the event.
 		/// </param>
 		internal uint onStateEvent (uint flag, uint param)
 		{
@@ -184,19 +122,19 @@ namespace Mac_Layer
 			return 0;
 		}
 
-/// <summary>
-/// Sets the channel.
-/// </summary>
-/// <param name='channel'>
-/// Channel.
-/// </param>
+		/// <summary>
+		/// Sets the radio channel.
+		/// </summary>
+		/// <param name='channel'>
+		/// Radio channel.
+		/// </param>
 		public void setChannel (uint channel)
 		{
 			this.radio.setChannel ((byte)channel);
 		}
 		
 		/// <summary>
-		/// Associate the specified panId.
+		/// Tells the Mac to begin association handshake for a specified pan.
 		/// </summary>
 		/// <param name='panId'>
 		/// Pan identifier.
@@ -207,13 +145,13 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Creates the pan.
+		/// Creates a pan.
 		/// </summary>
 		/// <param name='panId'>
-		/// Pan identifier.
+		/// Pan identifier for the new Pan.
 		/// </param>
 		/// <param name='saddr'>
-		/// Saddr.
+		/// The Short Address for the Pan Coordinator
 		/// </param>
 		public void createPan (uint panId, uint saddr)
 		{
@@ -221,18 +159,7 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Sets the state.
-		/// </summary>
-		/// <param name='state'>
-		/// State.
-		/// </param>
-		internal void setState (MacState state)
-		{
-			this.state = state;
-		}
-		
-		/// <summary>
-		/// Disassociate this instance.
+		/// Disassociate this instance from the current Pan.
 		/// </summary>
 		public void disassociate ()
 		{
@@ -261,10 +188,10 @@ namespace Mac_Layer
 //		}
 		
 		/// <summary>
-		/// Sets the tx handler.
+		/// Sets the function that will handle transmission events.
 		/// </summary>
 		/// <param name='callback'>
-		/// Callback.
+		/// The transmission event handler.
 		/// </param>
 		public void setTxHandler (DevCallback callback)
 		{
@@ -272,10 +199,10 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Sets the rx handler.
+		/// Sets the function that will handle reception events.
 		/// </summary>
 		/// <param name='callback'>
-		/// Callback.
+		/// The reception event handler.
 		/// </param>
 		public void setRxHandler (DevCallback callback)
 		{
@@ -283,10 +210,10 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Sets the event handler.
+		/// Sets the function that will handle MAC events.
 		/// </summary>
 		/// <param name='callback'>
-		/// Callback.
+		/// The event handler.
 		/// </param>
 		public void setEventHandler (DevCallback callback)
 		{
@@ -294,7 +221,7 @@ namespace Mac_Layer
 		}
 		
 		/// <summary>
-		/// Send the specified data with sequence seq to dstSaddr.
+		/// Sends the specified data with sequence seq to dstSaddr.
 		/// </summary>
 		/// <param name='dstSaddr'>
 		/// Destination short address.
@@ -303,7 +230,7 @@ namespace Mac_Layer
 		/// Sequence number.
 		/// </param>
 		/// <param name='data'>
-		/// Data.
+		/// An array of byte. The maximum length of a frame is 127 byte.
 		/// </param>
 		public uint send (uint dstSaddr, short seq, byte[] data)
 		{
@@ -318,7 +245,29 @@ namespace Mac_Layer
 			return this.state.send (dstSaddr, seq, data);
 		}
 		
-		// static methods
+		//------------- static methods --------------
+		
+		/// <summary>
+		/// Static method called when other event handler've been setted.
+		/// </summary>
+		/// <returns>
+		/// An integer with no meanings.
+		/// </returns>
+		/// <param name='flags'>
+		/// Flags.
+		/// </param>
+		/// <param name='data'>
+		/// Data.
+		/// </param>
+		/// <param name='len'>
+		/// Length.
+		/// </param>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='time'>
+		/// Time.
+		/// </param>
 		public static int onMockEvent (uint flags, byte[] data, uint len, uint info, long time)
 		{
 			
@@ -342,233 +291,5 @@ namespace Mac_Layer
 			//TODO
 		}
 
-//		public void scan(int channel, uint mode) {
-//			uint scanMode = Radio.TIMED;
-//			if (mode == MAC_SCAN_ED){
-//				scanMode = Radio.RXMODE_ED;
-//				this.radio.setRxMode(Radio.RXMODE_ED);
-//				this.timer1.setParam(MAC_SCAN_ED);
-//			}
-//			else if (mode == MAC_SCAN_PASSIVE) {
-//				scanMode = Radio.RXMODE_NORMAL;
-//				//				this.radio.setRxMode(Radio.RXMODE_NORMAL);
-//				this.timer1.setParam(MAC_SCAN_PASSIVE);	
-//			}
-//			else{
-//				ArgumentException.throwIt(ArgumentException.ILLEGAL_VALUE);
-//				return;	
-//			}
-//			this.radio.setRxHandler(onScanEvent);
-////			this.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (nSlot+1) * (2^scanOrder+1));
-//			if (channel == 0) {
-//				this.scanContinue = true;
-//			}
-//			this.radio.setChannel((byte)channel);
-//			this.radio.startRx(scanMode,Time.currentTicks(),Time.currentTicks()+config.aScanInterval);
-//		}
-//
-//		public void stopScan() {
-//			this.scanContinue = false;
-//			this.timer1.cancelAlarm();
-//			this.radio.setRxHandler(onRxEvent);
-//		}
-//
-//		public void onTimerEvent(byte param, long time){
-////			if (param == MAC_CMODE) {
-//////				this.radio.startRx(Radio.ASAP|Radio.RXMODE_PROMISCUOUS,Time.currentTicks(),time+config.slotInterval);
-//////				this.slotCounter += 1;
-////				this.duringSuperframe = false;
-////				this.radio.stopRx ();
-////				this.timer1.setParam (MAC_SLEEP_TILL_BEACON);
-////				this.timer1.setAlarmBySpan (this.config.beaconInterval-this.config.nSlot*this.config.slotInterval);
-////			}
-////			else if (param == MAC_SLEEP_TILL_BEACON) {
-////				this.sendBeacon();
-////				this.slotCounter = 1;
-////				this.timer1.setParam ((byte)MAC_CMODE);
-////				this.timer1.setAlarmBySpan (this.config.nSlot*this.config.slotInterval);
-////				this.duringSuperframe = true;
-////			}
-////			else if (param == MAC_SLEEP) { // spegnere tutto
-////				this.duringSuperframe = false;
-////				this.timer2.setParam(MAC_SLEEP_WAITING_BEACON);
-////				this.timer2.setAlarmTime(time+config.beaconInterval-config.nSlot*config.slotInterval);
-////			}			
-////			else 
-//			if (param == MAC_SLEEP_WAITING_BEACON) {
-//				this.timer2.setParam(MAC_SLEEP);
-//				this.trackBeacon();	
-//			}
-//			else if ((param == MAC_SCAN_ED || 
-//			          param == MAC_SCAN_PASSIVE) && this.scanContinue) {
-//				int chnl = (int)this.radio.getChannel();
-//				if (chnl < 27) {
-//					chnl += 1;
-//					if(chnl == 27)
-//						this.scanContinue = false;
-//					this.radio.setChannel((byte)chnl);
-//					this.radio.startRx(param,time,Time.currentTicks()+config.aScanInterval);
-//				}
-//			}
-//		}
-//
-//		public int onScanEvent(uint flags, byte[] data, uint len, uint info, long time) {
-//			uint mode = radio.getRxMode();
-//			if (mode == Radio.RXMODE_ED) {
-//				this.scanHandler(MAC_SCAN_ED,data,Radio.std2chnl(this.radio.getChannel()),info,time);
-//			}
-//			else if (mode == Radio.RXMODE_NORMAL) {
-//				this.scanHandler(MAC_SCAN_PASSIVE,data,this.radio.getChannel(),info,time);
-//			}
-//
-//			if (!this.scanContinue){
-//				this.stopScan();
-//			}
-//			else
-//				this.timer1.setAlarmBySpan(config.aScanInterval>>1);
-//			return 0;
-//		}
-
-//		public int onRxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-//			uint modeFlag = flags & Device.FLAG_MODE_MASK;
-//			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-//				if (this.coordinator) { // the device is transmitting beacons
-//					if (this.slotCounter <= config.nSlot)
-//						this.timer1.setAlarmBySpan(config.slotInterval>>1);
-//					else { // superframe is ended
-//						this.slotCounter = 0;
-//						this.timer1.setParam(MAC_SLEEP_TILL_BEACON);
-//						this.timer1.setAlarmBySpan(time+config.beaconInterval-config.nSlot*config.slotInterval);
-//					}
-//				}
-//	
-//				if (data != null) {
-//					switch(Frame.getFrameType (data)) {
-//						case Radio.FCF_BEACON:
-//							if(!this.coordinator) {
-//								this.timer2.setAlarmTime(time+config.nSlot*config.slotInterval);
-//								Frame.getBeaconInfo (data, this.config);
-//								this.handleBeaconReceived (time);
-//							}
-//							break;
-//						case Radio.FCF_CMD:
-//							switch(Frame.getCMDType (data)){
-//								case 0x01: // association request handle - coordinator
-//									Logger.appendString (csr.s2b ("Received Association Request"));
-//									Logger.flush (Mote.INFO);
-//									byte[] assRes = Frame.getCMDAssRespFrame (data, this.radio.getPanId (), this.config);
-////									this.radio.stopRx ();
-//									this.radio.send (config.txMode, assRes, 0, Frame.getLength (assRes), time + this.config.slotInterval);
-//									break;
-//								case 0x04: // data request handle - coordinator
-//									break;
-//								case 0x02: // association response handle - not coordinator
-//									Logger.appendString(csr.s2b("Received Association Response"));
-//									Logger.flush(Mote.INFO);
-//									switch(data[26]){
-//										case 0x00: // association successful
-//											this.radio.setShortAddr (Util.get16 (data, 24));
-//											this.associated = true;
-//											this.trackBeacon ();
-//											break;
-//										case 0x01:
-//											this.associated = false;
-//											break;
-//									}
-//									break;
-//							}
-//							break;
-//						case Radio.FCF_DATA:
-//							// handle fcf data
-//							break;
-//					}
-//				}
-//			}
-//			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-//				Logger.appendString(csr.s2b("Rx Error"));
-//				Logger.flush(Mote.INFO);
-//			}
-//			else{
-//				Logger.appendString(csr.s2b("Rx what else?"));
-//				Logger.flush(Mote.INFO);
-//			}
-//			return 0;
-//		}
-
-//		public int onTxEvent(uint flags, byte[] data, uint len, uint info, long time) {
-//			uint modeFlag = flags & Device.FLAG_MODE_MASK;		
-//			if (modeFlag == Radio.FLAG_ASAP || modeFlag == Radio.FLAG_EXACT || modeFlag == Radio.FLAG_TIMED) {
-//				switch (data [0] & 0x07) {
-//					case Radio.FCF_BEACON:
-//						this.radio.startRx (Radio.ASAP|Radio.RX4EVER,0,0);
-//						this.eventHandler (MAC_BEACON_SENT, data, len, info, time);
-//						break;
-//					case Radio.FCF_DATA:
-//						this.txHandler (MAC_TX_COMPLETE, data, len, info, time);
-//						break;
-//					case Radio.FCF_CMD:
-//						if (data [17] == 0x01) { // association request - not coordinator
-//							this.radio.startRx (config.rxMode, Time.currentTicks (), time + config.slotInterval);
-//						} else if (data [17] == 0x04) { // data request - not coordinator
-//
-//						}
-//						break;
-//				}
-//			}						
-//			else if (modeFlag == Radio.FLAG_FAILED || modeFlag == Radio.FLAG_WASLATE) {
-//				if (this.pdu != null && this.duringSuperframe) {
-//					this.radio.transmit(config.txMode,this.pdu,0,Frame.getLength (this.pdu),time+config.slotInterval);
-//				}
-//				else { // pdu = null || this.slotCounter >= nSlot
-//					// impostare il risparmio energetico
-//				}
-//			}
-//			else {
-//
-//			}
-//			return 0;
-//		}
-
-//		public int onEvent(uint flags, byte[] data, uint len, uint info, long time) {
-//
-//			return 0;
-//		}
-
-//		public uint getCoordinatorSADDR() {
-//			return config.coordinatorSADDR;
-//		}
-
-		
-
-//		// private methods
-//		private void trackBeacon() { // nei diagrammi è espresso anche come scanBeacon()
-//			config.aScanInterval = Time.toTickSpan(Time.MILLISECS, 3 * (config.nSlot+1) * (2^14+1));
-//			this.radio.startRx(Radio.ASAP|Radio.RX4EVER, 0, Time.currentTicks()+config.aScanInterval);
-//		}
-//
-//		private void sendBeacon() {
-//			byte[] beacon = Frame.getBeaconFrame (this.radio.getPanId (), this.radio.getShortAddr (), this.config);
-//			this.radio.transmit(Radio.TIMED|Radio.TXMODE_POWER_MAX, beacon, 0, Frame.getLength (beacon),Time.currentTicks()+config.slotInterval);
-//		}
-
-//		private void handleBeaconReceived(long time) {
-//			this.radio.stopRx();
-//			this.radio.setPanId (config.panId, false);
-//			this.duringSuperframe = true;
-//			if (!this.associated) {
-//				byte[] assRequest = Frame.getCMDAssReqFrame (this.radio.getPanId (), config.coordinatorSADDR, config);
-//				this.radio.transmit(config.txMode,assRequest,0,Frame.getLength (assRequest),time+config.slotInterval);
-//			}
-//			else if (this.pdu != null  && this.duringSuperframe) { // there's something to transmit
-//				this.radio.transmit(config.txMode,this.pdu,0,Frame.getLength (this.pdu),time+config.slotInterval);
-//			}
-//			else if (this.pdu == null) { // nothing to transmit -> back to sleep
-//
-//			}
-//		}
-//		//
-//		private void handleDataReceived(byte[] data) {
-//
-//		}
 	}
 }

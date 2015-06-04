@@ -713,7 +713,7 @@ Fields = {
       "name" : "MAC_ASS_RESP",
       "fqname" : "Mac_Layer.Mac.MAC_ASS_RESP",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ AS s_ RES.",
+      "doc" : "<p class=\"first-line\">Indicates the reception of an association response frame.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_TX_COMPLETE" : {
@@ -723,7 +723,7 @@ Fields = {
       "name" : "MAC_TX_COMPLETE",
       "fqname" : "Mac_Layer.Mac.MAC_TX_COMPLETE",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ T x_ COMPLET.",
+      "doc" : "<p class=\"first-line\">Indicate the successful completion of a transmission.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_SCAN_ED" : {
@@ -733,7 +733,7 @@ Fields = {
       "name" : "MAC_SCAN_ED",
       "fqname" : "Mac_Layer.Mac.MAC_SCAN_ED",
       "type" : "b",
-      "doc" : "<p class=\"first-line\">Constant MA c_ SCA n_ E.",
+      "doc" : "<p class=\"first-line\">Indicates the energy detection scan mode.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_BEACON_SENT" : {
@@ -743,7 +743,7 @@ Fields = {
       "name" : "MAC_BEACON_SENT",
       "fqname" : "Mac_Layer.Mac.MAC_BEACON_SENT",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ BEACO n_ SEN.",
+      "doc" : "<p class=\"first-line\">Indicates a successful transmision of a beacon.",
       "seealso" : null
    },
    "Mac_Layer.Mac.pdu" : {
@@ -753,7 +753,7 @@ Fields = {
       "name" : "pdu",
       "fqname" : "Mac_Layer.Mac.pdu",
       "type" : "b[]",
-      "doc" : "<p class=\"first-line\">The pdu.",
+      "doc" : "<p class=\"first-line\">The buffer containing the pdu to transmit.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_ASSOCIATED" : {
@@ -763,7 +763,7 @@ Fields = {
       "name" : "MAC_ASSOCIATED",
       "fqname" : "Mac_Layer.Mac.MAC_ASSOCIATED",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ ASSOCIATE.",
+      "doc" : "<p class=\"first-line\">Indicates a successful association.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_BEACON_RXED" : {
@@ -773,7 +773,7 @@ Fields = {
       "name" : "MAC_BEACON_RXED",
       "fqname" : "Mac_Layer.Mac.MAC_BEACON_RXED",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ BEACO n_ RXE.",
+      "doc" : "<p class=\"first-line\">Indicates the reception of a beacon frame.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_ASS_REQ" : {
@@ -783,7 +783,7 @@ Fields = {
       "name" : "MAC_ASS_REQ",
       "fqname" : "Mac_Layer.Mac.MAC_ASS_REQ",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ AS s_ RE.",
+      "doc" : "<p class=\"first-line\">Indicates the reception of an association request frame.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_DATA_RXED" : {
@@ -793,7 +793,7 @@ Fields = {
       "name" : "MAC_DATA_RXED",
       "fqname" : "Mac_Layer.Mac.MAC_DATA_RXED",
       "type" : "u",
-      "doc" : "<p class=\"first-line\">Constant MA c_ DAT a_ RXE.",
+      "doc" : "<p class=\"first-line\">Indicates the reception of a data frame.",
       "seealso" : null
    },
    "Mac_Layer.Mac.MAC_SCAN_PASSIVE" : {
@@ -803,7 +803,7 @@ Fields = {
       "name" : "MAC_SCAN_PASSIVE",
       "fqname" : "Mac_Layer.Mac.MAC_SCAN_PASSIVE",
       "type" : "b",
-      "doc" : "<p class=\"first-line\">Constant MA c_ SCA n_ PASSIV.",
+      "doc" : "<p class=\"first-line\">Indicates the passive scan mode.",
       "seealso" : null
    }
 };
@@ -816,7 +816,7 @@ Methods = {
       "args" : [
          {
             "name" : "callback",
-            "doc" : "Callback.",
+            "doc" : "The transmission event handler.",
             "type" : "d:com.ibm.saguaro.system.DevCallback"
          }
       ],
@@ -824,7 +824,7 @@ Methods = {
       "signature" : "(d)",
       "fqname" : "Mac_Layer.Mac.setTxHandler(d)",
       "fullname" : "setTxHandler(d:com.ibm.saguaro.system.DevCallback callback)",
-      "doc" : "<p class=\"first-line\">Sets the tx handler.",
+      "doc" : "<p class=\"first-line\">Sets the function that will handle transmission events.",
       "seealso" : null
    },
    "Mac_Layer.Mac.setEventHandler(d)" : {
@@ -834,7 +834,7 @@ Methods = {
       "args" : [
          {
             "name" : "callback",
-            "doc" : "Callback.",
+            "doc" : "The event handler.",
             "type" : "d:com.ibm.saguaro.system.DevCallback"
          }
       ],
@@ -842,7 +842,7 @@ Methods = {
       "signature" : "(d)",
       "fqname" : "Mac_Layer.Mac.setEventHandler(d)",
       "fullname" : "setEventHandler(d:com.ibm.saguaro.system.DevCallback callback)",
-      "doc" : "<p class=\"first-line\">Sets the event handler.",
+      "doc" : "<p class=\"first-line\">Sets the function that will handle MAC events.",
       "seealso" : null
    },
    "Mac_Layer.Mac.disassociate()" : {
@@ -854,7 +854,7 @@ Methods = {
       "signature" : "()",
       "fqname" : "Mac_Layer.Mac.disassociate()",
       "fullname" : "disassociate()",
-      "doc" : "<p class=\"first-line\">Disassociate this instance.",
+      "doc" : "<p class=\"first-line\">Disassociate this instance from the current Pan.",
       "seealso" : null
    },
    "Mac_Layer.Mac.setChannel(u)" : {
@@ -864,7 +864,7 @@ Methods = {
       "args" : [
          {
             "name" : "channel",
-            "doc" : "Channel.",
+            "doc" : "Radio channel.",
             "type" : "u"
          }
       ],
@@ -872,7 +872,7 @@ Methods = {
       "signature" : "(u)",
       "fqname" : "Mac_Layer.Mac.setChannel(u)",
       "fullname" : "setChannel(u channel)",
-      "doc" : "<p class=\"first-line\">Sets the channel.",
+      "doc" : "<p class=\"first-line\">Sets the radio channel.",
       "seealso" : null
    },
    "Mac_Layer.Mac.enable(z)" : {
@@ -895,7 +895,7 @@ Methods = {
    },
    "Mac_Layer.Mac.onMockEvent(u,b[],u,u,l)" : {
       "ret" : {
-         "doc" : null,
+         "doc" : "An integer with no meanings.",
          "type" : "i"
       },
       "flags" : 1073741841,
@@ -903,27 +903,27 @@ Methods = {
       "args" : [
          {
             "name" : "flags",
-            "doc" : "",
+            "doc" : "Flags.",
             "type" : "u"
          },
          {
             "name" : "data",
-            "doc" : "",
+            "doc" : "Data.",
             "type" : "b[]"
          },
          {
             "name" : "len",
-            "doc" : "",
+            "doc" : "Length.",
             "type" : "u"
          },
          {
             "name" : "info",
-            "doc" : "",
+            "doc" : "Info.",
             "type" : "u"
          },
          {
             "name" : "time",
-            "doc" : "",
+            "doc" : "Time.",
             "type" : "l"
          }
       ],
@@ -931,7 +931,7 @@ Methods = {
       "signature" : "(u,b[],u,u,l)i",
       "fqname" : "Mac_Layer.Mac.onMockEvent(u,b[],u,u,l)",
       "fullname" : "onMockEvent(u flags, b[] data, u len, u info, l time)i",
-      "doc" : "",
+      "doc" : "<p class=\"first-line\">Static method called when other event handler've been setted.",
       "seealso" : null
    },
    "Mac_Layer.Mac.send(u,i,b[])" : {
@@ -954,7 +954,7 @@ Methods = {
          },
          {
             "name" : "data",
-            "doc" : "Data.",
+            "doc" : "An array of byte. The maximum length of a frame is 127 byte.",
             "type" : "b[]"
          }
       ],
@@ -962,7 +962,7 @@ Methods = {
       "signature" : "(u,i,b[])u",
       "fqname" : "Mac_Layer.Mac.send(u,i,b[])",
       "fullname" : "send(u dstSaddr, i seq, b[] data)u",
-      "doc" : "<p class=\"first-line\">Send the specified data with sequence seq to dstSaddr.",
+      "doc" : "<p class=\"first-line\">Sends the specified data with sequence seq to dstSaddr.",
       "seealso" : null
    },
    "Mac_Layer.Mac.Mac()" : {
@@ -992,7 +992,7 @@ Methods = {
       "signature" : "(u)",
       "fqname" : "Mac_Layer.Mac.associate(u)",
       "fullname" : "associate(u panId)",
-      "doc" : "<p class=\"first-line\">Associate the specified panId.",
+      "doc" : "<p class=\"first-line\">Tells the Mac to begin association handshake for a specified pan.",
       "seealso" : null
    },
    "Mac_Layer.Mac.createPan(u,u)" : {
@@ -1002,12 +1002,12 @@ Methods = {
       "args" : [
          {
             "name" : "panId",
-            "doc" : "Pan identifier.",
+            "doc" : "Pan identifier for the new Pan.",
             "type" : "u"
          },
          {
             "name" : "saddr",
-            "doc" : "Saddr.",
+            "doc" : "The Short Address for the Pan Coordinator",
             "type" : "u"
          }
       ],
@@ -1015,7 +1015,7 @@ Methods = {
       "signature" : "(u,u)",
       "fqname" : "Mac_Layer.Mac.createPan(u,u)",
       "fullname" : "createPan(u panId, u saddr)",
-      "doc" : "<p class=\"first-line\">Creates the pan.",
+      "doc" : "<p class=\"first-line\">Creates a pan.",
       "seealso" : null
    },
    "Mac_Layer.Mac.setRxHandler(d)" : {
@@ -1025,7 +1025,7 @@ Methods = {
       "args" : [
          {
             "name" : "callback",
-            "doc" : "Callback.",
+            "doc" : "The reception event handler.",
             "type" : "d:com.ibm.saguaro.system.DevCallback"
          }
       ],
@@ -1033,7 +1033,7 @@ Methods = {
       "signature" : "(d)",
       "fqname" : "Mac_Layer.Mac.setRxHandler(d)",
       "fullname" : "setRxHandler(d:com.ibm.saguaro.system.DevCallback callback)",
-      "doc" : "<p class=\"first-line\">Sets the rx handler.",
+      "doc" : "<p class=\"first-line\">Sets the function that will handle reception events.",
       "seealso" : null
    }
 };

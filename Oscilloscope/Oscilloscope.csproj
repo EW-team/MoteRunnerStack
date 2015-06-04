@@ -30,7 +30,7 @@
         <Command type="BeforeBuild" command="find . -type f -name oscilloscope-\* -exec rm {} \;" workingdir="${ProjectDir}" />
         <Command type="BeforeBuild" command="find . -type f -name oscilloscopes-\* -exec rm {} \;" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc --doc oscilloscope-5.0.sxp" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc --doc oscilloscopes-5.0.sxp" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" command="../../moterunner/linux64/bin/mrc --doc oscilloscopes-4.0.sxp" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

@@ -54,7 +54,7 @@ namespace Oscilloscope
 		static Mac mac;
 		
 		/// <summary>MasterOscilloscope is the gateway interface between motes that use Oscilloscope and a PC.</summary>
-		/// <remarks><para>MasterOscilloscope gets sensor readings from motes after creating a PAN with Mac and sends them 
+		/// <para>MasterOscilloscope gets sensor readings from motes after creating a PAN with Mac and sends them 
 		/// through LIP so that a js socket running on Sonoran can read them.</para>
 		static MasterOscilloscope ()
 		{			
@@ -90,19 +90,19 @@ namespace Oscilloscope
 		/// An integer with no meaning.
 		/// </returns>
 		/// <param name='flag'>
-		/// Flag. Represents the status of the transmission.
+		/// Represents the status of the transmission.
 		/// </param>
 		/// <param name='data'>
-		/// Data. The data transmitted.
+		/// The data transmitted.
 		/// </param>
 		/// <param name='len'>
-		/// Length. Length of the trasmitted data.
+		/// Length of the trasmitted data.
 		/// </param>
 		/// <param name='saddr'>
-		/// Saddr. Destination short address.
+		/// Destination short address.
 		/// </param>
 		/// <param name='time'>
-		/// Time. The time when the transmission's been completed.
+		/// The time when the transmission's been completed.
 		/// </param>
 		public static int onTxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
@@ -119,19 +119,19 @@ namespace Oscilloscope
 		/// An integer with no meaning.
 		/// </returns>
 		/// <param name='flag'>
-		/// Flag. Represents the status of the reception.
+		/// Represents the status of the reception.
 		/// </param>
 		/// <param name='data'>
-		/// Data. The data received.
+		/// The data received.
 		/// </param>
 		/// <param name='len'>
-		/// Length. Length of the received data.
+		/// Length of the received data.
 		/// </param>
 		/// <param name='saddr'>
-		/// Saddr. Source short address.
+		/// Source short address.
 		/// </param>
 		/// <param name='time'>
-		/// Time. The time when the data's been received.
+		/// The time when the data's been received.
 		/// </param>
 		public static int onRxEvent (uint flag, byte[] data, uint len, uint saddr, long time)
 		{
@@ -214,10 +214,10 @@ namespace Oscilloscope
 		/// Info.
 		/// </param>
 		/// <param name='buf'>
-		/// Buffer. Data sent to mote.
+		/// Data sent to mote.
 		/// </param>
 		/// <param name='len'>
-		/// Length.
+		/// Data length.
 		/// </param>
 		static int onLipData (uint info, byte[] buf, uint len)
 		{
