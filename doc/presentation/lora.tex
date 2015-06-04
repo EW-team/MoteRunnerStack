@@ -1,46 +1,169 @@
 \section{LoRaWAN}
   
 \begin{frame}[fragile]
-  \frametitle{What is LoRa}
+  \frametitle{A deeper look at LoRa}
   \begin{itemize}
       \item LoRaWAN is a Low Power Wide Area Network (LPWAN) specification intended for wireless battery operated Things in regional, national or global network. 
       \item LoRaWAN target key requirements of internet of things:
       \begin{itemize}
-      	\item secure bi-directional communication - INDAGARE
-      	\item mobility - INDAGARE
-      	\item localization services - INDAGARE
+      	\item secure bi-directional communication
+      	\item mobility
+      	\item localization services 
       \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa devices}
+  \frametitle{LoRa devices sync}
+  For time synchronization gateways periodically broadcast so-called beacons. Each beacon
+  minimally contains:
   \begin{itemize}
-    \item Class A: Bi-directional end-devices
-    \begin{itemize}
-      \item .
-    \end{itemize}
-    \item Class B: Bi-directional end-devices with scheduled receive slots
-    \begin{itemize}
-      \item .
-    \end{itemize}
-    \item Class C: Bi-directional end-devices with maximal receive slots
-    \begin{itemize}
-      \item .
-    \end{itemize}
+      \item available channels (ChMask)
+      \item current GPS time (Time)
+      \end{itemize}
+      The broadcasting of beacons (in implicit mode) is done time-synchronously (BEACON\_INTERVAL) by all gateways of a network with no interference.
+      \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/lora_beaconing.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa MAC Payload Frame}
+  \begin{columns}
+    \begin{column}{.48\linewidth}
+    LoRa MAC message types:
+       \begin{itemize}
+        \item join request
+        \item join accept 
+        \item unconfirmed data messages
+        \item confirmed data messages
+       \end{itemize}
+  \end{column}
+   \begin{column}{.48\linewidth}
+ \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/mac_frame.png}
+  \end{figure}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa end-devices}
+  \begin{itemize}
+   \item  Release v1.0 allows at MAC and Application layers, Bi-directional communications:
+     \begin{itemize}
+       \item Class A: after send operation two tiny time windows are opened in order to allow reception
+       \item Class B: send and receive operations may be scheduled based on the time information contained in the beacons
+     \end{itemize}
+    \item subsequent releases:
+     \begin{itemize}
+       \item Class C: nearly continuously open receive windows, only closed when transmitting.
+     \end{itemize}
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/lora_rx_windows.png}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LoRa secure communications - 1}
+  In order to partecipate in a LoRa network an end device first has to be personalized and the activated.
+  Activation of an end device can be achieved in two ways:
+  \begin{itemize}
+    \item OTAA (over-the-air activation) when an end device is deployed or reset;
+    \item APB (activation by personalization) one-step personalization and activation.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa technology}
+  \frametitle{LoRa secure communications - 2}
+  During activation the end device holds the following informations:
   \begin{itemize}
-      \item .
+      \item \textbf{DevAddr:} device ID of 32 bits that uniquely identifies the end device.
+      \item \textbf{AppEUI:} globally unique application ID that uniquely identifies the application provider of the end device.
+      \item \textbf{NwkSKey:} device-specific network session key, ensures data integrity and os used to encrypt/decrypt MAC data messages payload
+      \item \textbf{AppSKey:} device-specific application session key, used to encrypt and decrypt the payload field of application-specific data messages.
   \end{itemize}
 \end{frame}
 
+
 \begin{frame}[fragile]
-  \frametitle{LoRa technology}
-  \begin{itemize}
-      \item .
-  \end{itemize}
+  \frametitle{LoRa secure communications - OTAA}
+ \begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/lora_secure.png}
+  \end{figure}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa mobility}
+  LoRa network data rates are:
+ \begin{itemize}
+  \item Network controlled for fixed devices by means of using ADR bit in the PHY payload of data messages:
+  \begin{itemize}
+    \item If is set, the network will control the data rate of the end device through the appropriate MAC commands
+    \item If is cleared, the network will not attempt to control the data rate of the end device independently of the received signal quality
+  \end{itemize}
+  \item default for mobile end-devices.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/PHYpayload.png}
+  \end{figure}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa mobility 2}
+  LoRa modes (868Mhz band):
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/LoRamode.png}
+  \caption{SX1272 module modes}
+ \end{figure}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LoRa localization}
+  All gateways send their beacon at exactly the same point in time:
+  \begin{itemize}
+    \item on first 15 bytes there are no visible on-air collisions 
+    \item wrt the optional part , device within the proximity of more than one
+	  gateway will still be able to decode the strongest beacon with high probability
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{img/optional.png}
+  \caption{Beacon optional part}
+ \end{figure}
+  
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa conclusions 1}
+  For what applications is LoRa a good option?
+  \begin{itemize}
+    \item solar or mains-powered nodes transmitting every 10 or 15 minutes in networks with low or medium number of nodes
+    \item very wide networks, with long-range links (Up to 22km, Sensitivity -134dBm) 
+  \end{itemize}
+  
+\end{frame}
+  
+ \begin{frame}[fragile]
+  \frametitle{LoRa conclusions 2}
+  For what applications is NOT LoRa a good option?
+  \begin{itemize}
+    \item projects which require high data-rate and/or very frequent transmissions (e.g., each 10 seconds)
+    \item including receipt of ACK message, mode 10 (the fastest), takes twice the time of XBee (<200ms)
+    \item due to low data-rates OTA re-programming is not easily achieved (3G, GPRS may be better choiches)
+  \end{itemize}
+ 
+\end{frame}
+
