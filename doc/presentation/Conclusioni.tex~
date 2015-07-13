@@ -1,7 +1,4 @@
 \section{Conclusion} 
-\begin{frame}[fragile]
-  \frametitle{Conclusion}
-\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Final considerations about Mote Runner}
@@ -16,7 +13,28 @@
     \begin{itemize}
       \item It's still in beta
       \item Low support (docs, API, \dots)
-      \item q
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mac status}
+  \begin{itemize}
+    \item Only three states are supported, there are others (orphan,..)
+    \item Superframe parameters can't be dinamically changed
+    \item In the associated state motes are not energy aware
+    \item Some funtionality have not been implemented (e.g. disassociation, channels scan,...)
+    \item Transmission from PAN-C to devices seems to require EUI64, but SADDRs are more suited
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+  Let's try it!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+  Thank's for your attention :)
 \end{frame}

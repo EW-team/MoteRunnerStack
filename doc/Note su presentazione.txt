@@ -1,0 +1,9 @@
+Slide # - Annotazione
+
+20 - Si potrebbe rimuovere il testo mettendo le immagini a tutto schermo per facilitarne la lettura.
+22 - Credo sia "In order to partecipate in a LoRa network an end device first has to be personalized and then activated.". Inoltre non è chiaro cosa si intenda per personalizzazione.
+31:35 - Incompleto. Si parla solo di radio. Si potrebbe cambiare nome alla sezione o tagliare direttamente il blocco di slides.
+47 - Era impostata la formattazione a 2 colonne senza immagine, ho aggiunto una immagine che faccia capire il funzionamento. Può essere d'ausilio alla simulazione con i nodi veri, che credo vada fatta una volta arrivati a questo punto.
+59 - Aggiunta slide con considerazioni conclusive sullo stato attuale del progetto.
+60 - Forse si può tagliare e spostare la frase alla slide 47.
+61 - Aggiunta slide con ringraziamenti.

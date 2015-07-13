@@ -18,8 +18,8 @@
   \frametitle{MRv6: an implementation of 6LoWPAN in MR}
   \begin{itemize}
     \item TDMA and beacon based multi-hop network which allows for an IPv6 based communication between motes
-    \item Is not a bultin MR component, but fully implemented in C\#
-    \item Datagram packets exchanged adheres to a subset of th 6LoWPAN specifications
+    \item Is not a builtin MR component, but fully implemented in C\#
+    \item Datagram packets exchanged adheres to a subset of the 6LoWPAN specifications
     \item The edge mote decides upon:
     \begin{itemize}
       \item Association requests
@@ -58,7 +58,7 @@
   \frametitle{Superframe}
   \begin{itemize}
    \item At the beginning of their communication period parent motes send out beacon messages
-    \item Other then a fixed exclusive slot parent offers a shared slot (e.g. association requests and responses, broadcast messages)
+    \item Other then a fixed exclusive slot, parent offers a shared slot (e.g. association requests and responses, broadcast messages)
     \item Beacon, shared and fixed slots form the superframe whose timings are assigned by the edge
   \end{itemize}
   \begin{table}[h]
@@ -86,12 +86,12 @@
 \begin{frame}[fragile]
  \frametitle{Short comparison}
  \begin{table}[h]
-    \begin{tabular}{@{}p{5cm}p{5cm}@{}}
+    \begin{tabular}{@{}p{5cm}|p{5cm}@{}}
       \toprule
       Our Mac-Like &  MRv6 \\ \midrule
       Contention based &  Scheduled\\
       Trasmitt only when  \mbox{requested} &  TDMA based\\
-      Association managed by pan-coordinator & Association managed by the endge  \\ 
+      Association managed by pan-coordinator & Association managed by the edge  \\ 
       ... & ... \\ \bottomrule
     \end{tabular}
   \end{table}

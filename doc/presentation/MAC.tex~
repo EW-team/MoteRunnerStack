@@ -65,7 +65,7 @@
 \begin{frame}[fragile]
   \frametitle{Timing with beacon}
   \begin{itemize}
-    \item It grants synchronization between mote and coordinator
+    \item Grants synchronization between mote and coordinator
     \item Realized with a timer and scheduled events
   \end{itemize}
   \begin{figure}
