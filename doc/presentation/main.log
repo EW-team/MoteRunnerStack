@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Debian) (format=xelatex 2015.2.24)  13 JUL 2015 11:10
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Debian) (format=xelatex 2015.2.24)  13 JUL 2015 19:26
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2179,6 +2179,51 @@ Underfull \hbox (badness 5064) in paragraph at lines 8--9
 
  (./main.vrb) [62
 
+]) (./Integrazione.tex [63
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/loraClasses.png Graphic file (type QTm)
+
+<use  "img/loraClasses.png" >) [64
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/lora_rx_windows.png Graphic file (type QTm)
+
+<use  "img/lora_rx_windows.png" >)
+Overfull \vbox (4.21303pt too high) detected at line 28
+ []
+
+[65
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/loraBeacon.png Graphic file (type QTm)
+ <use  "img/loraBeacon.png" >)
+Overfull \vbox (27.10605pt too high) detected at line 44
+ []
+
+[66
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb) [67
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/loraClassC.png Graphic file (type QTm)
+ <use  "img/loraClassC.png" >) [68
+
 ])
 \tf@nav=\write6
 \openout6 = `main.nav'.
@@ -2189,20 +2234,21 @@ Underfull \hbox (badness 5064) in paragraph at lines 8--9
 \tf@snm=\write8
 \openout8 = `main.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 47.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 47.
- (./main.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 47.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 47.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 47.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
+
+(./main.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 48.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 48.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 38679 strings out of 494011
- 850335 string characters out of 3153095
+ 38715 strings out of 494011
+ 850722 string characters out of 3153095
  916995 words of memory out of 3000000
- 41008 multiletter control sequences out of 15000+200000
+ 41028 multiletter control sequences out of 15000+200000
  9008 words of font info for 85 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  59i,13n,84p,919b,850s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on main.pdf (62 pages).
+Output written on main.pdf (68 pages).

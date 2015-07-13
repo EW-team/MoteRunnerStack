@@ -3,7 +3,6 @@
 
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
-\usepackage{hyperref}
 
 \usepgfplotslibrary{dateplot}
 

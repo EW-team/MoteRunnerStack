@@ -141,8 +141,23 @@
 \headcommand {\beamer@framepages {61}{61}}
 \headcommand {\slideentry {6}{0}{62}{62/62}{}{0}}
 \headcommand {\beamer@framepages {62}{62}}
-\headcommand {\beamer@partpages {1}{62}}
-\headcommand {\beamer@subsectionpages {58}{62}}
+\headcommand {\sectionentry {7}{Integrazione LoRa}{63}{Integrazione LoRa}{0}}
 \headcommand {\beamer@sectionpages {58}{62}}
-\headcommand {\beamer@documentpages {62}}
-\headcommand {\def \inserttotalframenumber {61}}
+\headcommand {\beamer@subsectionpages {58}{62}}
+\headcommand {\slideentry {7}{0}{63}{63/63}{}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\slideentry {7}{0}{64}{64/64}{}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\slideentry {7}{0}{65}{65/65}{}{0}}
+\headcommand {\beamer@framepages {65}{65}}
+\headcommand {\slideentry {7}{0}{66}{66/66}{}{0}}
+\headcommand {\beamer@framepages {66}{66}}
+\headcommand {\slideentry {7}{0}{67}{67/67}{}{0}}
+\headcommand {\beamer@framepages {67}{67}}
+\headcommand {\slideentry {7}{0}{68}{68/68}{}{0}}
+\headcommand {\beamer@framepages {68}{68}}
+\headcommand {\beamer@partpages {1}{68}}
+\headcommand {\beamer@subsectionpages {63}{68}}
+\headcommand {\beamer@sectionpages {63}{68}}
+\headcommand {\beamer@documentpages {68}}
+\headcommand {\def \inserttotalframenumber {67}}
