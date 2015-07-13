@@ -1,6 +1,7 @@
 Slide # - Annotazione
 
 20 - Si potrebbe rimuovere il testo mettendo le immagini a tutto schermo per facilitarne la lettura.
+
 21 - I dispositivi di classe B includono le funzionalità dei dispositivi di classe A, ma sono indirizzati anche ad un'ulteriore necessità: permettere ai server di inviare messaggi ad essi senza che il dispositivo debba inviare prima un frame. Ciò è possibile ottenendo sincronizzazione tra il dispositivo di classe B e il server, usando i gateway che forniscono periodicamente il tempo fornito nei beacon. Un dispositivo passa da classe A a classe B mediante comando da parte del server ed è possibile solo in seguito alla ricezione di un beacon. In seguito un estratto della documentazione:
 
 	"LoRaWAN Class B layer which is optimized for battery-powered
@@ -35,18 +36,55 @@ Slide # - Annotazione
 
 	In the event of beacon loss, a device shall be capable of maintaining Class B operation for 2
 	hours (120 minutes) after it received the last beacon. This temporary Class B operation
-	without beacon is called beacon-les operation. It relies on the end-device‘s own clock to
+	without beacon is called beacon-less operation. It relies on the end-device‘s own clock to
 	keep timing.
 	During beacon-less operation, unicast, multicast and beacon reception slots must all be
 	progressively expanded to accommodate the end-device‘s possible clock drift.
 
+	The beacon window interval is divided into 212 = 4096 ping slots of 30 ms each numbered
+	from 0 to 4095.
+	An end-device using the slot number N must turn on its receiver exactly Ton seconds after
+	the start of the beacon where: Ton = beacon_reserved + N * 30 ms
+	N is called slot index.
+	To avoid systematic collisions or over-hearing problems the slot index is randomized and
+	changed at every beacon period.
 
+	Besides relaying messages between end-devices and network servers, all gateways
+	participate in providing a time-synchronization mechanisms by sending beacons at regular
+	fixed intervals configurable per network (BEACON_INTERVAL). All beacons are transmitted
+	in radio packet implicit mode, that is, without a LoRa physical header and with no CRC being
+	appended by the radio.
 
+	When the network attempts to communicate with an end-device using a Class B downlink
+	slot, it transmits the downlink from the gateway which was closest to the end-device when
+	the last uplink was received. Therefore the network server needs to keep track of the rough
+	position of every Class B device.
+	Whenever a Class B device moves and changes cell, it needs to communicate with the
+	network server in order to update its downlink route.
+	The end-device has the choice between 2 basic strategies:
+	- Systematic periodic uplink: simplest method that doesn‘t require demodulation of the
+	gateway specific field of the beacon. Only applicable to slowly moving or stationery
+	end-devices. There are no requirements on those periodic uplinks.
+	- Uplink on cell change: The end-device demodulates the ―gateway specific‖ field of
+	the beacon, detects that the ID of the gateway broadcasting the beacon it
+	demodulates has changed, and sends an uplink. In that case the device should
+	respect a pseudo random delay in the [0:120] seconds range between the beacon
+	demodulation and the uplink transmission. This is required to insure that the uplinks
+	of multiple Class B devices entering or leaving a cell during the same beacon period
+	will not systematically occur at the same time immediately after the beacon
+	broadcast.
+
+	Failure to report cell change will result in Class B downlink being temporary not operational.
 "
 
 22 - Credo sia "In order to partecipate in a LoRa network an end device first has to be personalized and then activated.". Inoltre non è chiaro cosa si intenda per personalizzazione.
+
 31:35 - Incompleto. Si parla solo di radio. Si potrebbe cambiare nome alla sezione o tagliare direttamente il blocco di slides.
+
 47 - Era impostata la formattazione a 2 colonne senza immagine, ho aggiunto una immagine che faccia capire il funzionamento. Può essere d'ausilio alla simulazione con i nodi veri, che credo vada fatta una volta arrivati a questo punto.
+
 59 - Aggiunta slide con considerazioni conclusive sullo stato attuale del progetto.
+
 60 - Forse si può tagliare e spostare la frase alla slide 47.
+
 61 - Aggiunta slide con ringraziamenti.
