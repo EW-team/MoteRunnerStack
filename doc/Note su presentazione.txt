@@ -1,6 +1,6 @@
 Slide # - Annotazione
 
-20 - Si potrebbe rimuovere il testo mettendo le immagini a tutto schermo per facilitarne la lettura.
+20 - Si potrebbe rimuovere il testo mettendo le immagini a tutto schermo per facilitarne la lettura. (SOLVED)
 
 21 - I dispositivi di classe B includono le funzionalità dei dispositivi di classe A, ma sono indirizzati anche ad un'ulteriore necessità: permettere ai server di inviare messaggi ad essi senza che il dispositivo debba inviare prima un frame. Ciò è possibile ottenendo sincronizzazione tra il dispositivo di classe B e il server, usando i gateway che forniscono periodicamente il tempo fornito nei beacon. Un dispositivo passa da classe A a classe B mediante comando da parte del server ed è possibile solo in seguito alla ricezione di un beacon. In seguito un estratto della documentazione:
 
@@ -79,12 +79,17 @@ Slide # - Annotazione
 
 22 - Credo sia "In order to partecipate in a LoRa network an end device first has to be personalized and then activated.". Inoltre non è chiaro cosa si intenda per personalizzazione.
 
-31:35 - Incompleto. Si parla solo di radio. Si potrebbe cambiare nome alla sezione o tagliare direttamente il blocco di slides.
+22(R) Matteo - Punto uno solved ;) Per la pers. io l'ho intesa come una registrazione/ assegnazione di identità univoca data da: globally unique end-device identifier (DevEUI), the
+application identifier (AppEUI), and an AES-128 key (AppKey). Purtroppo non è chiarissimo.
 
-47 - Era impostata la formattazione a 2 colonne senza immagine, ho aggiunto una immagine che faccia capire il funzionamento. Può essere d'ausilio alla simulazione con i nodi veri, che credo vada fatta una volta arrivati a questo punto.
+35:39 - Incompleto. -Si parla solo di radio. Si potrebbe cambiare nome alla sezione o tagliare direttamente il blocco di slides.
 
-59 - Aggiunta slide con considerazioni conclusive sullo stato attuale del progetto.
+35:39(R) Matteo - Modifica da fare anche al volo credo, non so se tagliare però. Male che va si va in Fast forward su queste.
 
-60 - Forse si può tagliare e spostare la frase alla slide 47.
+51 - Era impostata la formattazione a 2 colonne senza immagine, ho aggiunto una immagine che faccia capire il funzionamento. Può essere d'ausilio alla simulazione con i nodi veri, che credo vada fatta una volta arrivati a questo punto.
 
-61 - Aggiunta slide con ringraziamenti.
+51(R) Matteo - Anche qui mi trovi piuttosto d'accordo, modificato di conseguenza (eliminazione della slide 60 (let's try))
+
+63 - Aggiunta slide con considerazioni conclusive sullo stato attuale del progetto.
+
+64 - Aggiunta slide con ringraziamenti.
