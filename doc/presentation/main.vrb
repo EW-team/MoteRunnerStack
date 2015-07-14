@@ -1,10 +1,2 @@
-\frametitle {Class C end-devices}
-\begin{itemize}
-\item This mode is used when there are no need for energy awareness and there's no need to minimize reception time.
-\item Class C end-devices cannot implement Class B option.
-\item These devices will listen with RX2 windows parameters as often as possible.
-\end{itemize}
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{img/loraClassC.png}
-\end{figure}
+\frametitle {}
+  Thank's for the attention :)

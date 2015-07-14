@@ -36,7 +36,7 @@
     	\item Every mote has a unique short address (SADDR) inside the PAN
     \end{itemize}
     \item To obtain the SADDR the mote must associate with the PAN coordinator
-    \item To grant communication between motes it's needed synchronization
+    \item To grant communication between motes synchronization is crucial
     \begin{itemize}
       \item Beacon + Superframe
     \end{itemize}
@@ -65,7 +65,7 @@
 \begin{frame}[fragile]
   \frametitle{Timing with beacon}
   \begin{itemize}
-    \item It grants synchronization between mote and coordinator
+    \item Grants synchronization between mote and coordinator
     \item Realized with a timer and scheduled events
   \end{itemize}
   \begin{figure}
@@ -159,9 +159,9 @@
   \end{column}
   \hfill
     \begin{column}{.4\linewidth}
-      %\begin{figure}
-	%\includegraphics[width=\textwidth]{}
-      %\end{figure}
+      \begin{figure}
+	\includegraphics[width=\textwidth]{img/oscilloscope.png}
+      \end{figure}
     \end{column}
   \end{columns}
 \end{frame}

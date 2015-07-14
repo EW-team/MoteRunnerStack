@@ -1,12 +1,12 @@
-\section{Testing Mote Runner}
+\section{Introduction to \mbox{Mote Runner}}
 \begin{frame}[fragile]
-  \frametitle{Problems}
+  \frametitle{Points to explore}
   \begin{itemize}
     \item MR v.13 offers:
     \begin{itemize}
     	\item Radio interface IEEE 802.15.4 compliant
     	\item Hopi
-    	\item A simulation environment IRIS friendly
+    	\item An IRIS-friendly simulation environment
     	\item Many nice features (Debugger, Logger and so on)
     \end{itemize}
   \end{itemize}
@@ -38,7 +38,7 @@
     	\item The radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
     	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
     \end{itemize}
-    \item Each mote mantains 3 addresses:
+    \item Each mote holds 3 addresses:
     \begin{itemize}
     	\item a 16-bit PAN identifier
     	\item a 64-bit extended address that uniquely identifies a mote
@@ -83,11 +83,13 @@
 \begin{frame}[fragile]
   \frametitle{Tx/Rx Real and Real Time Constraints}
   \begin{itemize}
-    \item It's possible to operate in many different ways with regars to real time constraints:
+    \item It's possible to operate in many different ways with regards to real time constraints:
     \begin{itemize}
-    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or exactly at the specified time or ...
-    	\item Radio requires a start operation and an end operation instant, MR manages autonomously Radio rampage so that the device is ready at the specified time and could turn back to sleep at the end of the operations
-    	\item If the device cannot be ready, it raises an even
+    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or EXACTLY at the specified time or ...
+    	\item Rx/Tx require a start operation time and an end one
+    	\item MR manages autonomously all warm up and ramp up to make the device ready at the specified time
+    	\item The device turn off at the end and an event is raised to be managed with delegation
+    	\item If the device cannot be ready at the specified time or an error occurs which reports this status
     \end{itemize}
 
   \end{itemize}

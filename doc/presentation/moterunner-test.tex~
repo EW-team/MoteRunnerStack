@@ -1,34 +1,34 @@
-\section{Testing \mbox{Mote Runner}}
+\section{Physical layer in \mbox{Mote Runner}}
 \begin{frame}[fragile]
-  \frametitle{Points to explore}
+  \frametitle{Radio interface}
   \begin{itemize}
-    \item MR v.13 offers:
+    \item MR v.13 offers a Radio interface IEEE 802.15.4 compliant
     \begin{itemize}
-    	\item Radio interface IEEE 802.15.4 compliant
-    	\item Hopi
-    	\item An IRIS-friendly simulation environment
-    	\item Many nice features (Debugger, Logger and so on)
+    	\item It is a generic class in the IBM saguaro system that permits to use the radio device
+    	\item It offers an API with the following functionality:
+    	\begin{itemize}
+			\item open: opens the radio, once opened no other assembly can use it
+			\item close: releases the radio so that others can use it
+			\item setter and getters for channel and network parameters (addresses, panid...)
+			\item startReceive: listens the channel (in one of the many receiption mode)
+			\item transmit: begin to transmit a pdu
+    	\end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Programming the Radio}
-  \begin{itemize}
-    \item com.ibm.saguaro.system.Radio
-    \begin{itemize}
-    	\item This is a generic class in the IBM saguaro system to use the device radio
-    	\item It offers a low level API with the following functionality:
-    	\begin{itemize}
-	  \item open: opens the radio, once opened no other assembly can use it
-	  \item close: releases the radio so that others can use it
-	  \item setter and getters for channel and network parameters (addresses, panid...)
-	  \item startReceive: listens the channel (in one of the many receiption mode)
-	  \item transmit: begin to transmit a pdu
-    	\end{itemize}
-    \end{itemize}
-  \end{itemize}
+	\frametitle{Radio interface}
+	\begin{itemize}
+		\item In addition Radio:
+		\begin{itemize}
+			\item Handles transmission and receiption notifing to higher level by delegation
+			\item Manages acks notifing failure or success states in callbacks
+			\item Permits to set parameters as PAN id, short address, radio channel
+		\end{itemize}
+	\end{itemize}
 \end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Transmission \& Reception}
@@ -89,7 +89,7 @@
     	\item Rx/Tx require a start operation time and an end one
     	\item MR manages autonomously all warm up and ramp up to make the device ready at the specified time
     	\item The device turn off at the end and an event is raised to be managed with delegation
-    	\item If the device cannot be ready at the specified time or an error occurs an error reports this status
+    	\item If the device cannot be ready at the specified time or an error occurs which reports this status
     \end{itemize}
 
   \end{itemize}

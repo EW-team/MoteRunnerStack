@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Debian) (format=xelatex 2015.2.24)  13 JUL 2015 19:26
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Debian) (format=xelatex 2015.2.24)  14 JUL 2015 11:44
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1816,23 +1816,28 @@ File: img/mac_frame.png Graphic file (type QTm)
 \openout4 = `main.vrb'.
 
  (./main.vrb
+File: img/loraClasses.png Graphic file (type QTm)
+ <use  "img/loraClasses.png" >) [22
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
 File: img/lora_rx_windows.png Graphic file (type QTm)
- <use  "img/lora_rx_windows.png" >)
-Overfull \vbox (17.78297pt too high) detected at line 70
+
+<use  "img/lora_rx_windows.png" >)
+Overfull \vbox (4.21303pt too high) detected at line 67
  []
 
-[22
+[23
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [23
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb)
-Overfull \vbox (15.09521pt too high) detected at line 92
+ (./main.vrb
+File: img/loraBeacon.png Graphic file (type QTm)
+ <use  "img/loraBeacon.png" >)
+Overfull \vbox (27.10605pt too high) detected at line 83
  []
 
 [24
@@ -1840,9 +1845,36 @@ Overfull \vbox (15.09521pt too high) detected at line 92
 ]
 \openout4 = `main.vrb'.
 
+ (./main.vrb) [25
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/loraClassC.png Graphic file (type QTm)
+ <use  "img/loraClassC.png" >) [26
+
+]
+\openout4 = `main.vrb'.
+
+
+(./main.vrb) [27
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb)
+Overfull \vbox (15.09521pt too high) detected at line 128
+ []
+
+[28
+
+]
+\openout4 = `main.vrb'.
+
  (./main.vrb
 File: img/lora_secure.png Graphic file (type QTm)
- <use  "img/lora_secure.png" >) [25
+ <use  "img/lora_secure.png" >) [29
 
 ]
 \openout4 = `main.vrb'.
@@ -1851,10 +1883,10 @@ File: img/lora_secure.png Graphic file (type QTm)
 File: img/PHYpayload.png Graphic file (type QTm)
 
 <use  "img/PHYpayload.png" >)
-Overfull \vbox (11.11061pt too high) detected at line 118
+Overfull \vbox (11.11061pt too high) detected at line 154
  []
 
-[26
+[30
 
 ]
 \openout4 = `main.vrb'.
@@ -1862,34 +1894,17 @@ Overfull \vbox (11.11061pt too high) detected at line 118
  (./main.vrb
 File: img/LoRamode.png Graphic file (type QTm)
  <use  "img/LoRamode.png" >)
-Overfull \vbox (6.61252pt too high) detected at line 129
+Overfull \vbox (6.61252pt too high) detected at line 165
  []
 
-[27
+[31
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb
 File: img/optional.png Graphic file (type QTm)
- <use  "img/optional.png" >) [28
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [29
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [30
-
-]) (./moterunner-test.tex [31
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [32
+ <use  "img/optional.png" >) [32
 
 ]
 \openout4 = `main.vrb'.
@@ -1899,32 +1914,24 @@ File: img/optional.png Graphic file (type QTm)
 ]
 \openout4 = `main.vrb'.
 
+ (./main.vrb) [34
 
-(./main.vrb) [34
+]) (./moterunner-test.tex
+Underfull \hbox (badness 1400) in paragraph at lines 1--1
+[][][][]\EU1/FiraSans(0)/m/sc/17.28 physical layer in 
+ []
 
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-File: img/header.jpg Graphic file (type QTm)
- <use  "img/header.jpg" >
-File: img/fcf.jpg Graphic file (type QTm)
- <use  "img/fcf.jpg" >
-File: img/fca.jpg Graphic file (type QTm)
-
-<use  "img/fca.jpg" >) [35
+[35
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb) [36
 
-]) (./MAC.tex
-Underfull \hbox (badness 2951) in paragraph at lines 1--1
-[][][][]\EU1/FiraSans(0)/m/sc/17.28 a mac layer in 
- []
+]
+\openout4 = `main.vrb'.
 
-[37
+ (./main.vrb) [37
 
 ]
 \openout4 = `main.vrb'.
@@ -1935,22 +1942,23 @@ Underfull \hbox (badness 2951) in paragraph at lines 1--1
 \openout4 = `main.vrb'.
 
  (./main.vrb
-File: img/MAClan.png Graphic file (type QTm)
- <use  "img/MAClan.png" >) [39
+File: img/header.jpg Graphic file (type QTm)
+
+<use  "img/header.jpg" >
+File: img/fcf.jpg Graphic file (type QTm)
+ <use  "img/fcf.jpg" >
+File: img/fca.jpg Graphic file (type QTm)
+ <use  "img/fca.jpg" >) [39
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb)
-[40
 
-]
-\openout4 = `main.vrb'.
+(./main.vrb) [40
 
- (./main.vrb
-File: img/Association.png Graphic file (type QTm)
- <use  "img/Association.png" >)
-Overfull \vbox (8.60464pt too high) detected at line 54
+]) (./MAC.tex
+Underfull \hbox (badness 2951) in paragraph at lines 1--1
+[][][][]\EU1/FiraSans(0)/m/sc/17.28 a mac layer in 
  []
 
 [41
@@ -1958,9 +1966,38 @@ Overfull \vbox (8.60464pt too high) detected at line 54
 ]
 \openout4 = `main.vrb'.
 
+ (./main.vrb) [42
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/MAClan.png Graphic file (type QTm)
+ <use  "img/MAClan.png" >) [43
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb)
+[44
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb
+File: img/Association.png Graphic file (type QTm)
+ <use  "img/Association.png" >)
+Overfull \vbox (8.60464pt too high) detected at line 53
+ []
+
+[45
+
+]
+\openout4 = `main.vrb'.
+
  (./main.vrb
 File: img/DataRequest.png Graphic file (type QTm)
- <use  "img/DataRequest.png" >) [42
+ <use  "img/DataRequest.png" >) [46
 
 ]
 \openout4 = `main.vrb'.
@@ -1968,7 +2005,7 @@ File: img/DataRequest.png Graphic file (type QTm)
  (./main.vrb
 File: img/MAC_STATES.png Graphic file (type QTm)
 
-<use  "img/MAC_STATES.png" >) [43
+<use  "img/MAC_STATES.png" >) [47
 
 ]
 \openout4 = `main.vrb'.
@@ -1976,7 +2013,7 @@ File: img/MAC_STATES.png Graphic file (type QTm)
  (./main.vrb
 File: img/beacon.png Graphic file (type QTm)
  <use  "img/beacon.png" >)
-[44
+[48
 
 ]
 \openout4 = `main.vrb'.
@@ -1984,10 +2021,10 @@ File: img/beacon.png Graphic file (type QTm)
  (./main.vrb
 File: img/MAC_COORDINATOR.png Graphic file (type QTm)
  <use  "img/MAC_COORDINATOR.png" >)
-Overfull \vbox (26.67722pt too high) detected at line 113
+Overfull \vbox (26.67722pt too high) detected at line 112
  []
 
-[45
+[49
 
 ]
 \openout4 = `main.vrb'.
@@ -1997,17 +2034,17 @@ File: img/associazione.png Graphic file (type QTm)
  <use  "img/associazione.png" >
 File: img/dataIndirect.png Graphic file (type QTm)
  <use  "img/dataIndirect.png" >)
-Overfull \vbox (23.40378pt too high) detected at line 127
+Overfull \vbox (23.40378pt too high) detected at line 126
  []
 
-[46
+[50
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb
 File: img/mda100.jpg Graphic file (type QTm)
- <use  "img/mda100.jpg" >) [47
+ <use  "img/mda100.jpg" >) [51
 
 ]
 \openout4 = `main.vrb'.
@@ -2015,9 +2052,9 @@ File: img/mda100.jpg Graphic file (type QTm)
  (./main.vrb
 File: img/oscilloscope.png Graphic file (type QTm)
 
-<use  "img/oscilloscope.png" >) [48
+<use  "img/oscilloscope.png" >) [52
 
-]) (./6LoWPAN.tex [49
+]) (./6LoWPAN.tex [53
 
 ]
 \openout4 = `main.vrb'.
@@ -2029,25 +2066,25 @@ File: img/6low_network.png Graphic file (type QTm)
 Overfull \vbox (17.1949pt too high) detected at line 8
  []
 
-[50
+[54
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb
 File: img/6low_stack.png Graphic file (type QTm)
- <use  "img/6low_stack.png" >) [51
+ <use  "img/6low_stack.png" >) [55
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [52
+ (./main.vrb) [56
 
 ]
 \openout4 = `main.vrb'.
 
 
-(./main.vrb) [53
+(./main.vrb) [57
 
 ]
 \openout4 = `main.vrb'.
@@ -2087,7 +2124,7 @@ File: img/6low_stack.png Graphic file (type QTm)
 . * 'bold italic small caps' with NFSS spec.:
 . <->"Fira Sans/I/ICU:script=latn;language=DFLT;mapping=tex-text;+tnum;+smcp;"
 .................................................
-) [54
+) [58
 
 ]
 \openout4 = `main.vrb'.
@@ -2121,12 +2158,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 10--10
 []\EU1/FiraSansLight(2)/m/n/12 Child
  []
 
-) [55
+) [59
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [56
+ (./main.vrb) [60
 
 ]
 \openout4 = `main.vrb'.
@@ -2155,74 +2192,24 @@ Underfull \hbox (badness 5064) in paragraph at lines 8--9
 []\EU1/FiraSansLight(2)/m/n/12 Association managed by
  []
 
-) [57
+) [61
 
-]) (./Conclusioni.tex [58
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [59
+]) (./Conclusioni.tex [62
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [60
+ (./main.vrb) [63
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [61
+ (./main.vrb) [64
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb) [62
-
-]) (./Integrazione.tex [63
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-File: img/loraClasses.png Graphic file (type QTm)
-
-<use  "img/loraClasses.png" >) [64
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-File: img/lora_rx_windows.png Graphic file (type QTm)
-
-<use  "img/lora_rx_windows.png" >)
-Overfull \vbox (4.21303pt too high) detected at line 28
- []
-
-[65
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-File: img/loraBeacon.png Graphic file (type QTm)
- <use  "img/loraBeacon.png" >)
-Overfull \vbox (27.10605pt too high) detected at line 44
- []
-
-[66
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb) [67
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb
-File: img/loraClassC.png Graphic file (type QTm)
- <use  "img/loraClassC.png" >) [68
+ (./main.vrb) [65
 
 ])
 \tf@nav=\write6
@@ -2236,19 +2223,18 @@ File: img/loraClassC.png Graphic file (type QTm)
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
-
-(./main.aux)
+ (./main.aux)
 Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 48.
 Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 48.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 38715 strings out of 494011
- 850722 string characters out of 3153095
+ 38699 strings out of 494011
+ 850559 string characters out of 3153095
  916995 words of memory out of 3000000
- 41028 multiletter control sequences out of 15000+200000
+ 41019 multiletter control sequences out of 15000+200000
  9008 words of font info for 85 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  59i,13n,84p,919b,850s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on main.pdf (68 pages).
+Output written on main.pdf (65 pages).
