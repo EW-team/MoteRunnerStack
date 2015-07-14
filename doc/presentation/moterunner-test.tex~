@@ -24,7 +24,8 @@
 		\begin{itemize}
 			\item Handles transmission and receiption notifing to higher level by delegation
 			\item Manages acks notifing failure or success states in callbacks
-			\item Permits to set parameters as PAN id, short address, radio channel
+			\item Permits to set parameters as PAN identifier, short address, radio channel
+			\item Permits to register functions that will handle the radio events (Tx and Rx)
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -35,7 +36,7 @@
   \begin{itemize}
     \item These operations require much attention:
     \begin{itemize}
-    	\item The radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
+    	\item Radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
     	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
     \end{itemize}
     \item Each mote holds 3 addresses:
