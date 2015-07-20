@@ -1,4 +1,4 @@
-\beamer@endinputifotherversion {3.10pt}
+\beamer@endinputifotherversion {3.36pt}
 \beamer@sectionintoc {1}{Introduction to \unhbox \voidb@x \hbox {Mote Runner}}{4}{0}{1}
 \beamer@sectionintoc {2}{LoRaWAN}{18}{0}{2}
 \beamer@sectionintoc {3}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{35}{0}{3}

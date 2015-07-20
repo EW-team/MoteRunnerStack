@@ -38,3 +38,10 @@ bin/
 *.pdf
 *.nav
 doc/presentation/lora.tex~
+*.aux
+doc/presentation/main.log
+*.nav
+doc/presentation/main.pdf
+*.toc
+doc/presentation/main.vrb
+*.*~
