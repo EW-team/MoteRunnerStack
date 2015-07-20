@@ -1,0 +1,95 @@
+Slide # - Annotazione
+
+20 - Si potrebbe rimuovere il testo mettendo le immagini a tutto schermo per facilitarne la lettura. (SOLVED)
+
+21 - I dispositivi di classe B includono le funzionalità dei dispositivi di classe A, ma sono indirizzati anche ad un'ulteriore necessità: permettere ai server di inviare messaggi ad essi senza che il dispositivo debba inviare prima un frame. Ciò è possibile ottenendo sincronizzazione tra il dispositivo di classe B e il server, usando i gateway che forniscono periodicamente il tempo fornito nei beacon. Un dispositivo passa da classe A a classe B mediante comando da parte del server ed è possibile solo in seguito alla ricezione di un beacon. In seguito un estratto della documentazione:
+
+	"LoRaWAN Class B layer which is optimized for battery-powered
+	end-devices that may be either mobile or mounted at a fixed location.
+	End-devices should implement Class B operation when there is a requirement to open
+	receive windows at fixed time intervals for the purpose of enabling server initiated downlink
+	messages.
+	LoRaWAN Class B option adds a synchronized reception window on the end-device.
+	The purpose of Class B is to have an end-device
+	available for reception on a predictable time, in addition to the reception windows that
+	follows the random uplink transmission from the end-device of Class A.
+
+	A network initiated downlink using one of these ping slots is called a ―ping‖. The gateway
+	chosen to initiate this downlink communication is selected by the network server based on
+	the signal quality indicators of the last uplink of the end-device. For this reason, if an end-
+	device moves and detects a change in the identity advertised in the received beacon, it must
+	send an uplink to the network server so that the server can update the downlink routing path
+	database.
+	All end-devices start and join the network as end-devices of Class A. The end-device
+	application can then decide to switch to Class B.
+
+	A downlink Ping uses the same format as a Class A downlink frame but might follow a
+	different channel frequency plan.
+	Before switching from Class A to Class B, the end-device must first receive one of the
+	network beacons to align his internal timing reference with the network.
+	Once in Class B, the end-device must periodically search and receive a network beacon to
+	cancel any drift of its internal clock time base, relative to the network timing.
+	A Class B device may be temporarily unable to receive beacons (out of range from the
+	network gateways, presence of interference, ..). In this event, the end-device has to
+	gradually widen its beacon and ping slots reception windows to take into account a possible
+	drift of its internal clock.
+
+	In the event of beacon loss, a device shall be capable of maintaining Class B operation for 2
+	hours (120 minutes) after it received the last beacon. This temporary Class B operation
+	without beacon is called beacon-less operation. It relies on the end-device‘s own clock to
+	keep timing.
+	During beacon-less operation, unicast, multicast and beacon reception slots must all be
+	progressively expanded to accommodate the end-device‘s possible clock drift.
+
+	The beacon window interval is divided into 212 = 4096 ping slots of 30 ms each numbered
+	from 0 to 4095.
+	An end-device using the slot number N must turn on its receiver exactly Ton seconds after
+	the start of the beacon where: Ton = beacon_reserved + N * 30 ms
+	N is called slot index.
+	To avoid systematic collisions or over-hearing problems the slot index is randomized and
+	changed at every beacon period.
+
+	Besides relaying messages between end-devices and network servers, all gateways
+	participate in providing a time-synchronization mechanisms by sending beacons at regular
+	fixed intervals configurable per network (BEACON_INTERVAL). All beacons are transmitted
+	in radio packet implicit mode, that is, without a LoRa physical header and with no CRC being
+	appended by the radio.
+
+	When the network attempts to communicate with an end-device using a Class B downlink
+	slot, it transmits the downlink from the gateway which was closest to the end-device when
+	the last uplink was received. Therefore the network server needs to keep track of the rough
+	position of every Class B device.
+	Whenever a Class B device moves and changes cell, it needs to communicate with the
+	network server in order to update its downlink route.
+	The end-device has the choice between 2 basic strategies:
+	- Systematic periodic uplink: simplest method that doesn‘t require demodulation of the
+	gateway specific field of the beacon. Only applicable to slowly moving or stationery
+	end-devices. There are no requirements on those periodic uplinks.
+	- Uplink on cell change: The end-device demodulates the ―gateway specific‖ field of
+	the beacon, detects that the ID of the gateway broadcasting the beacon it
+	demodulates has changed, and sends an uplink. In that case the device should
+	respect a pseudo random delay in the [0:120] seconds range between the beacon
+	demodulation and the uplink transmission. This is required to insure that the uplinks
+	of multiple Class B devices entering or leaving a cell during the same beacon period
+	will not systematically occur at the same time immediately after the beacon
+	broadcast.
+
+	Failure to report cell change will result in Class B downlink being temporary not operational.
+"
+
+22 - Credo sia "In order to partecipate in a LoRa network an end device first has to be personalized and then activated.". Inoltre non è chiaro cosa si intenda per personalizzazione.
+
+22(R) Matteo - Punto uno solved ;) Per la pers. io l'ho intesa come una registrazione/ assegnazione di identità univoca data da: globally unique end-device identifier (DevEUI), the
+application identifier (AppEUI), and an AES-128 key (AppKey). Purtroppo non è chiarissimo.
+
+35:39 - Incompleto. -Si parla solo di radio. Si potrebbe cambiare nome alla sezione o tagliare direttamente il blocco di slides.
+
+35:39(R) Matteo - Modifica da fare anche al volo credo, non so se tagliare però. Male che va si va in Fast forward su queste.
+
+51 - Era impostata la formattazione a 2 colonne senza immagine, ho aggiunto una immagine che faccia capire il funzionamento. Può essere d'ausilio alla simulazione con i nodi veri, che credo vada fatta una volta arrivati a questo punto.
+
+51(R) Matteo - Anche qui mi trovi piuttosto d'accordo, modificato di conseguenza (eliminazione della slide 60 (let's try))
+
+63 - Aggiunta slide con considerazioni conclusive sullo stato attuale del progetto.
+
+64 - Aggiunta slide con ringraziamenti.

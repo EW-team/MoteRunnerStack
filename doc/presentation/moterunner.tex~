@@ -1,4 +1,4 @@
-\section{Introduction to Mote Runner}
+\section{Introduction to \mbox{Mote Runner}}
 \begin{frame}[fragile]
   \frametitle{Mote Runner}
   \begin{itemize}
@@ -16,10 +16,20 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Mote Runner}
+  \frametitle{Mote Runner Operating System}
   \begin{columns}
     \begin{column}{.48\linewidth}
-    	
+    	\begin{itemize}
+	    	\item Mote Runner system provides:
+	    	\begin{itemize}
+		    	\item A Virtual Machine for executing byte codes
+		    	\item An Operating System for:
+		    	\begin{itemize}
+			    	\item  organizing access to different devices 
+			    	\item scheduling the various activities
+		    	\end{itemize} 
+		    \end{itemize}
+    	\end{itemize}
     \end{column}
     \hfill
     \begin{column}{.5\linewidth}
@@ -29,6 +39,25 @@
     	\end{figure}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  	\frametitle{Device Model}
+  	\begin{itemize}
+  		\item The OS assumes that all devices have the following states
+  	\end{itemize}
+  	\begin{figure}
+  		\centering
+   		\includegraphics[width=0.6\textwidth]{img/sdev-states.png}
+  	\end{figure}
+  	\begin{itemize}
+ 		\item The OS manage implicitely most of the state changes:
+	 	 \begin{itemize}
+	  		\item Makes sure that the device ramp up happens before the requested time
+			\item Keeps device in states with the lowest energy consumption
+			\item Application, however, can put devices into the states CLOSED, OFF and STDBY
+		\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -102,11 +131,31 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa$^{TM}$}
+  \frametitle{IBM LRSC}
+    	\begin{itemize}
+	  \item The Long Range Signaling and Control (LRSC) system is a network infrastructure which relies on LoRa\texttrademark, modulation technology developed by Semtech for wireless bidirectional communication over distances of up to 15 km in semi-rural environments and up to five km in dense urban environments.
+	  \item All communication is generally bi-directional, although uplink communication from end devices to the network server is strongly favored, and is based on LoRa.
+    	\end{itemize}
+   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{LRSC network simulation}
+    	The Mote Runner SDK ships with:
+    	\begin{itemize}
+	  \item LoRa Mac library providing an API for accessing a LRSC network. 
+	  \item LIP shell interface to control the Mac from the Mote Runner shell MRSH.
+    	\end{itemize}
+  The main constraint for our intial purpose depends on the fact that the end devices cannot communicate directly. Any message should be sent over the LRSC network.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LoRa\texttrademark}
   \begin{columns}
     \begin{column}{.48\linewidth}
       \begin{itemize}
-	\item $LoRa^{TM}$ Alliance
+	\item LoRa\texttrademark Alliance
 	\begin{itemize}
 	  \item Target: IoT,  machine-to-machine (M2M), smart city, and industrial applications
 	  \item Intiated to standardize Low Power Wide Area Networks (LPWAN)
@@ -125,12 +174,12 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa$^{TM}$}
+  \frametitle{LoRa\texttrademark}
   \begin{itemize}
-    \item $LoRa^{TM}$ Technology
+    \item LoRa\texttrademark Technology
     \begin{itemize}
       \item LoRaWAN pledeges to extend the radio range by 10x while using only one third of the power used by competing solutions 
-      \item Star (of stars?) topology
+      \item Star (of stars) topology
       \item Gateways relay messages between end-devices and a central network server
       \item Communication between end-devices and gateways is spread out on different frequency channels and data rates.
       \item Data rates: 0.3 - 50 kbps
@@ -139,7 +188,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa$^{TM}$}
+  \frametitle{LoRa\texttrademark}
   \begin{itemize}
     \item ...and more
     \begin{itemize}
@@ -155,7 +204,7 @@
   \frametitle{Mote Runner - Conclusion}
   \vspace{-1em}
   \begin{itemize}
-    \item For the purpose of this work (TAKS \& WIDS):
+    \item For the purpose of this work:
     \begin{itemize}
     	\item MR allows dynamic reprogramming of motes with a control server using WLIP
     	\item v.17.1.8c is not suitable
@@ -166,8 +215,8 @@
     	\end{itemize}
     	\item v.11, v.13 are better choices:
     	\begin{itemize}
-	  \item radio interface could be used to implement an 802.15.4 MAC with TAKS support
-	  \item this MAC could be used to build upper layer with WIDS
+	  \item radio interface could be used to implement an 802.15.4 MAC 
+	  \item this MAC could be possibly used to build upper layer with WIDS
     	\end{itemize}
     \end{itemize}
     \item This does not exclude a future integration with LoRa-LRSC
@@ -177,6 +226,6 @@
 \begin{frame}[fragile]
   \frametitle{Mote Runner}
   \begin{itemize}
-  	\item 
+    \item 
   \end{itemize}
 \end{frame}

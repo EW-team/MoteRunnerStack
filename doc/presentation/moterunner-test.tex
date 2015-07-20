@@ -1,41 +1,42 @@
-\section{Testing \mbox{Mote Runner}}
+\section{Physical layer in \mbox{Mote Runner}}
 \begin{frame}[fragile]
-  \frametitle{Points to explore}
+  \frametitle{Radio interface}
   \begin{itemize}
-    \item MR v.13 offers:
+    \item MR v.13 offers a Radio interface IEEE 802.15.4 compliant
     \begin{itemize}
-    	\item Radio interface IEEE 802.15.4 compliant
-    	\item Hopi
-    	\item An IRIS-friendly simulation environment
-    	\item Many nice features (Debugger, Logger and so on)
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Programming the Radio}
-  \begin{itemize}
-    \item com.ibm.saguaro.system.Radio
-    \begin{itemize}
-    	\item This is a generic class in the IBM saguaro system to use the device radio
-    	\item It offers a low level API with the following functionality:
+    	\item It is a generic class in the IBM saguaro system that permits to use the radio device
+    	\item It offers an API with the following functionality:
     	\begin{itemize}
-	  \item open: opens the radio, once opened no other assembly can use it
-	  \item close: releases the radio so that others can use it
-	  \item setter and getters for channel and network parameters (addresses, panid...)
-	  \item startReceive: listens the channel (in one of the many receiption mode)
-	  \item transmit: begin to transmit a pdu
+			\item open: opens the radio, once opened no other assembly can use it
+			\item close: releases the radio so that others can use it
+			\item setter and getters for channel and network parameters (addresses, panid...)
+			\item startReceive: listens the channel (in one of the many receiption mode)
+			\item transmit: begin to transmit a pdu
     	\end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
+	\frametitle{Radio interface}
+	\begin{itemize}
+		\item In addition Radio:
+		\begin{itemize}
+			\item Handles transmission and receiption notifing to higher level by delegation
+			\item Manages acks notifing failure or success states in callbacks
+			\item Permits to set parameters as PAN identifier, short address, radio channel
+			\item Permits to register functions that will handle the radio events (Tx and Rx)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Transmission \& Reception}
   \begin{itemize}
     \item These operations require much attention:
     \begin{itemize}
-    	\item The radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
+    	\item Radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
     	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
     \end{itemize}
     \item Each mote holds 3 addresses:

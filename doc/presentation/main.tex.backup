@@ -3,16 +3,13 @@
 
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
-\usepackage{minted}
 
 \usepgfplotslibrary{dateplot}
 
-\usemintedstyle{trac}
-
-\title{Realization of a network stack that supports TAKS+WIDS on WSN with Mote Runner}
+\title{Realization of an 802.15.4-like MAC layer with Mote Runner}
 \subtitle{}
 \date{\today}
-\author{Andrea Salini - 231413\\Lorenzo Di Giuseppe - 227515\\Matteo Gentile - 230997}
+\author{Andrea Salini - 231413 \\ Lorenzo Di Giuseppe - 227515 \\ Matteo Gentile - 230997}
 \institute{DISIM - Università degli Studi dell’Aquila}
 
 \begin{document}
@@ -22,184 +19,29 @@
 \begin{frame}[fragile]
   \frametitle{Introduction}
   \begin{itemize}
-    \item 
+    \item Object of this project is the exploration of Mote Runner, an IBM’s infrastructure platform for WSN
+    \item For a deep understanding of MR the focus of this works was the design and develop of a 802.15.4-like MAC layer
+    \item Oscilloscope is an applications developed to test the MAC layer
+    \item The application was tested on IRIS mote
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Index}
   \begin{itemize}
-    \item 
+    \item Introduction to Mote Runner
+    \item Testing Mote Runner
+    \item A MAC Layer in Mote Runner
+    \item 6LoWPAN implementation in Mote Runner
+    \item Conclusion
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-    \item An OS and a runtime and development environment for WSN
-    \item Key features:
-    \begin{itemize}
-      \item Support for RT constraints \& energy awareness
-      \item Portability thanks to a VM that abstracts the HW
-      \item Event oriented programming paradigm
-      \item High level coding (Java - C\#)
-      \item Debugging \& simulation environments
-    \end{itemize}
-    \item It’s still in beta and is evolving towards IoT
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{columns}
-    \begin{column}{.48\linewidth}
-    	
-    \end{column}
-    \hfill
-    \begin{column}{.5\linewidth}
-    	\begin{figure}
-	  \centering
-	  \includegraphics[width=\textwidth]{img/vm-dev.jpg}
-    	\end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{columns}
-    \begin{column}{.5\linewidth}
-    	\begin{figure}
-	  \centering
-	  \includegraphics[width=\textwidth]{img/overview.jpg}
-    	\end{figure}
-    \end{column}
-    \hfill
-    \begin{column}{.5\linewidth}
-    	\begin{figure}
-	  \centering
-	  \includegraphics[width=\textwidth]{img/onmote.jpg}
-    	\end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner - v.11, v.13 beta}
-  \begin{itemize}
-    \item They support IEEE 802.15.4
-    \begin{itemize}
-    	\item exposing a low radio level API that can be used to implement custom MAC layer
-    	\item dropping messages with header structure not 802.15.4 compliant in the radio stack 
-    \end{itemize}
-    \item Offer Hopi
-    \begin{itemize}
-    	\item A multi-hop data gathering protocol
-    	\item Used to collect data from motes setting automatically a tree network
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner - v.17.1.8c (latest)}
-  \begin{itemize}
-    \item Supports only two platforms: IMST \& Blipper
-    \item It’s based on a different radio layer: $LoRa^{TM}$
-    \item It offers a build-in MAC layer: LRSC - Low Range Signaling \& Control
-    \begin{itemize}
-    	\item It supports only a network topology: the LRSC one
-    	\item The offered API is poor since the radio is hidden in the firmware (not compatible with previous versions)
-    \end{itemize}
-
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LRSC - Architecture}
-  \begin{columns}
-    \begin{column}{.48\linewidth}
-    	\begin{itemize}
-	  \item Gateways (GW) are connected to server on IP
-	  \item Motes comunicate with server in tunneling TCP/UDP over IP
-	  \item Motes comunicate with GW with LoRa single-hop
-    	\end{itemize}
-    \end{column}
-    \hfill
-    \begin{column}{.48\linewidth}
-    	\begin{figure}
-	  \centering
-	  \includegraphics[width=\linewidth]{img/LRSC_infrastructure.png}
-    	\end{figure}
-
-    \end{column}
-  \end{columns}
-
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mote Runner}
-  \begin{itemize}
-  	\item 
-  \end{itemize}
-\end{frame}
+\input{moterunner}
+\input{lora}
+\input{moterunner-test}
+\input{MAC}
+\input{6LoWPAN}
+\input{Conclusioni}
 
 \end{document}
