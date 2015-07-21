@@ -45,3 +45,4 @@ doc/presentation/main.pdf
 *.toc
 doc/presentation/main.vrb
 *.*~
+*.log
