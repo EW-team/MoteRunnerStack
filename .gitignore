@@ -47,3 +47,6 @@ doc/presentation/main.vrb
 *.*~
 *.log
 doc/presentation/img/Thumbs.db
+doc/presentation/main.log
+*.vrb
+doc/presentation/main.pdf

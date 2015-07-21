@@ -38,7 +38,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa devices sync}
+  \frametitle{LoRa Beacon}
   For time synchronization gateways periodically broadcast so-called beacons. Each beacon
   minimally contains:
   \begin{itemize}
@@ -54,6 +54,21 @@
   	\centering
   \includegraphics[width=\textwidth]{img/lora_beaconing.png}
   \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{LoRa Beacon}
+	All gateways send their beacon at exactly the same point in time:
+	\begin{itemize}
+		\item on first 15 bytes there are no visible on-air collisions 
+		\item wrt the optional part , device within the proximity of more than one
+		gateway will still be able to decode the strongest beacon with high probability
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{img/optional.png}
+		\caption{Beacon optional part}
+	\end{figure}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -160,7 +175,7 @@
   \frametitle{LoRa secure communications - OTAA}
  \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{img/lora_secure.png}
+  \includegraphics[width=\textwidth]{img/lora_secure.png}
   \end{figure}
 \end{frame}
 
@@ -189,24 +204,6 @@
   \includegraphics[width=0.9\textwidth]{img/LoRamode.png}
   \caption{SX1272 module modes}
  \end{figure}
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{LoRa localization}
-  All gateways send their beacon at exactly the same point in time:
-  \begin{itemize}
-    \item on first 15 bytes there are no visible on-air collisions 
-    \item wrt the optional part , device within the proximity of more than one
-	  gateway will still be able to decode the strongest beacon with high probability
-  \end{itemize}
-  \begin{figure}
-  \centering
-  \includegraphics[width=0.9\textwidth]{img/optional.png}
-  \caption{Beacon optional part}
- \end{figure}
-  
 
 \end{frame}
 

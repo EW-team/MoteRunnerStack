@@ -18,7 +18,7 @@
   \frametitle{MRv6: an implementation of 6LoWPAN in MR}
   \begin{itemize}
     \item TDMA and beacon based multi-hop network which allows for an IPv6 based communication between motes
-    \item Is not a builtin MR component, but fully implemented in C\#
+    \item It is not a built-in MR component, but it is fully implemented in C\#
     \item Datagram packets exchanged adheres to a subset of the 6LoWPAN specifications
     \item The edge mote decides upon:
     \begin{itemize}
@@ -90,6 +90,7 @@
       \toprule
       Our Mac-Like &  MRv6 \\ \midrule
       Contention based &  Scheduled\\
+      \hline
       Trasmitt only when  \mbox{requested} &  TDMA based\\
       Association managed by pan-coordinator & Association managed by the edge  \\ 
       ... & ... \\ \bottomrule
