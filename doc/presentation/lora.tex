@@ -1,5 +1,29 @@
 \section{LoRaWAN}
   
+  
+\begin{frame}[fragile]
+	\frametitle{LoRa\texttrademark}
+	\begin{columns}
+		\begin{column}{.48\linewidth}
+			\begin{itemize}
+				\item LoRa\texttrademark Alliance
+				\begin{itemize}
+					\item Target: IoT,  machine-to-machine (M2M), smart city, and industrial applications
+					\item Intiated to standardize Low Power Wide Area Networks (LPWAN)
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+		\hfill
+		\begin{column}{.48\linewidth}
+			\begin{figure}
+				\centering
+				\includegraphics[width=\linewidth]{img/lora.jpg}
+			\end{figure}
+			
+		\end{column}
+	\end{columns}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{A deeper look at LoRa}
   \begin{itemize}
@@ -18,12 +42,16 @@
   For time synchronization gateways periodically broadcast so-called beacons. Each beacon
   minimally contains:
   \begin{itemize}
-      \item available channels (ChMask)
+      \item network identifier (NetID)
       \item current GPS time (Time)
       \end{itemize}
-      The broadcasting of beacons (in implicit mode) is done time-synchronously (BEACON\_INTERVAL) by all gateways of a network with no interference.
+      The broadcasting of beacons (in implicit mode) is done time-synchronously (BEACON\_INTERVAL) by all gateways of a network with \textquotedblleft no interference\textquotedblright
       \begin{figure}
   \centering
+  \includegraphics[width=0.6\textwidth]{img/general_lora_beaconing.png}
+\end{figure}
+  \begin{figure}
+  	\centering
   \includegraphics[width=\textwidth]{img/lora_beaconing.png}
   \end{figure}
 \end{frame}

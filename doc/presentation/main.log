@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.5-0.9999.3 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.20)  20 JUL 2015 16:29
+This is XeTeX, Version 3.1415926-2.5-0.9999.3 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.20)  21 JUL 2015 11:33
 entering extended mode
 **main.tex
 
@@ -2085,17 +2085,21 @@ b") [12
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [13
+b")
+Overfull \vbox (2.1372pt too high) detected at line 224
+ []
+
+[13
+
+])
+("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\lora.te
+x" [14
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/lora.jpg Graphic file (type QTm)
- <use  "img/lora.jpg" >) [14
-
-]
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [15
+ <use  "img/lora.jpg" >) [15
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2103,71 +2107,61 @@ b") [16
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b")
-Overfull \vbox (2.1372pt too high) detected at line 224
+b"
+File: img/general_lora_beaconing.png Graphic file (type QTm)
+ <use  "img/general_lora_beaconing.png" >
+File: img/lora_beaconing.png Graphic file (type QTm)
+ <use  "img/lora_beaconing.png" >)
+Overfull \vbox (7.67863pt too high) detected at line 57
  []
 
 [17
-
-])
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\lora.te
-x" [18
-
-]
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [19
-
-]
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b"
-File: img/lora_beaconing.png Graphic file (type QTm)
- <use  "img/lora_beaconing.png" >) [20
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/mac_frame.png Graphic file (type QTm)
- <use  "img/mac_frame.png" >) [21
+ <use  "img/mac_frame.png" >) [18
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/loraClasses.png Graphic file (type QTm)
- <use  "img/loraClasses.png" >) [22
+ <use  "img/loraClasses.png" >) [19
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/lora_rx_windows.png Graphic file (type QTm)
  <use  "img/lora_rx_windows.png" >)
-Overfull \vbox (4.05827pt too high) detected at line 67
+Overfull \vbox (4.05827pt too high) detected at line 95
  []
 
-[23
+[20
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/loraBeacon.png Graphic file (type QTm)
  <use  "img/loraBeacon.png" >)
-Overfull \vbox (27.0863pt too high) detected at line 83
+Overfull \vbox (27.0863pt too high) detected at line 111
  []
 
-[24
+[21
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [25
+b") [22
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/loraClassC.png Graphic file (type QTm)
- <use  "img/loraClassC.png" >) [26
+ <use  "img/loraClassC.png" >) [23
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [27
+b") [24
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2175,26 +2169,26 @@ b"
 Requested font "Fira Sans/ICU:mapping=tex-text;" at 12.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/fira/FiraSans-Regular.otf
 )
-Overfull \vbox (15.09521pt too high) detected at line 128
+Overfull \vbox (15.09521pt too high) detected at line 156
  []
 
-[28
+[25
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/lora_secure.png Graphic file (type QTm)
- <use  "img/lora_secure.png" >) [29
+ <use  "img/lora_secure.png" >) [26
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/PHYpayload.png Graphic file (type QTm)
  <use  "img/PHYpayload.png" >)
-Overfull \vbox (10.9719pt too high) detected at line 154
+Overfull \vbox (10.9719pt too high) detected at line 182
  []
 
-[30
+[27
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2205,16 +2199,33 @@ Requested font "Fira Sans/ICU:script=latn;language=DFLT;mapping=tex-text;" at 1
 0.95pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/fira/FiraSans-Regular.otf
 )
-Overfull \vbox (6.63205pt too high) detected at line 165
+Overfull \vbox (6.63205pt too high) detected at line 193
  []
 
-[31
+[28
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/optional.png Graphic file (type QTm)
- <use  "img/optional.png" >) [32
+ <use  "img/optional.png" >) [29
+
+]
+("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
+b") [30
+
+]
+("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
+b") [31
+
+])
+("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\moterun
+ner-test.tex"
+Underfull \hbox (badness 1406) in paragraph at lines 1--1
+[][][][]\EU1/FiraSans(0)/m/sc/17.28 physical layer in 
+ []
+
+[32
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2224,26 +2235,9 @@ b") [33
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b") [34
 
-])
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\moterun
-ner-test.tex"
-Underfull \hbox (badness 1406) in paragraph at lines 1--1
-[][][][]\EU1/FiraSans(0)/m/sc/17.28 physical layer in 
- []
-
-[35
-
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [36
-
-]
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [37
-
-]
-("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [38
+b") [35
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2254,11 +2248,11 @@ File: img/fcf.jpg Graphic file (type QTm)
  <use  "img/fcf.jpg" >
 File: img/fca.jpg Graphic file (type QTm)
  <use  "img/fca.jpg" >)
-[39
+[36
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [40
+b") [37
 
 ])
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\MAC.tex
@@ -2267,21 +2261,21 @@ Underfull \hbox (badness 2951) in paragraph at lines 1--1
 [][][][]\EU1/FiraSans(0)/m/sc/17.28 a mac layer in 
  []
 
-[41
+[38
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [42
+b") [39
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/MAClan.png Graphic file (type QTm)
- <use  "img/MAClan.png" >) [43
+ <use  "img/MAClan.png" >) [40
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [44
+b") [41
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2291,25 +2285,25 @@ File: img/Association.png Graphic file (type QTm)
 Overfull \vbox (8.74211pt too high) detected at line 53
  []
 
-[45
+[42
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/DataRequest.png Graphic file (type QTm)
- <use  "img/DataRequest.png" >) [46
+ <use  "img/DataRequest.png" >) [43
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/MAC_STATES.png Graphic file (type QTm)
- <use  "img/MAC_STATES.png" >) [47
+ <use  "img/MAC_STATES.png" >) [44
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/beacon.png Graphic file (type QTm)
- <use  "img/beacon.png" >) [48
+ <use  "img/beacon.png" >) [45
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2319,7 +2313,7 @@ File: img/MAC_COORDINATOR.png Graphic file (type QTm)
 Overfull \vbox (26.73587pt too high) detected at line 112
  []
 
-[49
+[46
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2331,23 +2325,23 @@ File: img/dataIndirect.png Graphic file (type QTm)
 Overfull \vbox (22.86856pt too high) detected at line 126
  []
 
-[50
+[47
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/mda100.jpg Graphic file (type QTm)
- <use  "img/mda100.jpg" >) [51
+ <use  "img/mda100.jpg" >) [48
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/oscilloscope.png Graphic file (type QTm)
- <use  "img/oscilloscope.png" >) [52
+ <use  "img/oscilloscope.png" >) [49
 
 ])
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\6LoWPAN
-.tex" [53
+.tex" [50
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2357,21 +2351,21 @@ File: img/6low_network.png Graphic file (type QTm)
 Overfull \vbox (17.2612pt too high) detected at line 8
  []
 
-[54
+[51
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
 b"
 File: img/6low_stack.png Graphic file (type QTm)
- <use  "img/6low_stack.png" >) [55
+ <use  "img/6low_stack.png" >) [52
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [56
+b") [53
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [57
+b") [54
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2400,7 +2394,7 @@ Requested font "Fira Sans Light/ICU" at 12.0pt
 . 
 . This font family consists of the following shapes:
 .................................................
-) [58
+) [55
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2449,11 +2443,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 10--10
 []\EU1/FiraSansLight(0)/m/n/12 Child
  []
 
-) [59
+) [56
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [60
+b") [57
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
@@ -2497,23 +2491,23 @@ Underfull \hbox (badness 4713) in paragraph at lines 8--9
 []\EU1/FiraSansLight(0)/m/n/12 Association managed by
  []
 
-) [61
+) [58
 
 ])
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\Conclus
-ioni.tex" [62
+ioni.tex" [59
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [63
+b") [60
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [64
+b") [61
 
 ]
 ("C:\Users\Lorenzo Di Giuseppe\Desktop\MoteRunnerStack\doc\presentation\main.vr
-b") [65
+b") [62
 
 ])
 \tf@nav=\write6
@@ -2533,12 +2527,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 44635 strings out of 429025
- 1005292 string characters out of 3167800
+ 44778 strings out of 429025
+ 1006305 string characters out of 3167800
  1161127 words of memory out of 3000000
- 47030 multiletter control sequences out of 15000+200000
+ 47178 multiletter control sequences out of 15000+200000
  9304 words of font info for 78 fonts, out of 3000000 for 9000
  912 hyphenation exceptions out of 8191
  67i,13n,96p,10393b,881s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on main.pdf (65 pages).
+Output written on main.pdf (62 pages).
