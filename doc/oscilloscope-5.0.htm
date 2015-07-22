@@ -1,0 +1,1955 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+    (C) IBM Corp.  All rights reserved.
+    IBM Research Zurich.
+
+    Mote Runner <moterunner@zurich.ibm.com>
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Oscilloscope API Documentation</title>
+
+    <style type="text/css">
+/*! (C) IBM Corp.  All rights reserved.
+    IBM Research Zurich.
+
+    Mote Runner <moterunner@zurich.ibm.com>
+*/
+#body {
+	font: 12px Arial, Helvetica, Geneva, sans-serif;
+	background-color: #f5f5f5;
+}
+
+#search-field {
+	position: absolute;
+	top: 16px;
+	left: 1150px;
+	width: 240px;
+	color: #5f5f5f;
+}
+
+h1 {
+	font: bold 24px sans-serif;
+	color: #676767;
+	padding-left: 24px;
+	padding-top: 4px;
+}
+
+p {
+	color: #5f5f5f;
+	margin: 0;
+	padding: 0;
+}
+
+a, .alink {
+	text-decoration: none;
+	color: #5f5f5f;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+a:hover, .alink:hover {
+	border-bottom: 1px solid #a1a1a1;
+}
+
+.first-line {
+	color: black;
+	margin-top: 0;
+	padding: 0 0 8px;
+}
+
+.table, .description {
+	margin: 4px 0 0 16px;
+
+	background: white;
+	border:1px solid #d0d0d0;
+	padding: 8px 0 0 0;
+	border-radius: 3px;
+
+	box-shadow: inset 1px 1px 1px rgba(40,40,40,0.1);
+	-moz-box-shadow: inset 1px 1px 1px rgba(40,40,40,0.1);
+	-webkit-box-shadow: inset 1px 1px 1px rgba(40,40,40,0.1);
+}
+
+.table-header {
+	color: #d3401a;
+	text-shadow: lightgray 0 1px 1px;
+	font-weight: bold;
+	padding-left: 8px;
+	
+	-moz-column-span: all;
+	-webkit-column-span: all;
+	column-span: all;
+	padding-bottom: 4px;
+}
+
+.table-entries {
+	overflow: auto;
+	padding: 4px;
+
+	font: 12px Courier, mono;
+	line-height: 16px;
+
+	-moz-column-width: 180px;
+	-moz-column-gap: 8px;
+	-webkit-column-width: 180px;
+	-webkit-column-gap: 8px;
+	column-width: 180px;
+	column-gap: 8px;
+}
+
+.wide-table-entries {
+	overflow: auto;
+	padding: 4px;	
+
+	font: 12px Courier, mono;
+	line-height: 16px;
+}
+
+.wide-table-entries div, .table-entries div {
+	border-top: 1px solid #e5e5e5;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.table-entries div:hover, .wide-table-entries div:hover {
+	-moz-transition-property: background-color;
+	-moz-transition-duration: 300ms,300ms,300ms;
+	-webkit-transition-property: background-color;
+	-webkit-transition-duration: 300ms,300ms,300ms;
+	transition-property: background-color;
+	transition-duration: 300ms,300ms,300ms;
+}
+
+.table-entries div:hover .args, .wide-table-entries div:hover .args {
+	color: black;
+}
+
+.table-entry {
+	padding-left: 4px;
+}
+
+.global {
+	opacity: 0.0;
+	padding-left: 4px;
+}
+
+.public {
+	color: green;
+	padding-left: 4px;
+}
+
+.protected {
+	border-left: 1px solid gold;
+	padding-left: 4px;
+}
+
+.private {
+	border-left: 1px solid red;
+	padding-left: 4px;
+}
+
+.args {
+	color: #a1a1a1;
+}
+
+.value {
+	float: right;
+	color: #a1a1a1;
+	padding-right: 8px;
+}
+
+.help-text {
+	text-align: center;
+	color: #5f5f5f;
+	text-shadow: lightgray 0 1px 1px;
+}
+
+#external-links {
+	position: absolute;
+	top: 44px;
+	left: 32px;
+}
+
+#language-selector {
+	position: absolute;
+	top: 44px;
+	left: 720px;
+
+	-webkit-animation-name: FadeIn;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-duration: .1s;
+	-moz-animation-name: FadeIn;
+	-moz-animation-timing-function: ease-in;
+	-moz-animation-duration: .1s;
+	animation-name: FadeIn;
+	animation-timing-function: ease-in;
+	animation-duration: .1s;
+}
+
+#search-help {
+	position: absolute;
+	top: 14px;
+	left: 580px;
+
+	-webkit-animation-name: FadeIn;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-duration: .1s;
+	-moz-animation-name: FadeIn;
+	-moz-animation-timing-function: ease-in;
+	-moz-animation-duration: .1s;
+	animation-name: FadeIn;
+	animation-timing-function: ease-in;
+	animation-duration: .1s;
+}
+
+#support-email {
+	position: absolute;
+	top: 44px;
+	left: 1155px;
+	color: #a1a1a1;
+}
+
+#namespaces-table {
+	position: absolute;
+	width: 1380px;
+	top: 64px;
+	left: 8px;
+}
+
+.namespaces-marker {
+	color: rgba(107,181,16,0.2);
+	margin-right: 4px;
+}
+
+#classes-table {
+	position: absolute;
+	width: 678px;
+	top: 141px;
+	left: 8px;
+}
+
+.classes-marker {
+	color: rgba(255,189,16,0.2);
+	margin-right: 4px;
+}
+
+#exceptions-table {
+	position: absolute;
+	width: 330px;
+	top: 141px;
+	left: 707px;
+}
+
+.exceptions-marker {
+	color: rgba(198,41,49,0.2);
+	margin-right: 4px;
+}
+
+#delegates-table {
+	position: absolute;
+	width: 330px;
+	top: 141px;
+	left: 1058px;
+}
+
+.delegates-marker {
+	color: rgba(231,132,0,0.2);
+	margin-right: 4px;
+}
+
+#methods-table {
+	position: absolute;
+	width: 678px;
+	top: 320px;
+	left: 8px;
+}
+
+.methods-marker {
+	color: rgba(132,41,115,0.2);
+	margin-right: 4px;
+}
+
+#fields-table {
+	position: absolute;
+	width: 330px;
+	top: 320px;
+	left: 707px;
+}
+
+.fields-marker {
+	color: rgba(16,140,206,0.2);
+	margin-right: 4px;
+}
+
+#consts-table {
+	position: absolute;
+	width: 330px;
+	top: 320px;
+	left: 1058px;
+}
+
+.consts-marker {
+	color: rgba(143,147,14,0.2);
+	margin-right: 4px;
+}
+
+@-moz-keyframes FadeIn {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-webkit-keyframes FadeIn {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+#walrus-image {
+	position: absolute;
+	top: 510px;
+	left: 480px;
+	opacity: 0.1;
+}
+
+#description {
+	position: absolute;
+	width: 1372px;
+	top: 500px;
+	left: 8px;
+
+	background: white;
+	border:1px solid #d0d0d0;
+	padding: 8px 0 0 8px;
+	overflow: auto;
+	
+	-webkit-animation-name: FadeIn;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-duration: .2s;
+	-moz-animation-name: FadeIn;
+	-moz-animation-timing-function: ease-in;
+	-moz-animation-duration: .2s;
+	animation-name: FadeIn;
+	animation-timing-function: ease-in;
+	animation-duration: .2s;
+}
+
+
+#namespaces-table-entries {
+	height: 32px;
+}
+
+#namespaces-table-entries div:hover {
+	background-color: rgba(107,181,16,0.2);
+}
+
+.ns-select {
+	background-color: rgba(107,181,16,0.1);	
+}
+
+#classes-table-entries, #exceptions-table-entries, #delegates-table-entries {
+	height: 134px;
+}
+
+#classes-table-entries div:hover {
+	background-color: rgba(255,189,16,0.2);
+}
+
+.cls-select {
+	background-color: rgba(255,189,16,0.1);	
+}
+
+#delegates-table-entries div:hover {
+	background-color: rgba(231,132,0,0.2);
+}
+
+.del-select {
+	background-color: rgba(231,132,0,0.1);	
+}
+
+#exceptions-table-entries div:hover {
+	background-color: rgba(198,41,49,0.2);
+}
+
+.exc-select {
+	background-color: rgba(198,41,49,0.1);
+}
+
+#methods-table-entries, #fields-table-entries, #consts-table-entries {
+	height: 134px;
+}
+
+#methods-table-entries div:hover {
+	background-color: rgba(132,41,115,0.2);
+}
+
+.mtd-select {
+	background-color: rgba(132,41,115,0.1);
+}
+
+#fields-table-entries div:hover {
+	background-color: rgba(16,140,206,0.2);
+}
+
+.fld-select {
+	background-color: rgba(16,140,206,0.1);
+}
+
+#consts-table-entries div:hover {
+	background-color: rgba(143,147,14,0.2);
+}
+
+.cst-select {
+	background-color: rgba(143,147,14,0.1);
+}
+
+#description-content {
+	height: 380px;
+	overflow: auto;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+#ns-description, #cls-description, #mbr-description {
+	display: none;
+	max-height: 280px;
+}
+
+.description-block {
+	padding: 8px;
+	border-top: 1px solid #e5e5e5;
+	margin: 4px 8px 0 0;
+	overflow: auto;
+	min-height: 14px;
+
+	-moz-transition: max-height 0.2s;
+	-webkit-transition: max-height 0.2s;
+	transition: max-height 0.2s;
+}
+
+
+#description-navigation .toggle {
+	color: #a1a1a1;
+	cursor: pointer;
+}
+
+#description-navigation .toggle:hover {
+	-moz-transition-property: color;
+	-moz-transition-duration: 300ms,300ms,300ms;
+	-webkit-transition-property: color;
+	-webkit-transition-duration: 300ms,300ms,300ms;
+	transition-property: color;
+	transition-duration: 300ms,300ms,300ms;
+
+	color: black;
+}
+
+#description-navigation .label {
+	font: 12px Courier, mono;
+	padding-top: 0;
+	padding-left: 4px;
+	padding-right: 16px;
+}
+
+.description-table {
+	border-top: 1px solid #e5e5e5;
+	width: 100%;
+}
+
+.property {
+	margin-bottom: 4px;
+}
+
+.text {
+	margin-bottom: 4px;
+	padding-bottom: 4px;
+}
+
+.props-label {
+	font: 11px Arial, Helvetica, Geneva, sans-serif;
+	padding-right: 8px;
+	color: #5f5f5f;
+	width: 10%;
+	vertical-align: top;
+}
+
+.props-list, .arg-typename {
+	font: 12px Courier, mono;
+	text-align: left;
+}
+
+.props-list {
+	width: 90%;
+	vertical-align: top;
+}
+
+.arg-typename {
+	padding-right: 16px;
+	vertical-align: top;
+}
+
+.arg-doc {
+	font: 12px Arial, Helvetica, Geneva, sans-serif;
+	width: 62%;
+	vertical-align: top;
+}
+
+.link {
+	border-bottom: 1px dotted #a1a1a1;
+	cursor: pointer;
+}
+
+.link:hover {
+	border-bottom: 1px solid #a1a1a1;
+}
+
+.switch {
+	cursor: pointer;
+	margin-right: 24px;
+	color: #a1a1a1;
+	border-bottom: 1px solid #f5f5f5;
+
+	-moz-transition-property:color,border-bottom;
+	-moz-transition-duration:300ms,300ms;
+	-webkit-transition-property:color,border-bottom;
+	-webkit-transition-duration:300ms,300ms;
+	transition-property:color,border-bottom;
+	transition-duration:300ms,300ms;
+}
+
+.switch:hover {
+	color: #676767;
+	border-bottom: 1px solid #676767;
+}
+
+.switch-select, .switch-select:hover {
+	color: #676767;
+	cursor: default;
+	border-bottom: 1px solid #d3401a;
+}
+
+.xlink, .mlink {
+	font-weight: normal;
+	font-style: normal;
+	cursor: pointer;
+	margin-right: 16px;
+
+	-moz-transition-property:border-bottom;
+	-moz-transition-duration:300ms;
+	-webkit-transition-property:border-bottom;
+	-webkit-transition-duration:300ms;
+	transition-property:border-bottom;
+	transition-duration:300ms;
+}
+
+.xlink {
+	color: #d3401a;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.xlink:hover {
+	border-bottom: 1px solid #d3401a;
+}
+
+.mlink {
+	color: #a1a1a1;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.mlink-hover {
+	border-bottom: 1px solid #676767;
+}
+
+.ns-circle, .cls-circle, .exc-circle, .del-circle, .mtd-circle, .fld-circle, .cst-circle {
+	position: absolute;
+	top: 16px;
+	
+	width: 36px;
+	height: 16px;
+
+	border-bottom: 5px solid;
+	text-align: right;
+	padding-right: 4px;
+}
+
+.ns-circle {
+	left: 600px;	
+	border-bottom-color: rgba(107,181,16,0.2);
+}
+
+.cls-circle {
+	left: 650px;	
+	border-bottom-color: rgba(255,189,16,0.2);
+}
+
+.exc-circle {
+	left: 700px;
+	border-bottom-color: rgba(198,41,49,0.2);
+}
+
+.del-circle {
+	left: 750px;
+	border-bottom-color: rgba(231,132,0,0.2);
+}
+
+.mtd-circle {
+	left: 800px;
+	border-bottom-color: rgba(132,41,115,0.2);
+}
+
+.fld-circle {
+	left: 850px;
+	border-bottom-color: rgba(16,140,206,0.2);
+}
+
+.cst-circle {
+	left: 900px;
+	border-bottom-color: rgba(143,147,14,0.2);
+}
+
+.highlight {
+	text-decoration: underline;
+}
+
+    </style>
+
+    <script type="application/javascript;version=1.8" src="gacdb.js"></script>
+    <script type="application/javascript;version=1.8" src="env.js"></script>
+
+    <script type="text/javascript">
+NamespacesTable = [
+   "Oscilloscope"
+];
+
+ClassesTable = [
+   "Oscilloscope.MasterOscilloscope"
+];
+
+DelegatesTable = [];
+
+MethodsTable = [
+   "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
+   "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
+   "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
+   "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)"
+];
+
+FieldsTable = [];
+
+Namespaces = {
+   "Oscilloscope" : {
+      "classes" : [
+         "Oscilloscope.MasterOscilloscope"
+      ],
+      "delegates" : [],
+      "uid" : 1,
+      "name" : "Oscilloscope",
+      "doc" : ""
+   }
+};
+
+Classes = {
+   "Oscilloscope.MasterOscilloscope" : {
+      "subclasses" : [],
+      "flags" : 268435457,
+      "uid" : 2,
+      "name" : "MasterOscilloscope",
+      "fields" : [],
+      "interfaces" : [],
+      "methods" : [
+         "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
+         "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
+         "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
+         "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)"
+      ],
+      "fqname" : "Oscilloscope.MasterOscilloscope",
+      "superclass" : null,
+      "doc" : "",
+      "seealso" : []
+   }
+};
+
+Fields = {};
+
+Methods = {
+   "Oscilloscope.MasterOscilloscope.MasterOscilloscope()" : {
+      "ret" : null,
+      "flags" : 1073742849,
+      "uid" : 3,
+      "args" : [],
+      "name" : "MasterOscilloscope",
+      "signature" : "()",
+      "fqname" : "Oscilloscope.MasterOscilloscope.MasterOscilloscope()",
+      "fullname" : "MasterOscilloscope()",
+      "doc" : "<p class=\"first-line\">Default constructor.",
+      "seealso" : null
+   },
+   "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)" : {
+      "ret" : {
+         "doc" : "An integer with no meaning.",
+         "type" : "i"
+      },
+      "flags" : 1073741841,
+      "uid" : 5,
+      "args" : [
+         {
+            "name" : "flag",
+            "doc" : "Represents the status of the reception.",
+            "type" : "u"
+         },
+         {
+            "name" : "data",
+            "doc" : "The data received.",
+            "type" : "b[]"
+         },
+         {
+            "name" : "len",
+            "doc" : "Length of the received data.",
+            "type" : "u"
+         },
+         {
+            "name" : "saddr",
+            "doc" : "Source short address.",
+            "type" : "u"
+         },
+         {
+            "name" : "time",
+            "doc" : "The time when the data's been received.",
+            "type" : "l"
+         }
+      ],
+      "name" : "onRxEvent",
+      "signature" : "(u,b[],u,u,l)i",
+      "fqname" : "Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)",
+      "fullname" : "onRxEvent(u flag, b[] data, u len, u saddr, l time)i",
+      "doc" : "<p class=\"first-line\">This method is called by Mac to notify reception events.",
+      "seealso" : null
+   },
+   "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)" : {
+      "ret" : {
+         "doc" : "An integer with no meaning.",
+         "type" : "i"
+      },
+      "flags" : 1073741841,
+      "uid" : 4,
+      "args" : [
+         {
+            "name" : "flag",
+            "doc" : "Represents the status of the transmission.",
+            "type" : "u"
+         },
+         {
+            "name" : "data",
+            "doc" : "The data transmitted.",
+            "type" : "b[]"
+         },
+         {
+            "name" : "len",
+            "doc" : "Length of the trasmitted data.",
+            "type" : "u"
+         },
+         {
+            "name" : "saddr",
+            "doc" : "Destination short address.",
+            "type" : "u"
+         },
+         {
+            "name" : "time",
+            "doc" : "The time when the transmission's been completed.",
+            "type" : "l"
+         }
+      ],
+      "name" : "onTxEvent",
+      "signature" : "(u,b[],u,u,l)i",
+      "fqname" : "Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)",
+      "fullname" : "onTxEvent(u flag, b[] data, u len, u saddr, l time)i",
+      "doc" : "<p class=\"first-line\">This method is called by Mac to notify transmission events.",
+      "seealso" : null
+   },
+   "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)" : {
+      "ret" : {
+         "doc" : "Integer with no meaning.",
+         "type" : "i"
+      },
+      "flags" : 1073741841,
+      "uid" : 6,
+      "args" : [
+         {
+            "name" : "flag",
+            "doc" : "Flag. Represents the notified event.",
+            "type" : "u"
+         },
+         {
+            "name" : "data",
+            "doc" : "Data. Data associated with the particular event.",
+            "type" : "b[]"
+         },
+         {
+            "name" : "len",
+            "doc" : "Length. Length of Data.",
+            "type" : "u"
+         },
+         {
+            "name" : "saddr",
+            "doc" : "Saddr.",
+            "type" : "u"
+         },
+         {
+            "name" : "time",
+            "doc" : "Time. The Time when the event occurred.",
+            "type" : "l"
+         }
+      ],
+      "name" : "onEvent",
+      "signature" : "(u,b[],u,u,l)i",
+      "fqname" : "Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)",
+      "fullname" : "onEvent(u flag, b[] data, u len, u saddr, l time)i",
+      "doc" : "<p class=\"first-line\">Called to notify Mac events as Association completed.",
+      "seealso" : null
+   }
+};
+
+Delegates = {};
+
+
+    </script>
+
+    <script type="text/javascript">
+/*! (C) IBM Corp.  All rights reserved.
+    IBM Research Zurich.
+
+    Mote Runner <moterunner@zurich.ibm.com>
+*/
+
+
+var qualifiedNamesMap={
+    'Oscilloscope':'Oscilloscope',
+    'Oscilloscope.MasterOscilloscope':'r:Oscilloscope.MasterOscilloscope',
+    'Oscilloscope.MasterOscilloscope.MasterOscilloscope()':'Oscilloscope.MasterOscilloscope.MasterOscilloscope()',
+    'Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onRxEvent(u,b[],u,u,l)',
+    'Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onTxEvent(u,b[],u,u,l)',
+    'Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)':'Oscilloscope.MasterOscilloscope.onEvent(u,b[],u,u,l)',
+ };
+
+/** The Walrus Engine main class.
+ */
+Walrus = {
+    /** The current version of the Walrus engine. */
+    VERSION: "1.0",
+    
+    /** Masks; keep in sync with the perl source. */
+    ACCESS_MASK: 0x7,
+    IS_EXCEPTION: 0x200,
+
+    /** Access rights as strings. */
+    accessRights: [ null, "public", "protected", null, "private" ],
+    flags: [ { key: "public",		mask: 0x0001 },
+	     { key: "protected",	mask: 0x0002 },
+	     { key: "private",		mask: 0x0004 },
+	     
+	     { key: "virtual", 		mask: 0x0008 },
+	     { key: "static", 		mask: 0x0010 },
+	     { key: "final", 		mask: 0x0020 },
+	     { key: "abstract",		mask: 0x0040 },
+	     { key: "native",		mask: 0x0080 },
+	     
+	     { key: "interface",	mask: 0x0100 },
+	     { key: "constructor",	mask: 0x0400 } ],
+
+    /** Internal state. */
+    idsSelected: { ns: -1, cls: -1, exc: -1, del: -1, mtd: -1, fld: -1, cst: -1 },
+    toggleState: { ns: 1, cls: 1, mbr: 1 },
+    language: null,
+    
+    SEARCH_NONE: -1,
+    SEARCH_NS:    0,
+    SEARCH_CLS:   1,
+    SEARCH_DEL:   2,
+    SEARCH_MTD:   3,
+    SEARCH_FLD:   4,
+    
+    searchTimer: null,
+    searchState: -1, /* no search pending */
+    
+    /** Shortcuts to divs and templates. */
+    namespacesTableDiv: 	null,
+    classesTableDiv:    	null,
+    exceptionsTableDiv: 	null,
+    delegatesTableDiv:  	null,
+    methodsTableDiv:    	null,
+    fieldsTableDiv:     	null,
+    constsTableDiv:		null,
+    
+    clsNavigationDiv:		null,
+    mbrNavigationDiv:		null,
+    
+    nsLabelDiv:			null,
+    clsLabelDiv:		null,
+    mbrLabelDiv:		null,
+    
+    descriptionDiv:		null,
+    nsDescriptionDiv:		null,
+    clsDescriptionDiv:		null,
+    mbrDescriptionDiv:		null,
+    
+    searchFieldDiv:		null,
+    searchHelpDiv:		null,
+    searchCountersDiv:		null,
+    languageSelectorDiv:	null,
+    
+    tableEntryTemplate:		null,
+    tableWideEntryTemplate:	null,
+    
+    clsDescriptionTemplate:	null,
+    delDescriptionTemplate:	null,
+    mtdDescriptionTemplate:	null,
+    fldDescriptionTemplate:	null,
+    cstDescriptionTemplate:	null,
+    argDescriptionTemplate:	null,
+
+    
+    /** Called once the page is loaded. */
+    onLoad: function() {
+	Walrus.namespacesTableDiv	= document.getElementById('namespaces-table-entries');
+	Walrus.classesTableDiv		= document.getElementById('classes-table-entries');
+	Walrus.exceptionsTableDiv	= document.getElementById('exceptions-table-entries');
+	Walrus.delegatesTableDiv	= document.getElementById('delegates-table-entries');
+	Walrus.methodsTableDiv		= document.getElementById('methods-table-entries');
+	Walrus.fieldsTableDiv		= document.getElementById('fields-table-entries');
+	Walrus.constsTableDiv		= document.getElementById('consts-table-entries');
+
+	Walrus.clsNavigationDiv		= document.getElementById('description-navigation-cls');
+	Walrus.mbrNavigationDiv		= document.getElementById('description-navigation-mbr');
+	
+	Walrus.nsLabelDiv		= document.getElementById('namespace-label');
+	Walrus.clsLabelDiv		= document.getElementById('class-label');
+	Walrus.mbrLabelDiv		= document.getElementById('member-label');
+	
+	Walrus.descriptionDiv		= document.getElementById('description');
+	Walrus.nsDescriptionDiv		= document.getElementById('ns-description');
+	Walrus.clsDescriptionDiv	= document.getElementById('cls-description');
+	Walrus.mbrDescriptionDiv	= document.getElementById('mbr-description');
+	
+	Walrus.searchFieldDiv		= document.getElementById('search-field');
+	Walrus.searchHelpDiv		= document.getElementById('search-help');
+	Walrus.searchCountersDiv	= document.getElementById('search-counters');
+	Walrus.languageSelectorDiv	= document.getElementById('language-selector');
+	
+	Walrus.tableEntryTemplate	= document.getElementById('template-table-entry').innerHTML;
+    	Walrus.tableWideEntryTemplate	= document.getElementById('template-wide-table-entry').innerHTML;
+    	
+    	Walrus.clsDescriptionTemplate	= document.getElementById('template-class-description').innerHTML;
+    	Walrus.delDescriptionTemplate	= document.getElementById('template-delegate-description').innerHTML;
+    	Walrus.mtdDescriptionTemplate	= document.getElementById('template-method-description').innerHTML;
+    	Walrus.fldDescriptionTemplate	= document.getElementById('template-field-description').innerHTML;
+    	Walrus.cstDescriptionTemplate	= document.getElementById('template-const-description').innerHTML;
+    	Walrus.argDescriptionTemplate	= document.getElementById('template-argument').innerHTML;
+    	
+    	if (document.getElementById('gaclink').href.match(/__GACLINK__$/))
+    	    document.getElementById('gaclink').href = m_envLinks[0].h;
+    	if (document.getElementById('doclink').href.match(/__DOCLINK__$/))
+    	    document.getElementById('doclink').href = m_envLinks[1].h;
+    	
+	Walrus.language = HTML.readCookie("walrus-setting-language");
+	if (Walrus.language == null)
+	    Walrus.language = "sil";
+	Walrus.selectLanguage(Walrus.language);
+	    
+    	Walrus.populateDocumentation();
+    },
+    
+
+    searchKeyUp: function(event, value, skip) {
+	Walrus.languageSelectorDiv.style.display = 'none';
+	
+    	if ((value.length > 2) || (event.keyCode == 13)) {
+    	    // minimum search string length is 3, or search is explicitly requested by RET
+	    Walrus.searchHelpDiv.style.display = 'none';
+	    Walrus.searchCountersDiv.style.display = 'block';
+	    
+	    Walrus.descriptionDiv.style.display = 'none';
+	    
+	    clearTimeout(Walrus.searchTimer);
+	    Walrus.searchTimer = null;
+
+	    if ((skip == undefined) || !skip) {	    
+		if (Walrus.searchState != Walrus.SEARCH_NONE) {
+		    history.replaceState({ type: "search", value: value }, null, window.location.pathname + "?search=" + value);
+		} else {
+		    history.pushState({ type: "search", value: value }, null, window.location.pathname + "?search=" + value);
+		}
+	    }
+	
+	    Walrus.searchState = Walrus.SEARCH_NS;
+	    Walrus.search(value);
+	    return;
+	}
+	
+	if (value.length > 0) {
+	    Walrus.searchCountersDiv.style.display = 'none';
+	    Walrus.searchHelpDiv.style.display = 'block';
+	} else {
+	    Walrus.languageSelectorDiv.style.display = 'block';
+	    Walrus.searchCountersDiv.style.display = 'none';
+	    Walrus.searchHelpDiv.style.display = 'none';
+
+	    Walrus.descriptionDiv.style.display = 'block';
+	    history.go(-1);
+	}
+
+	Walrus.searchState = Walrus.SEARCH_NONE;	
+    },
+    
+    
+    search: function(value) {
+	var regex = new RegExp(value, "i");
+	var html = "", xhtml = "";
+	var hits = 0, xhits = 0;
+    	
+    	switch (Walrus.searchState) {
+    	 case Walrus.SEARCH_NS:
+	    Walrus.classesTableDiv.innerHTML = 
+	    Walrus.exceptionsTableDiv.innerHTML = 
+	    Walrus.delegatesTableDiv.innerHTML = 
+	    Walrus.methodsTableDiv.innerHTML = 
+	    Walrus.fieldsTableDiv.innerHTML = 
+	    Walrus.constsTableDiv.innerHTML = "";
+
+	    for (var i = 0; i < NamespacesTable.length; ++i) {
+		var match, nm = NamespacesTable[i];
+		if (match = regex.exec(nm)) {
+		    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, Namespaces[nm].uid, Walrus.highlightMatch(nm, match), "global", "populateNamespace", nm, null, nm);
+		    ++hits;
+		}
+	    }
+	    
+	    Walrus.namespacesTableDiv.innerHTML = html;	    
+	    document.getElementById('search-counter-ns').innerHTML = hits;
+	    break;
+	    
+	 case Walrus.SEARCH_CLS:
+	    for (var i = 0; i < ClassesTable.length; ++i) {
+		var match, nm = ClassesTable[i];
+		var cls = Classes[nm];
+		
+		if (match = regex.exec(cls.name)) {
+		    var accessRight = Walrus.accessRights[cls.flags & Walrus.ACCESS_MASK];
+		    
+		    if (cls.flags & Walrus.IS_EXCEPTION) {
+			xhtml += HTML.fillTemplate(Walrus.tableEntryTemplate, null, cls.uid, Walrus.highlightMatch(cls.name, match), accessRight, "populateClass", cls.fqname, null, cls.fqname);
+			++xhits;
+		    } else {
+			html  += HTML.fillTemplate(Walrus.tableEntryTemplate, null, cls.uid, Walrus.highlightMatch(cls.name, match), accessRight, "populateClass", cls.fqname, null, cls.fqname);
+			++hits
+		    }
+		}
+	    }
+
+	    Walrus.classesTableDiv.innerHTML = html;
+	    Walrus.exceptionsTableDiv.innerHTML = xhtml;
+	    document.getElementById('search-counter-cls').innerHTML = hits;
+	    document.getElementById('search-counter-exc').innerHTML = xhits;
+	    break;
+	    
+	 case Walrus.SEARCH_DEL:
+	    for (var i = 0; i < DelegatesTable.length; ++i) {
+		var match, nm = DelegatesTable[i];
+		var del = Delegates[nm];
+		var ns = nm.substring(0, nm.lastIndexOf('.'));
+
+		if (match = regex.exec(del.name)) {
+		    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, del.uid, Walrus.highlightMatch(del.name, match), Walrus.accessRights[del.flags & Walrus.ACCESS_MASK], "populateDelegate", del.fqname, Walrus.cookSignature(del.signature), Walrus.cookSignature(ns + "." + del.fullname));
+		    ++hits;
+		}
+	    }
+	    
+	    Walrus.delegatesTableDiv.innerHTML = html;	    
+	    document.getElementById('search-counter-del').innerHTML = hits;
+	    break;
+
+ 	 case Walrus.SEARCH_MTD:
+	    for (var i = 0; i < MethodsTable.length; ++i) {
+		var match, nm = MethodsTable[i];
+		var mtd = Methods[nm];
+		var ns = nm.substring(0, nm.lastIndexOf('.'));
+		
+		if (match = regex.exec(mtd.name)) {
+		    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, mtd.uid, Walrus.highlightMatch(mtd.name, match), Walrus.accessRights[mtd.flags & Walrus.ACCESS_MASK], "populateMethod", mtd.fqname, Walrus.cookSignature(mtd.signature), Walrus.cookSignature(ns + "." + mtd.fullname));
+		    ++hits;
+		}
+	    }
+	    
+	    Walrus.methodsTableDiv.innerHTML = html;
+	    document.getElementById('search-counter-mtd').innerHTML = hits;
+	    break;
+	
+	 case Walrus.SEARCH_FLD:
+	    for (var i = 0; i < FieldsTable.length; ++i) {
+		var match, nm = FieldsTable[i];
+		var mtd = Fields[nm];
+		
+		if (match = regex.exec(fld.name)) {
+		    var accessRight =  Walrus.accessRights[fld.flags & Walrus.ACCESS_MASK];
+		    
+		    if (fld.value == undefined) {
+			html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, fld.uid, Walrus.highlightMatch(fld.name, match), accessRight, "populateField", fld.fqname, null, fld.fqname);
+			++hits
+		    } else {
+			xhtml += HTML.fillTemplate(Walrus.tableWideEntryTemplate, null, fld.uid, Walrus.highlightMatch(fld.name, match), accessRight, "populateField", fld.fqname, "0x" + parseInt(fld.value).toString(16).toUpperCase(), fld.fqname);
+			++xhits;
+		    }
+		}
+	    }
+	    
+	    Walrus.fieldsTableDiv.innerHTML = html;
+	    Walrus.constsTableDiv.innerHTML = xhtml;
+	    document.getElementById('search-counter-fld').innerHTML = hits;
+	    document.getElementById('search-counter-cst').innerHTML = xhits;
+	    break;
+	}
+	
+	++Walrus.searchState;
+	Walrus.searchTimer = (Walrus.searchState < Walrus.SEARCH_FLD) ? setTimeout("Walrus.search('" + value + "')", 100 /* msec */) : null;
+    },
+    
+    
+    highlightMatch: function(string, match) {
+    	return string.substring(0, match.index) + '<span class="highlight">' + match[0] + "</span>" + string.substring(match.index + match[0].length);
+    },
+    
+    
+    handleLink: function(fqn) {
+    	var type;
+    	
+    	if (qualifiedNamesMap[fqn] == undefined)
+    	    return Walrus.handleExternalLink(fqn);
+    	
+	if      (fqn.indexOf("(")  != -1)   { type = "method"; fqn = fqn.substring(0, fqn.indexOf(")")+1); }
+	else if (Classes[fqn]      != null) { type = "class"; fqn = "r:" + fqn; }
+	else if (Delegates[fqn]    != null) { type = "delegate"; fqn = "d:" + fqn; }
+	else if (Fields[fqn]       != null) { type = "field" }
+	else if (Namespaces[fqn]   != null) { type = "namespace" }
+	else if (Methods[fqn+"()"] != null) { type = "method"; fqn = fqn + "()" }
+	
+	Walrus.onPopState({ state: { type: type, fqn: fqn }}, false);
+    },
+    
+    
+    handleExternalLink: function(nm) {
+    	for (var i = 0; i < GACDB.length; ++i) {
+    	    if (GACDB[i].qualifiedNamesMap[nm] != undefined) {
+    	    	window.location.href = GACDB[i].assembly + ".htm?fqn=" + GACDB[i].qualifiedNamesMap[nm];
+    	    }
+    	}
+    },
+    
+    
+    selectLanguage: function(language, refresh) {
+    	HTML.removeClass(document.getElementById("language-sil"), "switch-select");
+    	HTML.removeClass(document.getElementById("language-java"), "switch-select");
+    	HTML.removeClass(document.getElementById("language-csharp"), "switch-select");
+    	HTML.addClass(document.getElementById("language-" + language), "switch-select");
+    	
+    	if (refresh) {
+	    Walrus.language = language;
+	    HTML.createCookie("walrus-setting-language", language);
+	    
+	    Walrus.populateDocumentation();
+	}
+    },
+    
+    
+    populateDocumentation: function(refresh) {
+       	var html = "";
+    	for (var i = 0; i < NamespacesTable.length; ++i) {
+    	    var ns = NamespacesTable[i];
+    	    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, Namespaces[ns].uid, ns, "global", "populateNamespace", ns, null, ns);
+    	}
+    	Walrus.namespacesTableDiv.innerHTML = html;
+
+	Walrus.descriptionDiv.style.display = 'block';
+	Walrus.searchState = Walrus.SEARCH_NONE;
+	
+	Walrus.languageSelectorDiv.style.display = 'block';
+	Walrus.searchHelpDiv.style.display = 'none';
+	Walrus.searchCountersDiv.style.display = 'none';
+	Walrus.searchFieldDiv.value = "";
+	
+    	if (refresh)
+    	    return;
+    	    
+    	var param;
+    	if (param = HTML.getURLParameter("fqn")) {
+    	    // jump to documenation given by URI argument
+    	    var type = null;
+    	    if      (param.indexOf("(")  != -1) type = "method";
+    	    else if (param.indexOf("r:") ==  0) type = "class";
+    	    else if (param.indexOf("d:") ==  0) type = "delegate";
+    	    else if (Namespaces[param] != null) type = "namespace";
+    	    else			      type = "field";
+    	    
+    	    Walrus.onPopState({ state: { type: type, fqn: param }}, false);
+    	} else if (param = HTML.getURLParameter("search")) {
+    	    Walrus.searchFieldDiv.value = param;
+    	    Walrus.searchKeyUp(null, param);
+    	    return;
+	} else if (NamespacesTable.length == 1) {
+    	    // only one namespace? show its classes right away
+	    history.replaceState({ type: "namespace", fqn: NamespacesTable[0] }, null, window.location.pathname + "?fqn=" + NamespacesTable[0]);
+    	    Walrus.populateNamespace(Namespaces[ns].uid, NamespacesTable[0], true);
+    	}
+    },
+    
+        
+    populateNamespace: function(id, nm, skip) {
+    	if (qualifiedNamesMap[nm] == undefined)
+    	    return Walrus.handleExternalLink(nm);
+
+    	var ns = Namespaces[nm];
+    	if ( (id == null) || (Walrus.searchState != Walrus.SEARCH_NONE) ) {
+    	    Walrus.populateDocumentation(true);
+    	    id = ns.uid;
+	}
+	if ((skip == undefined) || !skip)
+	    Walrus.pushState("namespace", nm);
+	
+	Walrus.clsNavigationDiv.style.visibility = 'hidden';
+	Walrus.mbrNavigationDiv.style.visibility = 'hidden';
+    	
+	Walrus.setCrumb(id, "ns", "cls", "exc", "del", "mtd", "fld", "cst");
+    	Walrus.nsLabelDiv.innerHTML = ns.name;
+	
+    	var cls_html = "", exc_html = "";
+    	for (var i = 0; i < ns.classes.length; ++i) {
+    	    var cls = Classes[ns.classes[i]];
+    	    var accessRight = Walrus.accessRights[cls.flags & Walrus.ACCESS_MASK];
+    	    
+    	    if (cls.flags & Walrus.IS_EXCEPTION) {
+    	    	exc_html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, cls.uid, cls.name, accessRight, "populateClass", cls.fqname, null, cls.fqname);
+    	    } else {
+    	    	cls_html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, cls.uid, cls.name, accessRight, "populateClass", cls.fqname, null, cls.fqname);
+    	    }
+    	}
+    	Walrus.classesTableDiv.innerHTML    = cls_html;
+    	Walrus.exceptionsTableDiv.innerHTML = exc_html;
+    	
+    	var html = "";
+    	for (var i = 0; i < ns.delegates.length; ++i) {
+    	    var del = Delegates[ns.delegates[i]];
+    	    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, del.uid, del.name, Walrus.accessRights[del.flags & Walrus.ACCESS_MASK], "populateDelegate", del.fqname, Walrus.cookSignature(del.signature), Walrus.cookSignature(ns.name + "." + del.fullname));
+    	}
+    	Walrus.delegatesTableDiv.innerHTML = html;
+
+    	Walrus.methodsTableDiv.innerHTML = Walrus.fieldsTableDiv.innerHTML = Walrus.constsTableDiv.innerHTML = "";
+    	Walrus.setDescription(ns.doc, "", "");
+    },
+    
+    
+    populateClass: function(id, nm, skip) {
+    	if (qualifiedNamesMap[nm] == undefined)
+    	    return Walrus.handleExternalLink(nm);
+
+    	var cls = Classes[nm], ns = nm.substring(0, nm.lastIndexOf('.'));
+    	if ( (id == null) || (Walrus.searchState != Walrus.SEARCH_NONE) ) {
+    	    Walrus.populateNamespace(null, ns, true);
+    	    id = cls.uid;
+    	}
+    	if ((skip == undefined) || !skip)
+	    Walrus.pushState("class", nm);
+    	
+	Walrus.clsNavigationDiv.style.visibility = 'visible'; 
+	Walrus.mbrNavigationDiv.style.visibility = 'hidden'; 
+
+    	if (cls.flags & Walrus.IS_EXCEPTION) {
+	    Walrus.setCrumb(id, "exc", "cls", "del", "mtd", "fld", "cst");
+    	    Walrus.colorDescription("cls", "exc", "cls", "del");
+	} else {
+	    Walrus.setCrumb(id, "cls", "exc", "del", "mtd", "fld", "cst");
+    	    Walrus.colorDescription("cls", "cls", "cls", "exc");
+	}
+    	Walrus.clsLabelDiv.innerHTML = cls.name;
+
+    	var html = "";
+    	for (var i = 0; i < cls.methods.length; ++i) {
+    	    var mtd = Methods[cls.methods[i]];
+    	    html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, mtd.uid, mtd.name, Walrus.accessRights[mtd.flags & Walrus.ACCESS_MASK], "populateMethod", mtd.fqname, Walrus.cookSignature(mtd.signature), Walrus.cookSignature(ns + "." + mtd.fullname));
+    	}
+    	Walrus.methodsTableDiv.innerHTML = html;
+
+    	var fld_html = "", cst_html = "";
+    	for (var i = 0; i < cls.fields.length; ++i) {
+    	    var fld = Fields[cls.fields[i]];
+    	    var accessRight =  Walrus.accessRights[fld.flags & Walrus.ACCESS_MASK];
+    	    
+    	    if (fld.value == undefined) {
+		fld_html += HTML.fillTemplate(Walrus.tableEntryTemplate, null, fld.uid, fld.name, accessRight, "populateField", fld.fqname, null, fld.fqname);
+	    } else {
+		cst_html += HTML.fillTemplate(Walrus.tableWideEntryTemplate, null, fld.uid, fld.name, accessRight, "populateField", fld.fqname, "0x" + parseInt(fld.value).toString(16).toUpperCase(), fld.fqname);
+	    }
+    	}
+    	Walrus.fieldsTableDiv.innerHTML = fld_html;
+    	Walrus.constsTableDiv.innerHTML = cst_html;
+
+	Walrus.clsDescriptionDiv.innerHTML = HTML.fillTemplate(Walrus.clsDescriptionTemplate, null, Walrus.flagsToString(cls.flags), Walrus.supersToString(cls), Walrus.subsToString(cls), cls.doc, Walrus.seeAlsoToString(cls), Walrus.intfsToString(cls));
+    	Walrus.showHideDescription(null, cls, null);
+    },
+    
+    
+    populateDelegate: function(id, nm, skip) {
+    	if (qualifiedNamesMap[nm] == undefined)
+    	    return Walrus.handleExternalLink(nm);
+
+	var del = Delegates[nm];
+    	if ( (id == null) || (Walrus.searchState != Walrus.SEARCH_NONE) ) {
+    	    Walrus.populateNamespace(null, nm.substring(0, nm.lastIndexOf('.')), true);
+    	    id = del.uid;
+	}
+    	if ((skip == undefined) || !skip)
+	    Walrus.pushState("delegate", nm);
+	
+	Walrus.clsNavigationDiv.style.visibility = 'visible'; 
+	Walrus.mbrNavigationDiv.style.visibility = 'hidden'; 
+
+    	Walrus.setCrumb(id, "del", "cls", "exc", "mtd", "fld", "cst");
+    	Walrus.colorDescription("cls", "del", "cls", "exc");
+
+    	Walrus.clsLabelDiv.innerHTML = Walrus.cookSignature(del.fullname);
+
+    	var args_html = '<table class="description-table">', label = "ARGUMENTS:";
+    	for (var i = 0; i < del.args.length; ++i) {
+    	    args_html += HTML.fillTemplate(Walrus.argDescriptionTemplate, null, label, Walrus.typeToLink(del.args[i].type) + " " + del.args[i].name, del.args[i].doc);
+    	    label = "";
+    	}
+	args_html += (del.ret == null) ? HTML.fillTemplate(Walrus.argDescriptionTemplate, null, "RETURNS:", "-", "", "")
+				       : HTML.fillTemplate(Walrus.argDescriptionTemplate, null, "RETURNS:", Walrus.typeToLink(del.ret.type), del.ret.doc);
+    	args_html += '</table>';
+    	
+    	Walrus.clsDescriptionDiv.innerHTML = HTML.fillTemplate(Walrus.delDescriptionTemplate, null, Walrus.flagsToString(del.flags), args_html, Walrus.superToString(del), del.doc, Walrus.seeAlsoToString(del));
+    	Walrus.showHideDescription(null, del, null);
+
+    	Walrus.methodsTableDiv.innerHTML = Walrus.fieldsTableDiv.innerHTML = Walrus.constsTableDiv.innerHTML = ""
+    },
+    
+    
+    populateField: function(id, nm, skip) {
+    	if (qualifiedNamesMap[nm] == undefined)
+    	    return Walrus.handleExternalLink(nm);
+
+	var fld = Fields[nm];
+    	if ( (id == null) || (Walrus.searchState != Walrus.SEARCH_NONE) ) {
+    	    Walrus.populateClass(null, nm.substring(0, nm.lastIndexOf('.')), true);
+    	    id = fld.uid;
+    	}
+    	if ((skip == undefined) || !skip)
+	    Walrus.pushState("field", nm);
+
+	Walrus.mbrNavigationDiv.style.visibility = 'visible';
+	Walrus.mbrLabelDiv.innerHTML = fld.name;
+
+	if (fld.value == undefined) {
+	    Walrus.setCrumb(id, "fld", "mtd", "cst");
+    	    Walrus.colorDescription("mbr", "fld", "mbr", "cst");
+
+	    Walrus.mbrDescriptionDiv.innerHTML = HTML.fillTemplate(Walrus.fldDescriptionTemplate, null, Walrus.flagsToString(fld.flags), Walrus.typeToLink(fld.type), null, fld.doc, Walrus.seeAlsoToString(fld));
+	} else {
+	    Walrus.setCrumb(id, "cst", "fld", "mtd");
+    	    Walrus.colorDescription("mbr", "cst", "mbr", "fld");
+
+	    Walrus.mbrDescriptionDiv.innerHTML = HTML.fillTemplate(Walrus.cstDescriptionTemplate, null, Walrus.flagsToString(fld.flags), Walrus.typeToLink(fld.type), null, fld.doc, Walrus.seeAlsoToString(fld), fld.value, parseInt(fld.value).toString(16).toUpperCase(), parseInt(fld.value).toString(2), parseInt(fld.value).toString(8));
+	}
+	Walrus.showHideDescription(null, null, fld);
+    },
+
+
+    populateMethod: function(id, nm, skip) {
+    	if (qualifiedNamesMap[nm] == undefined)
+    	    return Walrus.handleExternalLink(nm);
+
+	var mtd = Methods[nm];
+    	if ( (id == null) || (Walrus.searchState != Walrus.SEARCH_NONE) ) {
+    	    Walrus.populateClass(null, nm.substring(0, nm.lastIndexOf('.')), true);
+    	    id = mtd.uid;
+    	}
+    	if ((skip == undefined) || !skip)
+	    Walrus.pushState("method", nm);
+
+	Walrus.mbrNavigationDiv.style.visibility = 'visible'; 
+
+    	Walrus.setCrumb(id, "mtd", "fld", "cst");
+    	Walrus.colorDescription("mbr", "mtd", "fld", "cst");
+
+	Walrus.mbrLabelDiv.innerHTML = Walrus.cookSignature(mtd.fullname);
+
+    	var args_html = '<table class="description-table">', label = "ARGUMENTS:";
+    	for (var i = 0; i < mtd.args.length; ++i) {
+    	    args_html += HTML.fillTemplate(Walrus.argDescriptionTemplate, null, label, Walrus.typeToLink(mtd.args[i].type) + " " + mtd.args[i].name, mtd.args[i].doc);
+    	    label = "";
+    	}
+	args_html += (mtd.ret == null) ? HTML.fillTemplate(Walrus.argDescriptionTemplate, null, "RETURNS:", "-", "", "")
+				       : HTML.fillTemplate(Walrus.argDescriptionTemplate, null, "RETURNS:", Walrus.typeToLink(mtd.ret.type), mtd.ret.doc);
+    	args_html += '</table>';
+    	
+    	Walrus.mbrDescriptionDiv.innerHTML = HTML.fillTemplate(Walrus.mtdDescriptionTemplate, null, Walrus.flagsToString(mtd.flags), args_html, null, mtd.doc, Walrus.seeAlsoToString(mtd));
+    	Walrus.showHideDescription(null, null, mtd);
+    },
+    
+
+    cookSignature: function(signature) {
+    	if ( (Walrus.language == "java") || (Walrus.language == "csharp") ) {
+	    signature = signature.replace(/b([ ,\)\[])|b$/g, "byte\$1");
+	    signature = signature.replace(/i([ ,\)\[])|i$/g, "int\$1");
+	    signature = signature.replace(/l([ ,\)\[])|l$/g, "long\$1");
+	    signature = signature.replace(/r([ ,\)\[])|r$/g, "Object\$1");
+
+	    if (Walrus.language == "java") {
+	    	signature = signature.replace(/u([ ,\)\[])|u$/g, "int\$1");
+		signature = signature.replace(/d([ ,\)\[])|d$/g, "Object\$1");
+	    } else {
+		signature = signature.replace(/u([ ,\)\[])|u$/g, "uint\$1");
+		signature = signature.replace(/d([ ,\)\[])|d$/g, "Delegate\$1");
+	    }
+	}
+	
+	return signature;
+    },
+    
+    showHideDescription: function(ns, cls, mbr) {
+    	if ( (ns == undefined) && (cls == undefined) && (mbr == undefined) ) {
+    	    Walrus.nsDescriptionDiv.style.display  = 'none';
+    	    Walrus.clsDescriptionDiv.style.display = 'none';
+    	    Walrus.mbrDescriptionDiv.style.display = 'none';
+    	    return;
+    	}
+    	
+	if (mbr != undefined) {
+    	    Walrus.mbrDescriptionDiv.style.display = 'block';
+    	    if (Walrus.toggleState['cls'] == 1) Walrus.toggleDescription("cls");
+	}
+
+	if (cls != undefined) {	    
+    	    Walrus.mbrDescriptionDiv.style.display = 'none';
+    	    if (Walrus.toggleState['ns'] == 1) Walrus.toggleDescription("ns");
+
+    	    Walrus.clsDescriptionDiv.style.display = 'block';
+    	    if (Walrus.toggleState['cls'] == 0) Walrus.toggleDescription("cls");
+	}
+
+	if (ns  != undefined) {	    
+    	    Walrus.mbrDescriptionDiv.style.display = 'none';
+    	    Walrus.clsDescriptionDiv.style.display = 'none';
+
+//    	    Walrus.nsDescriptionDiv.style.display  = 'block';
+    	    if (Walrus.toggleState['ns'] == 0) Walrus.toggleDescription("ns");
+	}
+    },
+
+
+    setDescription: function(ns, cls, mbr) {
+	if (mbr != undefined) {
+	    Walrus.mbrDescriptionDiv.innerHTML = mbr;
+    	    Walrus.mbrDescriptionDiv.style.display = 'block';
+    	    if (Walrus.toggleState['cls'] == 1) Walrus.toggleDescription("cls");
+	}
+
+	if (cls != undefined) {	    
+    	    Walrus.mbrDescriptionDiv.style.display = 'none';
+    	    if (Walrus.toggleState['ns'] == 1) Walrus.toggleDescription("ns");
+
+	    Walrus.clsDescriptionDiv.innerHTML = cls;
+    	    Walrus.clsDescriptionDiv.style.display = 'block';
+    	    if (Walrus.toggleState['cls'] == 0) Walrus.toggleDescription("cls");
+	}
+
+	if (ns  != undefined) {	    
+    	    Walrus.mbrDescriptionDiv.style.display = 'none';
+    	    Walrus.clsDescriptionDiv.style.display = 'none';
+
+	    Walrus.nsDescriptionDiv.innerHTML = ns;
+//    	    Walrus.nsDescriptionDiv.style.display  = 'block';
+    	    if (Walrus.toggleState['ns'] == 0) Walrus.toggleDescription("ns");
+	}	
+    },
+
+
+    colorDescription: function(desc, sel) {
+    	var elem = document.getElementById(desc + "-description");
+    	for (var i = 2; i < arguments.length; ++i) {
+    	    HTML.removeClass(elem, arguments[i] + "-select");
+    	}
+    	HTML.addClass(elem, sel + "-select");
+    },
+    
+    
+    toggleDescription: function(selector) {
+        var elem = document.getElementById(selector + '-description');
+        if (elem.style.maxHeight != "14px") {
+            elem.style.maxHeight = "14px";
+    	    document.getElementById(selector + '-toggle').innerHTML = "&#9658;";
+    	    Walrus.toggleState[selector] = 0;
+    	} else {
+            elem.style.maxHeight = "320px"; // XXX read from CSS!
+    	    document.getElementById(selector + '-toggle').innerHTML = "&#9660;";
+    	    Walrus.toggleState[selector] = 1;
+    	}
+	elem.scrollTop = 0;
+    },
+
+
+    setCrumb: function(id) {
+    	for (var i = 1; i < arguments.length; ++i) {
+	    var nsID = Walrus.idsSelected[arguments[i]];
+	    if (nsID != -1) {
+		HTML.removeClass(document.getElementById(nsID), arguments[i] + '-select');
+		Walrus.idsSelected[arguments[i]] = -1;
+	    }
+	}
+	
+	var elem = document.getElementById(id);
+	HTML.addClass(elem, arguments[1] + '-select');
+	elem.scrollIntoView(false);
+
+	Walrus.idsSelected[arguments[1]] = id;
+    },
+    
+    
+    flagsToString: function(flags) {
+    	var str = "";
+    	
+    	for (var i = 0; i < Walrus.flags.length; ++i) {
+    	    if (flags & Walrus.flags[i].mask)
+    	    	str += ((str != "") ? ", " : "") + Walrus.flags[i].key;
+    	}
+    	return str;
+    },
+    
+
+    superToString: function(del) {
+    	return (del.superclass) ? Walrus.typeToLink("d:" + del.superclass, true) : "-";
+    },
+
+    
+    supersToString: function(cls) {
+    	var str = "";
+    	
+    	while (cls.superclass) {
+    	    str += ((str != "") ? " &#8658; " : "") + Walrus.typeToLink("r:" + cls.superclass, true);
+    	    cls = Classes[cls.superclass];
+    	}
+    	return (str == "") ? "-" : str;
+    },
+    
+    
+    subsToString: function(cls) {
+    	var str = "";
+    	
+    	for (var i = 0; i < cls.subclasses.length; ++i) {
+    	    str += ((str != "") ? ", " : "") + Walrus.typeToLink("r:" + cls.subclasses[i], true);
+    	}
+    	return (str == "") ? "-" : str;
+    },
+
+
+    intfsToString: function(cls) {
+    	var str = "";
+    	
+    	for (var i = 0; i < cls.interfaces.length; ++i) {
+    	    str += ((str != "") ? ", " : "") + Walrus.typeToLink("r:" + cls.interfaces[i], true);
+    	}
+    	return (str == "") ? "-" : str;
+    },
+    
+    
+    seeAlsoToString: function(fqn) {
+    	var str = "", selector;
+    	var seealso = fqn.seealso;
+	if (seealso == null)
+	    return "-";
+	
+	for (var i = 0; i < seealso.length; ++i) {
+	    fqn = name = seealso[i];
+    	
+	    if      (fqn.indexOf("(") != -1)   { selector = "Method"; }
+	    else if (Classes[fqn]     != null) { selector = "Class"; name = "r:" + name; }
+	    else if (Delegates[fqn]   != null) { selector = "Delegate";  name = "d:" + name; }
+	    else    			       { selector = "Field" };
+	    
+	    str += ((str != "") ? ", " : "") + '<span class="link" onClick="Walrus.populate' + selector + '(null, \'' + fqn + '\')">' + name + '</span>';
+	}
+    	
+    	return (str == "") ? "-" : str;
+    },
+    
+    
+    typeToLink: function(type, shorten) {
+	if (type.indexOf("d:") == 0)
+	    return '<span class="link" onClick="Walrus.populateDelegate(null, \'' + type.substring(2) + '\')">' + ((shorten) ? type.substring(2) : type) + '</span>';
+	if (type.indexOf("r:") == 0)
+	    return '<span class="link" onClick="Walrus.populateClass(null, \'' + type.substring(2) + '\')">' + ((shorten) ? type.substring(2) : type) + '</span>';
+
+	if ( (Walrus.language == "java") || (Walrus.language == "csharp") ) {
+	    type = type.replace(/b$/, "byte");
+	    type = type.replace(/i$/, "int");
+	    type = type.replace(/l$/, "long");
+	    type = type.replace(/r$/, "Object");
+	    
+	    if (Walrus.language == "java") {
+	    	type = type.replace(/u$/, "int");
+	    	type = type.replace(/d$/, "Object");
+	    } else {
+	    	type = type.replace(/u$/, "uint");
+	    	type = type.replace(/d$/, "Delegate");
+	    }
+	}
+	
+	return type;
+    },
+    
+    
+    pushState: function(type, fqn) {
+    	if (type == "class")    fqn = "r:" + fqn;
+    	if (type == "delegate") fqn = "d:" + fqn;
+    	
+    	history.pushState({ type: type, fqn: fqn }, null, window.location.pathname + "?fqn=" + fqn);
+    },
+    
+    
+    onPopState: function(evt, skip) {
+    	if ((evt == null) || (evt.state == null) || (evt.state.type == undefined))    	
+    	    return;
+    	var type = evt.state.type;
+
+	if (type == "search") {
+    	    Walrus.searchFieldDiv.value = evt.state.value;
+	    Walrus.searchKeyUp(null, evt.state.value, true);
+	    return;
+	}
+	
+    	if (skip == undefined)
+    	    skip = true;
+    	
+    	var fqn = evt.state.fqn;    	
+    	switch (type) {
+    	    case "namespace":
+    	    	Walrus.populateNamespace(null, fqn, skip);
+    	    	break;
+    	    case "class":
+    	    	Walrus.populateClass(null, fqn.substring(2), skip);
+    	    	break;
+    	    case "delegate":
+    	    	Walrus.populateDelegate(null, fqn.substring(2), skip);
+    	    	break;
+    	    case "field":
+    	    	Walrus.populateField(null, fqn, skip);
+    	    	break;
+    	    case "method":
+    	    	Walrus.populateMethod(null, fqn, skip);
+    	    	break;
+    	    default: // do nothing
+    	    	break;
+    	}
+    }
+};
+
+
+/** Some HTML/DOM utility functions.
+ */
+HTML = {
+    addClass: function(element, cls) {
+    	if ( (element == undefined) || (element.className == undefined) )
+    	    return;
+
+    	if (element.className.indexOf(cls) == -1)
+    	    element.className += " " + cls;
+    },
+    
+    
+    removeClass: function(element) {
+    	if ( (element == undefined) || (element.className == undefined) )
+    	    return;
+    	
+    	for (var i = 1; i < arguments.length; ++i) {
+	    element.className = element.className.replace(arguments[i], "").trim();
+	}
+    },
+    
+    quoteRegExps: {
+	html:  [/&/g,"&"+"amp;", /</g,"&"+"lt;", />/g,"&"+"gt;"], // ampersand first!
+	query: [/%/g,"%25", /&/g,"%26", / /g,"%20", /[+]/g,"%2B", /=/g,"%3D", /;/g,"%3B"],
+	cdata: [/\"/g,"&quot;"],
+	js:    [/[\'\\\u0000-\u001F\u007F-\uFFFF]/g, function(match, p1, p2, offset, str) {
+		    var code = match.charCodeAt(0);
+		    return "\\u"+
+			"0123456789ABCDEF".charAt((code>>12) & 0xF) +
+			"0123456789ABCDEF".charAt((code>> 8) & 0xF) +
+			"0123456789ABCDEF".charAt((code>> 4) & 0xF) +
+			"0123456789ABCDEF".charAt( code      & 0xF);
+		}],
+	nbsp:  [/ /g,"&nbsp;"]
+    },
+
+
+    genericQuote: function(s,p) {
+	if (s == null) return null;
+	if (typeof(s) != 'string') s = s.toString();
+	
+	for (var i = 0; i < p.length; i += 2)
+	    s = s.replace(p[i], p[i+1]);
+	return s;
+    },
+    
+    
+    quoteHTML:  function(s) { return HTML.genericQuote(s, HTML.quoteRegExps.html);  },
+    quoteSPACE: function(s) { return HTML.genericQuote(s, HTML.quoteRegExps.nbsp);  },
+    quoteQUERY: function(s) { return HTML.genericQuote(s, HTML.quoteRegExps.query); },
+    quoteCDATA: function(s) { return HTML.genericQuote(s, HTML.quoteRegExps.cdata); },
+    quoteJS:    function(s) { return HTML.genericQuote(s, HTML.quoteRegExps.js);    },
+
+
+    // Replace strings of the form
+    //   _NAME_{FLAGS}_
+    //   %NAME_{FLAGS}%
+    //   %NAME:{FLAGS}%
+    // where NAME is either a number 1..k referring to the nth argument in args or a field name
+    // in args[0]. Flags is optional and if present denotes a sequence of quotation schemes to apply.
+    fillTemplate: function(str, args) {
+	var arglist = arguments; // save a ref to argments for nested function
+	return str.replace(/[%_]([0-9a-zA-Z]+)([:_][HCJSQqU]+)[%_]/g,
+			   function(match, p1, p2, offset, str) {
+			       var a = (args && (p1 in args)) ? args[p1] : arglist[new Number(p1)+1];
+			       if (a == null) return "";
+			       if (p2) {
+				   var n = p2.length;
+				   for (var i = 1; i < n; ++i) {
+				       var c = p2.charAt(i);
+				       /**/ if (c == 'H') a = HTML.quoteHTML(a);
+				       else if (c == 'C') a = HTML.quoteCDATA(a);
+				       else if (c == 'J') a = HTML.quoteJS(a);
+				       else if (c == 'S') a = HTML.quoteSPACE(a);
+				       else if (c == 'Q') a = "'" + a + "'";
+				       else if (c == 'q') a = '"' + a + '"';
+				       // else U - unquoted
+				   }
+			       }
+			       return a;
+			   });
+    },
+
+
+    getURLParameter: function(name) {
+	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+
+	var regexS = "[\\?&]" + name + "=([^&#]*)";
+	var regex = new RegExp(regexS);
+	var results = regex.exec(window.location.search);
+
+	return (results == null) ? null : decodeURI(results[1]);
+    },
+
+
+    createCookie: function(name, value, days) {
+    	var expires = "";
+	if (days) {
+	    var date = new Date();
+	    date.setTime(date.getTime() + (days*24*60*60*1000));
+	    expires = "; expires=" + date.toGMTString();
+	}
+	
+	document.cookie = name + "=" + value+expires + "; path=/";
+    },
+
+    readCookie: function(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i = 0;i < ca.length; ++i) {
+	    var c = ca[i];
+	    while (c.charAt(0) == ' ')
+	        c = c.substring(1, c.length);
+	    if (c.indexOf(nameEQ) == 0)
+	    	return c.substring(nameEQ.length, c.length);
+	}
+	return null;
+    }
+};
+
+    </script>
+</head>
+
+<body id="body" onload="Walrus.onLoad(); window.onpopstate = Walrus.onPopState;">
+<h1>Oscilloscope API Documentation</h1>
+
+<div id="external-links">
+    <span id="xlink-base"><a id="doclink" class="xlink" href="__DOCLINK__">&#8618; IBM Mote Runner Documentation</a></span>
+    <span id="xlink-gac"> <a id="gaclink" class="xlink" href="__GACLINK__">&#8618; Global Assembly Cache</a></span>
+</div>
+
+<div id="language-selector">
+    <span id="language-sil"    class="switch switch-select" onClick="Walrus.selectLanguage('sil',true)">SIL</span>
+    <span id="language-java"   class="switch"               onClick="Walrus.selectLanguage('java',true)">Java</span>
+    <span id="language-csharp" class="switch"               onClick="Walrus.selectLanguage('csharp',true)">C#</span>
+</div>
+
+<div id="search-counters" class="search-status" style="display:none">
+    <span id="search-counter-ns"  class="ns-circle">0</span>
+    <span id="search-counter-cls" class="cls-circle">0</span>
+    <span id="search-counter-exc" class="exc-circle">0</span>
+    <span id="search-counter-del" class="del-circle">0</span>
+    <span id="search-counter-mtd" class="mtd-circle">0</span>
+    <span id="search-counter-fld" class="fld-circle">0</span>
+    <span id="search-counter-cst" class="cst-circle">0</span>
+</div>
+
+<div id="search-help" class="help-text" style="display:none">
+    Search starts automatically when the search string is of three letters or more.<br>
+    Press enter to explicitly start searching for shorter search strings.
+</div>
+
+<div id="support-email"></div>
+
+<div class="Search">
+    <input id="search-field" type="search" results="5" name="q" results="0" onkeyup="Walrus.searchKeyUp(event, this.value)" value="Search..." onfocus="if(this.value=='Search...')this.value=''" onblur="if(this.value=='')this.value='Search...'"/>
+</div>
+
+<div id="namespaces-table" class="table">
+    <div class="table-header"><span class="namespaces-marker">&FilledSmallSquare;</span>NAMESPACES</div>
+
+    <div id="namespaces-table-entries" class="table-entries">
+    </div>
+</div>
+
+<div id="classes-table" class="table">
+    <div class="table-header"><span class="classes-marker">&FilledSmallSquare;</span>CLASSES</div>
+    	
+    <div id="classes-table-entries" class="table-entries">
+    </div>
+</div>
+
+<div id="exceptions-table" class="table">
+    <div class="table-header"><span class="exceptions-marker">&FilledSmallSquare;</span>EXCEPTIONS</div>
+    	
+    <div id="exceptions-table-entries" class="wide-table-entries">
+    </div>
+</div>
+
+<div id="delegates-table" class="table">
+    <div class="table-header"><span class="delegates-marker">&FilledSmallSquare;</span>DELEGATES</div>
+    	
+    <div id="delegates-table-entries" class="wide-table-entries">
+    </div>
+</div>
+
+<div id="methods-table" class="table">
+    <div class="table-header"><span class="methods-marker">&FilledSmallSquare;</span>METHODS</div>
+
+    <div id="methods-table-entries" class="table-entries">
+    </div>
+</div>
+
+<div id="fields-table" class="table">
+    <div class="table-header"><span class="fields-marker">&FilledSmallSquare;</span>FIELDS</div>
+
+    <div id="fields-table-entries" class="wide-table-entries">
+    </div>
+</div>
+
+<div id="consts-table" class="table">
+    <div class="table-header"><span class="consts-marker">&FilledSmallSquare;</span>CONSTS</div>
+
+    <div id="consts-table-entries" class="wide-table-entries">
+    </div>
+</div>
+
+<!--
+<div id="walrus-image">
+    <img src="http://upload.wikimedia.org/wikipedia/commons/2/2a/Briny_Beach.jpg" height="355px" width="536">
+</div>
+-->
+
+<div id="description" class="description" style="display:none">
+    <div class="table-header">DESCRIPTION</div>
+
+    <div id="description-content">
+    	<div id="description-navigation">
+    	    <span id="description-navigation-ns"><span id="ns-toggle" class="toggle" onClick="Walrus.toggleDescription('ns')"> &#9660;</span><span id="namespace-label" class="label">com.ibm.saguaro.system</span></span>
+    	    <span id="description-navigation-cls"><span id="cls-toggle" class="toggle" onClick="Walrus.toggleDescription('cls')">&#9660;</span><span id="class-label" class="label">Util</span></span></span>
+    	    <span id="description-navigation-mbr"><span id="mbr-toggle" class="toggle" onClick="Walrus.toggleDescription('mbr')">&#9660;</span><span id="member-label" class="label">setbe()</span></span></span>
+    	</div>
+    	<div id="ns-description" class="description-block ns-select">
+	</div>
+    	<div id="cls-description"  class="description-block">
+	</div>
+    	<div id="mbr-description"  class="description-block">
+	</div>
+    </div>
+</div>
+
+<!-- TEMPLATES -->
+<div style="display:none">
+    <div id="template-table-entry">
+	<div id="_1_U_" class="table-entry" onClick="Walrus._4_U_('_1_U_', '_5_U_')" title="_7_U_"><span class="_3_U_">&#x25AA;&nbsp;</span><span class="name">_2_U_</span><span class="args">_6_U_</span></div>
+    </div>
+    
+    <div id="template-wide-table-entry">
+	<div id="_1_U_" class="table-entry" onClick="Walrus._4_U_('_1_U_', '_5_U_')" title="_7_U_&nbsp;=&nbsp;_6_U_"><span class="_3_U_">&#x25AA;&nbsp;</span><span class="name">_2_U_</span><span class="value">_6_U_</span></div>
+    </div>
+    
+    <div id="template-class-description">
+    	<div class="text">_4_U_</div>
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">FLAGS:</td><td class="props-list">_1_U_</td></tr>
+	    <tr class="property"><td class="props-label">SUPERCLASSES:</td><td class="props-list">_2_U_</td></tr>
+	    <tr class="property"><td class="props-label">SUBCLASSES:</td><td class="props-list">_3_U_</td></tr>
+	    <tr class="property"><td class="props-label">INTERFACES:</td><td class="props-list">_6_U_</td></tr>
+	    <tr class="property"><td class="props-label">SEE ALSO:</td><td class="props-list">_5_U_</td></tr>
+    	</table>
+    </div>
+
+    <div id="template-delegate-description">
+    	<div class="text">_4_U_</div>
+    	_2_U_
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">FLAGS:</td><td class="props-list">_1_U_</td></tr>
+	    <tr class="property"><td class="props-label">SUPERCLASS:</td><td class="props-list">_3_U_</td></tr>
+	    <tr class="property"><td class="props-label">SEE ALSO:</td><td class="props-list">_5_U_</td></tr>
+    	</table>
+    </div>
+
+    <div id="template-method-description">
+    	<div class="text">_4_U_</div>
+    	_2_U_
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">FLAGS:</td><td class="props-list">_1_U_</td></tr>
+	    <tr class="property"><td class="props-label">SEE ALSO:</td><td class="props-list">_5_U_</td></tr>
+    	</table>
+    </div>
+
+    <div id="template-field-description">
+    	<div class="text">_4_U_</div>
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">TYPE:</td><td class="props-list">_2_U_</td></tr>
+	    <tr class="property"><td class="props-label">FLAGS:</td><td class="props-list">_1_U_</td></tr>
+	    <tr class="property"><td class="props-label">SEE ALSO:</td><td class="props-list">_5_U_</td></tr>
+    	</table>
+    </div>
+
+    <div id="template-const-description">
+    	<div class="text">_4_U_</div>
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">DEC:</td><td class="props-list">_6_U_</td></tr>
+	    <tr class="property"><td class="props-label">HEX:</td><td class="props-list">_7_U_</td></tr>
+	    <tr class="property"><td class="props-label">BIN:</td><td class="props-list">_8_U_</td></tr>
+	    <tr class="property"><td class="props-label">OCT:</td><td class="props-list">_9_U_</td></tr>
+    	</table>
+    	<table class="description-table">
+	    <tr class="property"><td class="props-label">TYPE:</td><td class="props-list">_2_U_</td></tr>
+	    <tr class="property"><td class="props-label">FLAGS:</td><td class="props-list">_1_U_</td></tr>
+	    <tr class="property"><td class="props-label">SEE ALSO:</td><td class="props-list">_5_U_</td></tr>
+    	</table>
+    </div>
+    
+    <table id="template-argument">
+	<tr class="property"><td class="props-label">_1_U_</td><td class="arg-typename">_2_U_</td><td class="arg-doc">_3_U_</td></tr>
+    </table>
+</div>
+
+</body>
+</html>

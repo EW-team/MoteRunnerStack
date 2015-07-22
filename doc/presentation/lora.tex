@@ -60,7 +60,7 @@
 	\frametitle{LoRa Beacon}
 	All gateways send their beacon at exactly the same point in time:
 	\begin{itemize}
-		\item on first 15 bytes there are no visible on-air collisions 
+		\item on first bytes there are no visible on-air collisions 
 		\item wrt the optional part , device within the proximity of more than one
 		gateway will still be able to decode the strongest beacon with high probability
 	\end{itemize}
@@ -180,7 +180,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa mobility}
+  \frametitle{LoRa ADR - 1}
   LoRa network data rates are:
  \begin{itemize}
   \item Network controlled for fixed devices by means of using ADR bit in the PHY payload of data messages:
@@ -197,7 +197,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa mobility 2}
+  \frametitle{LoRa ADR - 2}
   LoRa modes (868Mhz band):
 \begin{figure}
   \centering
@@ -208,7 +208,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa conclusions 1}
+  \frametitle{LoRa conclusions - 1}
   For what applications is LoRa a good option?
   \begin{itemize}
     \item solar or mains-powered nodes transmitting every 10 or 15 minutes in networks with low or medium number of nodes
@@ -218,7 +218,7 @@
 \end{frame}
   
  \begin{frame}[fragile]
-  \frametitle{LoRa conclusions 2}
+  \frametitle{LoRa conclusions - 2}
   For what applications is NOT LoRa a good option?
   \begin{itemize}
     \item projects which require high data-rate and/or very frequent transmissions (e.g., each 10 seconds)
