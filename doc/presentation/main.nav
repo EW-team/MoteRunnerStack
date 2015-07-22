@@ -67,11 +67,11 @@
 \headcommand {\beamer@framepages {30}{30}}
 \headcommand {\slideentry {2}{0}{31}{31/31}{}{0}}
 \headcommand {\beamer@framepages {31}{31}}
-\headcommand {\sectionentry {3}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{32}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
-\headcommand {\beamer@sectionpages {14}{31}}
-\headcommand {\beamer@subsectionpages {14}{31}}
-\headcommand {\slideentry {3}{0}{32}{32/32}{}{0}}
+\headcommand {\slideentry {2}{0}{32}{32/32}{}{0}}
 \headcommand {\beamer@framepages {32}{32}}
+\headcommand {\sectionentry {3}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{33}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
+\headcommand {\beamer@sectionpages {14}{32}}
+\headcommand {\beamer@subsectionpages {14}{32}}
 \headcommand {\slideentry {3}{0}{33}{33/33}{}{0}}
 \headcommand {\beamer@framepages {33}{33}}
 \headcommand {\slideentry {3}{0}{34}{34/34}{}{0}}
@@ -82,11 +82,11 @@
 \headcommand {\beamer@framepages {36}{36}}
 \headcommand {\slideentry {3}{0}{37}{37/37}{}{0}}
 \headcommand {\beamer@framepages {37}{37}}
-\headcommand {\sectionentry {4}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{38}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
-\headcommand {\beamer@sectionpages {32}{37}}
-\headcommand {\beamer@subsectionpages {32}{37}}
-\headcommand {\slideentry {4}{0}{38}{38/38}{}{0}}
+\headcommand {\slideentry {3}{0}{38}{38/38}{}{0}}
 \headcommand {\beamer@framepages {38}{38}}
+\headcommand {\sectionentry {4}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{39}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
+\headcommand {\beamer@sectionpages {33}{38}}
+\headcommand {\beamer@subsectionpages {33}{38}}
 \headcommand {\slideentry {4}{0}{39}{39/39}{}{0}}
 \headcommand {\beamer@framepages {39}{39}}
 \headcommand {\slideentry {4}{0}{40}{40/40}{}{0}}
@@ -111,11 +111,11 @@
 \headcommand {\beamer@framepages {49}{49}}
 \headcommand {\slideentry {4}{0}{50}{50/50}{}{0}}
 \headcommand {\beamer@framepages {50}{50}}
-\headcommand {\sectionentry {5}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{51}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
-\headcommand {\beamer@sectionpages {38}{50}}
-\headcommand {\beamer@subsectionpages {38}{50}}
-\headcommand {\slideentry {5}{0}{51}{51/51}{}{0}}
+\headcommand {\slideentry {4}{0}{51}{51/51}{}{0}}
 \headcommand {\beamer@framepages {51}{51}}
+\headcommand {\sectionentry {5}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{52}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{0}}
+\headcommand {\beamer@sectionpages {39}{51}}
+\headcommand {\beamer@subsectionpages {39}{51}}
 \headcommand {\slideentry {5}{0}{52}{52/52}{}{0}}
 \headcommand {\beamer@framepages {52}{52}}
 \headcommand {\slideentry {5}{0}{53}{53/53}{}{0}}
@@ -132,19 +132,21 @@
 \headcommand {\beamer@framepages {58}{58}}
 \headcommand {\slideentry {5}{0}{59}{59/59}{}{0}}
 \headcommand {\beamer@framepages {59}{59}}
-\headcommand {\sectionentry {6}{Conclusion}{60}{Conclusion}{0}}
-\headcommand {\beamer@sectionpages {51}{59}}
-\headcommand {\beamer@subsectionpages {51}{59}}
-\headcommand {\slideentry {6}{0}{60}{60/60}{}{0}}
+\headcommand {\slideentry {5}{0}{60}{60/60}{}{0}}
 \headcommand {\beamer@framepages {60}{60}}
+\headcommand {\sectionentry {6}{Conclusion}{61}{Conclusion}{0}}
+\headcommand {\beamer@sectionpages {52}{60}}
+\headcommand {\beamer@subsectionpages {52}{60}}
 \headcommand {\slideentry {6}{0}{61}{61/61}{}{0}}
 \headcommand {\beamer@framepages {61}{61}}
 \headcommand {\slideentry {6}{0}{62}{62/62}{}{0}}
 \headcommand {\beamer@framepages {62}{62}}
 \headcommand {\slideentry {6}{0}{63}{63/63}{}{0}}
 \headcommand {\beamer@framepages {63}{63}}
-\headcommand {\beamer@partpages {1}{63}}
-\headcommand {\beamer@subsectionpages {60}{63}}
-\headcommand {\beamer@sectionpages {60}{63}}
-\headcommand {\beamer@documentpages {63}}
-\headcommand {\def \inserttotalframenumber {62}}
+\headcommand {\slideentry {6}{0}{64}{64/64}{}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\beamer@partpages {1}{64}}
+\headcommand {\beamer@subsectionpages {61}{64}}
+\headcommand {\beamer@sectionpages {61}{64}}
+\headcommand {\beamer@documentpages {64}}
+\headcommand {\def \inserttotalframenumber {63}}

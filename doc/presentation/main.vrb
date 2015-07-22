@@ -1,8 +1,8 @@
-\frametitle{Index}
-  \begin{itemize}
-    \item Introduction to Mote Runner
-    \item LoRaWAN
-    \item Physical Layer in Mote Runner
-    \item A MAC Layer in Mote Runner
-    \item 6LoWPAN implementation in Mote Runner
-  \end{itemize}
+\frametitle{}
+
+  \begin{figure}
+   \centering
+  \includegraphics[width=\textwidth]{img/thankyou.png}
+   \end{figure}
+
+

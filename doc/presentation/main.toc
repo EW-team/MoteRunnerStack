@@ -1,7 +1,7 @@
 \beamer@endinputifotherversion {3.36pt}
 \beamer@sectionintoc {1}{Introduction to \unhbox \voidb@x \hbox {Mote Runner}}{4}{0}{1}
 \beamer@sectionintoc {2}{LoRaWAN}{14}{0}{2}
-\beamer@sectionintoc {3}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{32}{0}{3}
-\beamer@sectionintoc {4}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{38}{0}{4}
-\beamer@sectionintoc {5}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{51}{0}{5}
-\beamer@sectionintoc {6}{Conclusion}{60}{0}{6}
+\beamer@sectionintoc {3}{Physical layer in \unhbox \voidb@x \hbox {Mote Runner}}{33}{0}{3}
+\beamer@sectionintoc {4}{A MAC Layer in \unhbox \voidb@x \hbox {Mote Runner}}{39}{0}{4}
+\beamer@sectionintoc {5}{6LoWPAN implementation in \unhbox \voidb@x \hbox {Mote Runner}}{52}{0}{5}
+\beamer@sectionintoc {6}{Conclusion}{61}{0}{6}
