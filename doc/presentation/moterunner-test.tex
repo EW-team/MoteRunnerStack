@@ -22,10 +22,9 @@
 	\begin{itemize}
 		\item In addition Radio:
 		\begin{itemize}
-			\item Handles transmission and receiption notifing to higher level by delegation
-			\item Manages acks notifing failure or success states in callbacks
+			\item Handles transmission and reception notifying to higher level by delegation, registering functions that will handle the events (tx and rx)
+			\item Manages acks notifying states of failure or success to callbacks
 			\item Permits to set parameters as PAN identifier, short address, radio channel
-			\item Permits to register functions that will handle the radio events (Tx and Rx)
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -37,12 +36,12 @@
     \item These operations require much attention:
     \begin{itemize}
     	\item Radio permits to transmit every type of pdu, but it's possible to receive only packets with 802.15.4 well formed headers
-    	\item It's also possible to receive in promiscuous mode to sniff for every packet, but this exposes to interferences
+    	\item Receiving in promiscuous mode allows to receive every kind of packet, but this exposes to interferences
     \end{itemize}
     \item Each mote holds 3 addresses:
     \begin{itemize}
     	\item a 16-bit PAN identifier
-    	\item a 64-bit extended address that uniquely identifies a mote
+    	\item a 64-bit extended address that uniquely identifies a mote (EUI-64)
     	\item a 16-bit short address that's application and protocol specific
     \end{itemize}
   \end{itemize}
@@ -82,16 +81,14 @@
 % \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Tx/Rx Real and Real Time Constraints}
+  \frametitle{Tx/Rx and Real Time Constraints}
   \begin{itemize}
     \item It's possible to operate in many different ways with regards to real time constraints:
     \begin{itemize}
-    	\item It's possible to receive/transmit ASAP (As Soon As Possible) or EXACTLY at the specified time or ...
-    	\item Rx/Tx require a start operation time and an end one
-    	\item MR manages autonomously all warm up and ramp up to make the device ready at the specified time
-    	\item The device turn off at the end and an event is raised to be managed with delegation
-    	\item If the device cannot be ready at the specified time or an error occurs which reports this status
+    	\item ASAP, EXACT, TIMED, RX4EVER indicate when the operation should begin and/or end given two time instant
+    	\item MR manages autonomously all warm up and ramp up to make the device ready given one of these modes
+    	\item At the end the device turns off and an event is raised to be managed with delegation
+    	\item If the device cannot be ready or cannot complete a task within the specified time an error occurs
     \end{itemize}
-
   \end{itemize}
 \end{frame}

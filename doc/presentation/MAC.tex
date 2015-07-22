@@ -2,25 +2,26 @@
 \begin{frame}[fragile]
   \frametitle{Design strategy}
   \begin{itemize}
+  	\item Beacon enabled, A-TDM with CSMA/CA
     \item Mac class behaviours:
     \begin{itemize}
-      \item Coordinator -> Beacon enabled, Slotted CSMA/CA
-      \item Unassociated -> Handles association with a Coordinator
+      \item Coordinator -> Sends beacons and handles request and data frames from motes
+      \item Unassociated -> Tries to associate with a Coordinator
       \item Associated -> Sends data from upper layer and receives data from Coordinator
     \end{itemize}
-    \item Flexibility:
+    \item Focus on flexibility:
     \begin{itemize}
-    	\item State changes are ruled by Mac class through events
-    	\item Mac can handle more than one state -> Mac - entities
+    	\item State changes have to be ruled by Mac class through events
+    	\item Mac should handle more than one state -> Mac - entities
     	\begin{itemize}
-	  \item e.g.: Coordinator - Associated
+	  \item e.g.: a single mote acting as Coordinator and Associated
     	\end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{The concept}
+  \frametitle{The network's concept}
   \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{img/MAClan.png}
@@ -28,11 +29,11 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{About the concept}
+  \frametitle{About the network}
   \begin{itemize}
-    \item Motes have to be subdivided into PANs
+    \item Motes are subdivided into PANs
     \begin{itemize}
-    	\item Every PAN has a PAN Id
+    	\item Every PAN has a PAN ID
     	\item Every mote has a unique short address (SADDR) inside the PAN
     \end{itemize}
     \item To obtain the SADDR the mote must associate with the PAN coordinator
@@ -54,7 +55,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Data indirect}
-  \vspace{-2.7em}
+%  \vspace{-2.7em}
   \begin{figure}
     \centering
     \includegraphics[width=.7\textwidth]{img/DataRequest.png}
@@ -163,4 +164,11 @@
       \end{figure}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Live demo}
+%	\begin{center}
+%		\includemedia[activate=onclick,	width=0.75\textwidth]{\includegraphics{FK3.png}}{FK3.swf}
+%	\end{center}	
 \end{frame}
