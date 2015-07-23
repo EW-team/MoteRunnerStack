@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.5-0.9999.3 (TeX Live 2013/Debian) (format=xelatex 2015.4.15)  23 JUL 2015 10:24
+This is XeTeX, Version 3.1415926-2.5-0.9999.3 (TeX Live 2013/Debian) (format=xelatex 2015.4.15)  23 JUL 2015 12:18
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1468,101 +1468,6 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count296
 \@thisrulewidth=\dimen314
 )
-(/usr/share/texlive/texmf-dist/tex/latex/media9/media9.sty
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3regex.sty
-Package: l3regex 2013/12/14 v4623 L3 Experimental regular expressions
-
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3tl-build.sty
-Package: l3tl-build 2011/12/08 v3039 L3 Experimental token list construction
-\l__tl_build_start_index_int=\count297
-\l__tl_build_index_int=\count298
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3tl-analysis.sty
-Package: l3tl-analysis 2011/12/08 v3039 L3 Experimental token lists analysis
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3str.sty
-Package: l3str 2013/07/24 v4576 L3 Experimental strings
-)
-\l__tl_analysis_normal_int=\count299
-\l__tl_analysis_index_int=\count300
-\l__tl_analysis_nesting_int=\count301
-\l__tl_analysis_type_int=\count302
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3flag.sty
-Package: l3flag 2011/12/08 v3039 L3 Experimental flags
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3experimental/l3str/l3str-convert.sty
-Package: l3str-convert 2013/01/08 v4339 L3 Experimental string encoding convers
-ions
-\l__str_internal_int=\count303
-)
-\l__regex_internal_a_int=\count304
-\l__regex_internal_b_int=\count305
-\l__regex_internal_c_int=\count306
-\l__regex_balance_int=\count307
-\l__regex_group_level_int=\count308
-\l__regex_mode_int=\count309
-\l__regex_catcodes_int=\count310
-\l__regex_default_catcodes_int=\count311
-\c__regex_catcode_L_int=\count312
-\c__regex_catcode_O_int=\count313
-\c__regex_catcode_A_int=\count314
-\c__regex_all_catcodes_int=\count315
-\l__regex_show_lines_int=\count316
-\l__regex_min_state_int=\count317
-\l__regex_max_state_int=\count318
-\l__regex_left_state_int=\count319
-\l__regex_right_state_int=\count320
-\l__regex_capturing_group_int=\count321
-\l__regex_min_pos_int=\count322
-\l__regex_max_pos_int=\count323
-\l__regex_current_pos_int=\count324
-\l__regex_start_pos_int=\count325
-\l__regex_success_pos_int=\count326
-\l__regex_current_char_int=\count327
-\l__regex_current_catcode_int=\count328
-\l__regex_last_char_int=\count329
-\l__regex_case_changed_char_int=\count330
-\l__regex_current_state_int=\count331
-\l__regex_step_int=\count332
-\l__regex_min_active_int=\count333
-\l__regex_max_active_int=\count334
-\l__regex_replacement_csnames_int=\count335
-\l__regex_match_count_int=\count336
-\l__regex_submatch_int=\count337
-\l__regex_zeroth_submatch_int=\count338
-) (/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
-Package: l3keys2e 2013/12/31 v4634 LaTeX2e option processing using LaTeX3 keys
-)
-Package: media9 2014/02/06 v0.39 acrobat-9/X compatible media
-\l_mix_poster_box=\box78
-\g_mix_wd_dim=\dimen315
-\g_mix_ht_dim=\dimen316
-\g_mix_dp_dim=\dimen317
-\g_mix_rmcnt_int=\count339
-\l_mix_viewcnt_int=\count340
-\g@mix@page@int=\count341
-\g_mix_obj_int=\count342
-\g_mix_resizeflag_int=\count343
-\l_mix_lineno_int=\count344
-.................................................
-. LaTeX info: "xparse/define-command"
-. 
-. Defining document command \addmediapath with arg. spec. 'm' on line 1157.
-.................................................
-\l_mix_pbtn_box=\box79
-.................................................
-. LaTeX info: "xparse/define-command"
-. 
-. Defining document command \includemedia with arg. spec. 'O{}mm' on line
-. 1446.
-.................................................
-\g_mix_mbtncnt_int=\count345
-.................................................
-. LaTeX info: "xparse/define-command"
-. 
-. Defining document command \mediabutton with arg. spec. 'O{}m' on line 2535.
-.................................................
-)
 (/usr/share/texlive/texmf-dist/tex/latex/ccicons/ccicons.sty
 Package: ccicons 2013/04/16 v1.5 LaTeX support for Creative Commons icons
 
@@ -1572,50 +1477,50 @@ Package: xkeyval 2012/10/14 v2.6b package option processing (HA)
 (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 \XKV@toks=\toks51
 \XKV@tempa@toks=\toks52
-\XKV@depth=\count346
+\XKV@depth=\count297
 File: xkeyval.tex 2012/10/14 v2.6b key=value parser (HA)
 )))
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.da
 teplot.code.tex (/usr/share/texmf/tex/latex/pgf/utilities/pgfcalendar.sty
 (/usr/share/texmf/tex/generic/pgf/utilities/pgfcalendar.code.tex
 File: pgfcalendar.code.tex 2007/07/23 v2.10 (rcs-revision 1.11)
-\pgfcalendarcurrentjulian=\count347
+\pgfcalendarcurrentjulian=\count298
 )))
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 13.
+(hyperref)                removing `\\' on input line 12.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 13.
+(hyperref)                removing `\\' on input line 12.
 
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 16.
-LaTeX Font Info:    Try loading font information for T3+cmr on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 15.
+LaTeX Font Info:    Try loading font information for T3+cmr on input line 15.
  (/usr/share/texmf/tex/latex/tipa/t3cmr.fd
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    ... okay on input line 15.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1652,8 +1557,8 @@ LaTeX Font Info:    ... okay on input line 16.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EveryShipout initializing macros
-\AtBeginShipoutBox=\box80
-Package hyperref Info: Link coloring OFF on input line 16.
+\AtBeginShipoutBox=\box78
+Package hyperref Info: Link coloring OFF on input line 15.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1661,70 +1566,70 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count348
+\c@section@level=\count299
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
 
 (./main.out) (./main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 16.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 15.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> EU1/lmr/m/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 16.
+(Font)                  OT1/cmss/m/n --> EU1/lmr/m/n on input line 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> EU1/FiraSansLight(0)/bx/n on input lin
-e 16.
+e 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  OT1/cmr/bx/n --> EU1/FiraSansLight(0)/bx/n on input lin
-e 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 16.
+e 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
 (Font)                  OT1/cmss/m/n --> EU1/FiraSansLight(0)/m/n on input line
- 16.
+ 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/cmss/bx/n --> EU1/FiraSansLight(0)/m/n on input lin
-e 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 16.
+e 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> EU1/FiraSansLight(0)/m/it on input lin
-e 16.
+e 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> EU1/FiraSansLight(0)/m/it on input li
-ne 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 16.
+ne 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> EU1/FiraMono(0)/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> EU1/FiraMono(0)/m/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> EU1/FiraMono(0)/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> EU1/FiraMono(0)/m/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
 (Font)                  EU1/FiraSansLight(0)/m/n --> EU1/FiraSansLight(0)/bx/n 
-on input line 16.
+on input line 15.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  EU1/FiraSansLight(0)/m/it --> EU1/FiraSansLight(0)/bx/i
-t on input line 16.
+t on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> EU1/lmr/bx/n on input line 16.
+(Font)                  OT1/cmss/bx/n --> EU1/lmr/bx/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  EU1/FiraSansLight(0)/bx/n --> EU1/FiraSansLight(0)/bx/n
- on input line 16.
+ on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  EU1/FiraSansLight(0)/m/n --> EU1/FiraSansLight(0)/bx/n 
-on input line 16.
+on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  EU1/FiraSansLight(0)/m/it --> EU1/FiraSansLight(0)/bx/i
-t on input line 16.
+t on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  EU1/FiraMono(0)/m/n --> EU1/FiraMono(0)/bx/n on input l
-ine 16.
+ine 15.
 
 (/usr/share/texmf/tex/latex/beamer/base/translator/dicts/translator-basic-dicti
 onary/translator-basic-dictionary-English.dict
@@ -1750,7 +1655,7 @@ Dictionary: translator-numbers-dictionary, Language: English
 tionary/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 16.
+LaTeX Info: Redefining \includegraphics on input line 15.
 
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.9}).
@@ -2146,20 +2051,15 @@ File: img/oscilloscope.png Graphic file (type QTm)
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb <VPlayer9.swf>
-<videos/sim_mr.flv>
-
-Package pgf Warning: Your graphic driver pgfsys-xetex.def does not support tran
-sparency groups. This warning is given only once on input line 7.
-
-) [51
+ (./main.vrb) [51
 
 ]) (./6LoWPAN.tex [52
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb
+
+(./main.vrb
 File: img/6low_network.png Graphic file (type QTm)
  <use  "img/6low_network.png" >)
 Overfull \vbox (17.1949pt too high) detected at line 8
@@ -2282,12 +2182,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--8
  []
 
 
-Underfull \hbox (badness 5064) in paragraph at lines 9--9
+Underfull \hbox (badness 5064) in paragraph at lines 10--10
 []\EU1/FiraSansLight(2)/m/n/12 Association managed by
  []
 
 
-Underfull \hbox (badness 5064) in paragraph at lines 9--10
+Underfull \hbox (badness 5064) in paragraph at lines 10--11
 []\EU1/FiraSansLight(2)/m/n/12 Association managed by
  []
 
@@ -2322,18 +2222,18 @@ File: img/thankyou.png Graphic file (type QTm)
 \tf@snm=\write8
 \openout8 = `main.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 49.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 49.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
  (./main.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 49.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 49.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 49.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 48.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 48.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 43005 strings out of 495643
- 937141 string characters out of 6187227
- 1024187 words of memory out of 5000000
- 45194 multiletter control sequences out of 15000+600000
+ 41220 strings out of 495643
+ 893891 string characters out of 6187227
+ 1021708 words of memory out of 5000000
+ 43442 multiletter control sequences out of 15000+600000
  9368 words of font info for 86 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  59i,13n,91p,10418b,849s stack positions out of 5000i,500n,10000p,200000b,80000s
