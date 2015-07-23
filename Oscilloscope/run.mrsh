@@ -1,21 +1,22 @@
 
-set-var -e APP_PORT 126 
+set-var -e APP_PORT 126
 
 socket-close -f osciSocket
 source socket.js
 socket-bind osciSocket
 
-mote-create -d iris 2
+#mote-create -d iris 2
 
 
 
-a0 msetup-setup oscilloscope
-a1 msetup-setup oscilloscopes
+#a0 msetup-setup oscilloscope
+#a1 msetup-setup oscilloscopes
 # a2 msetup-setup oscilloscopes
 
 # cmd type - read - flag - delay - saddr
 socket-send osciSocket 126 1 1 1 500 0x0100
-# socket-send osciSocket 126 1 1 2 500 0x0101
+socket-send osciSocket 126 1 1 2 1000 0x0101
+#socket-send osciSocket 126 1 1 2 500 0x0102
 
 # a3 msetup-setup oscilloscopes
 # a4 msetup-setup oscilloscopes

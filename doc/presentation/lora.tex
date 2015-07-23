@@ -61,7 +61,7 @@
 	All gateways send their beacon at exactly the same point in time:
 	\begin{itemize}
 		\item on first bytes there are no visible on-air collisions 
-		\item wrt the optional part , device within the proximity of more than one
+		\item device within the proximity of more than one
 		gateway will still be able to decode the strongest beacon with high probability
 	\end{itemize}
 	\begin{figure}
@@ -72,7 +72,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{LoRa MAC Payload Frame}
+  \frametitle{LoRa MAC Message types}
   
  \begin{figure}
   \centering
@@ -183,7 +183,7 @@
   \frametitle{LoRa ADR - 1}
   LoRa network data rates are:
  \begin{itemize}
-  \item Network controlled for fixed devices by means of using ADR bit in the PHY payload of data messages:
+  \item Network controlled for fixed devices by means of using ADR bit in FHDR in MAC payload of data messages:
   \begin{itemize}
     \item If is set, the network will control the data rate of the end device through the appropriate MAC commands
     \item If is cleared, the network will not attempt to control the data rate of the end device independently of the received signal quality
@@ -198,7 +198,7 @@
 
 \begin{frame}[fragile]
   \frametitle{LoRa ADR - 2}
-  LoRa modes (868Mhz band):
+  LoRa modes:
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{img/LoRamode.png}
