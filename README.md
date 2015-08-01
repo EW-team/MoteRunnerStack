@@ -1,7 +1,7 @@
 # MoteRunnerStack
 MoteRunnerStack is a IEEE 802.11.4-like MAC layer based on IBM MoteRunner v.13.
 
-It makes possible to create star topology with a PAN coordinator and one or more other motes associated with its.
+It makes possible to create a star topology with a PAN coordinator and one or more motes associated with it.
 
 The MAC layer works in beacon enabled + superframe mode with CSMA/CA access method to each slot time.
 The contention based access method permits to network with low data-rate to communicate without excessive waiting time.
